@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.3.xsd">
+
+	<!-- <var name="offer" class="pl.edu.pw.web.domain.Offer"/> -->
+	<on-start>
+        <evaluate expression="editOfferController.populateOffer(requestParameters.offerId)" result="flowScope.offer" />
+    </on-start> 
+    <view-state id="editOfferGeneralForm" model="offer" view="admin/editOfferGeneralForm">
+		<on-render>
+			<evaluate expression="editOfferController.prepareCategories()" result="viewScope.categories" result-type="java.util.List"></evaluate>
+			<evaluate expression="editOfferController.prepareStates()" result="viewScope.stateList" result-type="java.util.Map"></evaluate>
+		</on-render>
+    	<transition on="submit" to="editOfferAddressForm">
+    	</transition>
+	</view-state>
+	<view-state id="editOfferAddressForm" model="offer" view="admin/editOfferAddressForm">
+		<transition on="submit" to="koniec" validate="true">
+			<evaluate expression="editOfferController.updateOffer(offer)"></evaluate>
+		</transition>
+    	<transition on="back" to="editOfferGeneralForm" validate="false">
+    	</transition>
+	</view-state>
+	
+	<end-state id="koniec" view="admin/endOfferForm">
+	</end-state>
+	
+</flow>
