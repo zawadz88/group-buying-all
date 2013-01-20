@@ -12,68 +12,24 @@
 	<context:annotation-config />
 	<context:component-scan base-package="pl.edu.pw.groupbuying.web.admin"/>
 	
-	<!--  Ch 4 PasswordEncoder exercise -->
 	<bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder"/>
-	<!--  Ch 4 Salt exercise -->	
+	
 	<bean class="org.springframework.security.authentication.dao.ReflectionSaltSource" id="saltSource">
-	<!-- 
-		<property name="userPropertyToUse" value="username"/>
-		 -->
-		<!-- Ch 4 Salted User -->
 		<property name="userPropertyToUse" value="salt"/>
 	</bean>
-<!-- 	<bean class="pl.edu.pw.security.DatabasePasswordSecurerBean" init-method="secureDatabase" depends-on="dataSource">
-		<property name="dataSource" ref="dataSource"/>	
-	</bean> -->
+
 	<bean id="myLogoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
 		<property name="defaultTargetUrl" value="/" />
     	<property name="alwaysUseDefaultTargetUrl" value="true" />
 	</bean>
 
-<!-- Ch 4 UserDetailsManager exercise -->
-<!-- 
-	<bean id="jdbcUserService" class="org.springframework.security.provisioning.JdbcUserDetailsManager">
-		<property name="dataSource" ref="dataSource"/>
-		<property name="authenticationManager" ref="authenticationManager"/>
-	</bean>
- -->
- 
  	<bean id="jdbcUserServiceCustom" class="pl.edu.pw.eiti.groupbuying.web.admin.security.CustomJdbcDaoImpl">
 		<property name="dataSource" ref="dataSource"/>
-	<!-- </bean> -->
-		
-		<!-- Ch 4 Enable Groups Exercise -->
-		
 		<property name="enableGroups" value="false"/>
 		<property name="enableAuthorities" value="true"/>
-		
-		<!-- Ch 4 Salted User Exercise -->
-				
 		<property name="usersByUsernameQuery">
 			<value>select username,password,enabled,salt from employees where username = ?</value>
-		</property>
-		
-		<!-- Sample custom schema 
-		<property name="usersByUsernameQuery">
-			<value>SELECT LOGIN, PASSWORD, 1 FROM USER_INFO WHERE LOGIN = ?</value>
-		</property>
-		<property name="groupAuthoritiesByUsernameQuery">
-			<value>SELECT G.GROUP_ID, G.GROUP_NAME, P.NAME 
-				FROM USER_INFO U
-				 JOIN USER_GROUP UG on U.USER_INFO_ID = UG.USER_INFO_ID
-				 JOIN GROUP G ON UG.GROUP_ID = G.GROUP_ID
-				 JOIN GROUP_PERMISSION GP ON G.GROUP_ID = GP.GROUP_ID
-				 JOIN PERMISSION P ON GP.PERMISSION_ID = P.PERMISSION_ID
-				WHERE U.LOGIN = ?</value>
-		</property>
-		 -->
-		 
+		</property>	 
 	</bean>
-	
-<!-- 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl" />
-		<property name="username" value="system" />
-		<property name="password" value="agora" />
-	</bean> -->
+
 </beans>
