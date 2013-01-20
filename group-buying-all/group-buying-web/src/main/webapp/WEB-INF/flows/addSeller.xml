@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="seller" class="pl.edu.pw.eiti.groupbuying.core.domain.Seller"/>
+    
+    <view-state id="addSellerGeneralForm" model="seller" view="addSellerGeneralForm">
+    	<transition on="submit" to="addSellerAddressForm">
+    	</transition>
+	</view-state>
+	<view-state id="addSellerAddressForm" model="seller" view="addSellerAddressForm">
+		<transition on="submit" to="koniec" validate="true">
+			<evaluate expression="addSellerController.submitSeller(seller)"></evaluate>
+		</transition>
+    	<transition on="back" to="addSellerGeneralForm" validate="false">
+    	</transition>
+	</view-state>
+	
+	<end-state id="koniec" view="endSellerForm">
+	</end-state>
+	
+</flow>
