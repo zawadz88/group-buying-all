@@ -10,19 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.edu.pw.eiti.groupbuying.web.security.IChangePassword;
 
-/**
- * Used to service account requests.
- * 
- * @author Mularien
- */
+//TODO zrobić jakoś porządnie
 @Controller
 public class AccountController extends BaseController {
-	// Ch 4 start and end
+
 	@Autowired
 	private IChangePassword changePasswordDao;
-	// Ch 4 UserDetailsManager exercise
-	//@Autowired
-	//private UserDetailsManager userDetailsManager;
 	
 	@RequestMapping("/account/home.do")
 	public void accountHome() {		
@@ -45,14 +38,4 @@ public class AccountController extends BaseController {
 		return "redirect:../home.do";
 	}
 
-	/* Ch 4 UserDetailsManager version
-	@RequestMapping(value="/account/changePassword.do",method=RequestMethod.POST)
-	public String submitChangePasswordPage(@RequestParam("oldpassword") String oldPassword, 
-			@RequestParam("password") String newPassword) {
-		userDetailsManager.changePassword(oldPassword, newPassword);
-		SecurityContextHolder.clearContext();
-		
-		return "redirect:home.do";
-	}
-	*/
 }
