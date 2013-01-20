@@ -1,4 +1,4 @@
-- poprawa obiektów domeny o potrzebne pola, zapis użytkowników dobry
+- poprawa obiektów domeny o potrzebne pola, email = user
 - poprawa zapisywania haseł (brak gdzieś zakodowanych haseł)
 - OAuth2 serwer + Android
 - poprawa kodowania
