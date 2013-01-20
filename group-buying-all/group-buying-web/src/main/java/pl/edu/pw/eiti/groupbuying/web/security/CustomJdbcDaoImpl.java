@@ -13,25 +13,17 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 
-/**
- * Extends the baseline Spring Security JdbcDaoImpl and implements change password functionality.
- * 
- * Used in Chapter 4 example of customizing JdbcDaoImpl.
- * 
- * @author Mularien
- */
 public class CustomJdbcDaoImpl extends JdbcDaoImpl implements IChangePassword {
-	// Ch 4 Password Encoder and Salt Exercise
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private SaltSource saltSource;
-
+	
+	//TODO zaimplementowac to?
 	public void changePassword(String username, String password) {
-//		getJdbcTemplate().update(
-//				"UPDATE USERS SET PASSWORD = ? WHERE USERNAME = ?",
-//				password, username);
-		// Ch 4 After password encoder and salt exercise
+
 		UserDetails user = loadUserByUsername(username);
 		String encodedPassword = passwordEncoder.encodePassword(password, saltSource.getSalt(user));
 		getJdbcTemplate().update(
@@ -39,19 +31,15 @@ public class CustomJdbcDaoImpl extends JdbcDaoImpl implements IChangePassword {
 			encodedPassword, username);
 	}
 
-	// Ch 4 SaltedUser exercise
 	@Override
-	protected UserDetails createUserDetails(String username,
-			UserDetails userFromUserQuery,
-			List<GrantedAuthority> combinedAuthorities) {
+	protected UserDetails createUserDetails(String username, UserDetails userFromUserQuery,	List<GrantedAuthority> combinedAuthorities) {
         String returnUsername = userFromUserQuery.getUsername();
 
         if (!isUsernameBasedPrimaryKey()) {
             returnUsername = username;
         }
 
-        return new SaltedUser(returnUsername, userFromUserQuery.getPassword(), userFromUserQuery.isEnabled(),
-                true, true, true, combinedAuthorities, ((SaltedUser) userFromUserQuery).getSalt());
+        return new SaltedUser(returnUsername, userFromUserQuery.getPassword(), userFromUserQuery.isEnabled(), true, true, true, combinedAuthorities, ((SaltedUser) userFromUserQuery).getSalt());
 	}
 
 	@Override
