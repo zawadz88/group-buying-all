@@ -1,5 +1,6 @@
-- poprawa obiektów domeny o potrzebne pola, email = user
-- poprawa zapisywania haseł (brak gdzieś zakodowanych haseł)
+- poprawa obiektów ofert i userów o potrzebne pola, email = user
+- poprawa kodowania haseł dla klientów
+- uwspólnienie klientów i sprzedawców?
 - OAuth2 serwer + Android
 - poprawa kodowania
 - interfejs androida podstawowy bez logiki
