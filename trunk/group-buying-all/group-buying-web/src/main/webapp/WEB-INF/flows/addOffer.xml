@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<var name="offer" class="pl.edu.pw.eiti.groupbuying.core.domain.Offer"/>
+    
+    <view-state id="addOfferGeneralForm" model="offer" view="sellers/addOfferGeneralForm">
+		<on-render>
+			<evaluate expression="addOfferController.prepareCategories()" result="viewScope.categories" result-type="java.util.List"></evaluate>
+		</on-render>
+    	<transition on="submit" to="addOfferAddressForm">
+    	</transition>
+	</view-state>
+	<view-state id="addOfferAddressForm" model="offer" view="sellers/addOfferAddressForm">
+		<transition on="submit" to="koniec" validate="true">
+			<evaluate expression="addOfferController.submitOffer(offer)"></evaluate>
+		</transition>
+    	<transition on="back" to="addOfferGeneralForm" validate="false">
+    	</transition>
+	</view-state>
+	
+	<end-state id="koniec" view="sellers/endOfferForm">
+	</end-state>
+	
+</flow>
