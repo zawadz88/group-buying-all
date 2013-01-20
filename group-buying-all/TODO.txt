@@ -1,0 +1,15 @@
+- poprawa obiektów domeny o potrzebne pola, zapis użytkowników dobry
+- poprawa zapisywania haseł (brak gdzieś zakodowanych haseł)
+- OAuth2 serwer + Android
+- poprawa kodowania
+- interfejs androida podstawowy bez logiki
+- wyciąganie dobre ofert
+- zakup ofert + wyświetlanie zakupionych ofert
+- QR code + NFC
+- miejsca w pobliżu przez SOLR lub Redis
+- Redis do ofert w ogóle
+- Async z Servletu 3.0
+- HaPROXY
+- Javadoc
+- profile Mavenowe
+- wrzucenie na Cloud Foundry?
