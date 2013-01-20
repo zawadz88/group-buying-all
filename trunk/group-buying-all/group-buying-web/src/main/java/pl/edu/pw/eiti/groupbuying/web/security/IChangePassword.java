@@ -2,11 +2,6 @@ package pl.edu.pw.eiti.groupbuying.web.security;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-/**
- * Describes a class that allows changing of a user's password.
- * 
- * @author Mularien
- */
 public interface IChangePassword extends UserDetailsService {
 
 	/**

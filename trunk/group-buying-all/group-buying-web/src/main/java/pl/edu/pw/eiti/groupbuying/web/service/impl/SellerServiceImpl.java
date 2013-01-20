@@ -28,7 +28,7 @@ public class SellerServiceImpl implements SellerService{
 	}
 
 	private void encodeSeller(Seller seller) {
-		Random r = new Random();
+		Random r = new Random(System.currentTimeMillis());
 		
 		String salt = Double.toString(r.nextDouble() * 1000000000);
 		String encodedPassword = passwordEncoder.encodePassword(seller.getPassword(), salt);

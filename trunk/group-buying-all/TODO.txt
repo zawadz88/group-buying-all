@@ -9,7 +9,8 @@
 - miejsca w pobliżu przez SOLR lub Redis
 - Redis do ofert w ogóle
 - Async z Servletu 3.0
-- HaPROXY
-- Javadoc
+- poprawa walidacji formularzy
 - profile Mavenowe
+- Javadoc
 - wrzucenie na Cloud Foundry?
+- haproxy?
