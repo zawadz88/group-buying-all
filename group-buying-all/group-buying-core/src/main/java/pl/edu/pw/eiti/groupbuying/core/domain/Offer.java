@@ -6,31 +6,35 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Offer implements Serializable {
-	
+
 	private int offerId;
-	
+
 	private String title;
-	
+
+	private String lead;
+
 	private String description;
-	
+
 	private Address address = new Address();
-	
+
 	private String imageUrl;
-	
+
 	private double price;
-	
+
+	private double priceBeforeDiscount;
+
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private Date startDate;
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private Date endDate;
-	
+
 	private State state;
-	
+
 	private Category category = new Category();
-	
+
 	private String username;
-	
+
 	public int getOfferId() {
 		return offerId;
 	}
@@ -70,7 +74,7 @@ public class Offer implements Serializable {
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-	
+
 	public Category getCategory() {
 		return category;
 	}
@@ -103,7 +107,6 @@ public class Offer implements Serializable {
 		this.endDate = endDate;
 	}
 
-
 	public String getUsername() {
 		return username;
 	}
@@ -120,30 +123,48 @@ public class Offer implements Serializable {
 		this.state = state;
 	}
 
+	public String getLead() {
+		return lead;
+	}
+
+	public void setLead(String lead) {
+		this.lead = lead;
+	}
+
+	public double getPriceBeforeDiscount() {
+		return priceBeforeDiscount;
+	}
+
+	public void setPriceBeforeDiscount(double priceBeforeDiscount) {
+		this.priceBeforeDiscount = priceBeforeDiscount;
+	}
+
 	@Override
 	public String toString() {
-		return "Offer [offerId=" + offerId + ", title=" + title
-				+ ", description=" + description + ", address=" + address
-				+ ", imageUrl=" + imageUrl + ", price=" + price
+		return "Offer [offerId=" + offerId + ", title=" + title + ", lead="
+				+ lead + ", description=" + description + ", address="
+				+ address + ", imageUrl=" + imageUrl + ", price=" + price
+				+ ", priceBeforeDiscount=" + priceBeforeDiscount
 				+ ", startDate=" + startDate + ", endDate=" + endDate
 				+ ", state=" + state + ", category=" + category + ", username="
 				+ username + "]";
 	}
-	
-	public static enum State {		
+
+	public static enum State {
 		WAITING(0), ACTIVE(1), FINISHED(2);
 		private int value;
+
 		private State(final int number) {
 			this.value = number;
 		}
-		
+
 		public int getValue() {
 			return value;
 		}
-		
+
 		public static State getState(final int value) {
 			State state = null;
-			switch(value) {
+			switch (value) {
 			case 0:
 				state = WAITING;
 				break;
@@ -154,11 +175,12 @@ public class Offer implements Serializable {
 				state = FINISHED;
 				break;
 			default:
-				throw new IllegalArgumentException("value: '" + value + "' not permitted for Offer.State!");
+				throw new IllegalArgumentException("value: '" + value
+						+ "' not permitted for Offer.State!");
 			}
 			return state;
 		}
-		
+
 	}
-	
+
 }

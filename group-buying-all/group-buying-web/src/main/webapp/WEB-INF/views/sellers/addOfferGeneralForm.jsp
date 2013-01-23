@@ -21,6 +21,14 @@
 					<form:errors path="title"/>
 				</td>
 			</tr>
+			
+			<tr>
+				<td><spring:message code="offer.lead.label" /></td>
+				<td>
+					<form:input path="lead" />
+					<form:errors path="lead"/>
+				</td>
+			</tr>
 	
 			<tr>
 				<td><spring:message code="offer.description.label" /></td>
@@ -65,6 +73,13 @@
 				<td>
 					<form:input path="price" />
 					<form:errors path="price" />
+				</td>
+			</tr>
+			<tr>
+				<td><spring:message code="offer.priceBeforeDiscount.label" /></td>
+				<td>
+					<form:input path="priceBeforeDiscount" />
+					<form:errors path="priceBeforeDiscount" />
 				</td>
 			</tr>
 		</table>

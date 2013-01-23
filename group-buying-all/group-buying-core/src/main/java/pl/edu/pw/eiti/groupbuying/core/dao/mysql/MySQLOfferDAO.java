@@ -23,7 +23,7 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
 @Repository("offerDAO")
 public class MySQLOfferDAO implements OfferDAO {
 	
-	private static final String INSERT_OFFER = "insert into offers(title, description, street, city, postal_code, image_url, category_id, price, start_date, end_date, state, username) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	private static final String INSERT_OFFER = "insert into offers(title, lead, description, street, city, postal_code, image_url, category_id, price, price_before_discount, start_date, end_date, state, username) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	
 	private static final String SELECT_CATEGORIES = "SELECT * FROM CATEGORIES";
 
@@ -35,24 +35,24 @@ public class MySQLOfferDAO implements OfferDAO {
 
 	private static final String SELECT_USERNAME_FROM_OFFER = "select username from offers where offer_id = ?";
 	
-	private static final String UPDATE_OFFER = "update offers set title = ?, description = ?, street = ?, city = ?, postal_code = ?, image_url = ?, category_id = ?, price = ?, start_date = ?, end_date = ?, state = ?, username = ? where offer_id = ?";
+	private static final String UPDATE_OFFER = "update offers set title = ?, lead = ?, description = ?, street = ?, city = ?, postal_code = ?, image_url = ?, category_id = ?, price = ?, price_before_discount = ?, start_date = ?, end_date = ?, state = ?, username = ? where offer_id = ?";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	public boolean saveOffer(Offer offer) {
-		jdbcTemplate.update(INSERT_OFFER, new Object[] {offer.getTitle(), offer.getDescription(),
+		jdbcTemplate.update(INSERT_OFFER, new Object[] {offer.getTitle(), offer.getLead(), offer.getDescription(),
 				offer.getAddress().getStreet(), offer.getAddress().getCity(), offer.getAddress().getPostalCode(),
-				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), Offer.State.WAITING.getValue(), offer.getUsername()});
+				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getPriceBeforeDiscount(), offer.getStartDate(), offer.getEndDate(), Offer.State.WAITING.getValue(), offer.getUsername()});
 		return true;
 	}
 	
 	@Override
 	public void updateOffer(Offer offer) {
-		jdbcTemplate.update(UPDATE_OFFER, new Object[] {offer.getTitle(), offer.getDescription(),
+		jdbcTemplate.update(UPDATE_OFFER, new Object[] {offer.getTitle(), offer.getLead(), offer.getDescription(),
 				offer.getAddress().getStreet(), offer.getAddress().getCity(), offer.getAddress().getPostalCode(),
-				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), offer.getState().getValue(), offer.getUsername(), offer.getOfferId()});
+				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), offer.getState().getValue(), offer.getUsername(), offer.getOfferId()});
 
 		
 	}
@@ -82,6 +82,7 @@ public class MySQLOfferDAO implements OfferDAO {
 					Offer offer = new Offer();
 					offer.setOfferId(rs.getInt("offer_id"));
 					offer.setTitle(rs.getString("title"));
+					offer.setLead(rs.getString("lead"));
 					offer.setDescription(rs.getString("description"));
 					Category category = new Category();
 					category.setCategoryId(rs.getInt("category_id"));
@@ -91,6 +92,7 @@ public class MySQLOfferDAO implements OfferDAO {
 					offer.setStartDate(rs.getDate("start_date"));
 					offer.setImageUrl(rs.getString("image_url"));
 					offer.setPrice(rs.getDouble("price"));
+					offer.setPriceBeforeDiscount(rs.getDouble("price_before_discount"));
 					offer.setState(State.getState(rs.getInt("state")));
 					offer.setUsername(rs.getString("username"));
 					Address address = new Address();
@@ -153,6 +155,7 @@ public class MySQLOfferDAO implements OfferDAO {
 					Offer offer = new Offer();
 					offer.setOfferId(rs.getInt("offer_id"));
 					offer.setTitle(rs.getString("title"));
+					offer.setLead(rs.getString("lead"));
 					offer.setDescription(rs.getString("description"));
 					Category category = new Category();
 					category.setCategoryId(rs.getInt("category_id"));
@@ -162,6 +165,7 @@ public class MySQLOfferDAO implements OfferDAO {
 					offer.setStartDate(rs.getDate("start_date"));
 					offer.setImageUrl(rs.getString("image_url"));
 					offer.setPrice(rs.getDouble("price"));
+					offer.setPriceBeforeDiscount(rs.getDouble("price_before_discount"));
 					offer.setState(State.getState(rs.getInt("state")));
 					offer.setUsername(rs.getString("username"));
 					Address address = new Address();
@@ -188,6 +192,7 @@ public class MySQLOfferDAO implements OfferDAO {
 					Offer offer = new Offer();
 					offer.setOfferId(rs.getInt("offer_id"));
 					offer.setTitle(rs.getString("title"));
+					offer.setLead(rs.getString("lead"));
 					offer.setDescription(rs.getString("description"));
 					Category category = new Category();
 					category.setCategoryId(rs.getInt("category_id"));
@@ -197,6 +202,7 @@ public class MySQLOfferDAO implements OfferDAO {
 					offer.setStartDate(rs.getDate("start_date"));
 					offer.setImageUrl(rs.getString("image_url"));
 					offer.setPrice(rs.getDouble("price"));
+					offer.setPriceBeforeDiscount(rs.getDouble("price_before_discount"));
 					offer.setState(State.getState(rs.getInt("state")));
 					offer.setUsername(rs.getString("username"));
 					Address address = new Address();
