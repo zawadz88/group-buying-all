@@ -22,8 +22,8 @@ public class OfferValidator {
 	private void validateState(Errors errors) {
 		String field = "state";
 	    Assert.notNull(errors, "Errors object must not be null");
-	    Object value = errors.getFieldValue(field);
-	    if ((value == null) || (!(StringUtils.hasText(value.toString()))) || !(value.toString().equals(Offer.STATE_WAITING) || value.toString().equals(Offer.STATE_ACTIVE) || value.toString().equals(Offer.STATE_FINISHED))) {
+	    Object value = errors.getFieldValue(field);//TODO lepsza walidacja
+	    if ((value == null)) {
 	    	errors.rejectValue(field, "offer.state.incorrect", null, null);
 	    }
 	}
