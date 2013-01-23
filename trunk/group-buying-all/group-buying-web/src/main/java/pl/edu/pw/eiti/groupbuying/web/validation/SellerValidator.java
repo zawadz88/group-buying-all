@@ -10,10 +10,11 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Seller;
 public class SellerValidator {
 	public void validateAddSellerGeneralForm(Seller seller, Errors errors) {
 		System.out.println("Walidacja general form");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "seller.username.required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "seller.name.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "seller.password.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "seller.email.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "trade", "seller.trade.required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nip", "seller.nip.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "seller.description.required");
 
 	}

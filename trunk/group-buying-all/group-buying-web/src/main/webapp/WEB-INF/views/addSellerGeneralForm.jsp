@@ -14,13 +14,13 @@
 	<form:form modelAttribute="seller">
 		<table border="1">
 			<tr>
-				<td><spring:message code="seller.username.label" /></td>
+				<td><spring:message code="seller.email.label" /></td>
 				<td>
-					<form:input path="username" />
-					<form:errors path="username"/>
+					<form:input path="email" />
+					<form:errors path="email" />
 				</td>
 			</tr>
-	
+			
 			<tr>
 				<td><spring:message code="seller.password.label" /></td>
 				<td>
@@ -28,14 +28,14 @@
 					<form:errors path="password" />
 				</td>
 			</tr>
-	
 			<tr>
-				<td><spring:message code="seller.email.label" /></td>
+				<td><spring:message code="seller.name.label" /></td>
 				<td>
-					<form:input path="email" />
-					<form:errors path="email" />
+					<form:input path="name" />
+					<form:errors path="name"/>
 				</td>
 			</tr>
+	
 	
 			<tr>
 				<td><spring:message code="seller.trade.label" /></td>
@@ -50,6 +50,13 @@
 				<td>
 					<form:input path="description" />
 					<form:errors path="description" />
+				</td>
+			</tr>
+			<tr>
+				<td><spring:message code="seller.nip.label" /></td>
+				<td>
+					<form:input path="nip" />
+					<form:errors path="nip" />
 				</td>
 			</tr>
 		</table>
