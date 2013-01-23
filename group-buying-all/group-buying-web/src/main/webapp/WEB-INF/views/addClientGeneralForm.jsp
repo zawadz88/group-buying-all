@@ -13,14 +13,15 @@
 	<h1>Dodaj nowego klienta</h1>
 	<form:form modelAttribute="client">
 		<table border="1">
+	
 			<tr>
-				<td><spring:message code="client.username.label" /></td>
+				<td><spring:message code="client.email.label" /></td>
 				<td>
-					<form:input path="username" />
-					<form:errors path="username"/>
+					<form:input path="email" />
+					<form:errors path="email" />
 				</td>
 			</tr>
-	
+			
 			<tr>
 				<td><spring:message code="client.password.label" /></td>
 				<td>
@@ -45,13 +46,6 @@
 				</td>
 			</tr>
 	
-			<tr>
-				<td><spring:message code="client.email.label" /></td>
-				<td>
-					<form:input path="email" />
-					<form:errors path="email" />
-				</td>
-			</tr>
 		</table>
 		<hr />
 		<table border="1">

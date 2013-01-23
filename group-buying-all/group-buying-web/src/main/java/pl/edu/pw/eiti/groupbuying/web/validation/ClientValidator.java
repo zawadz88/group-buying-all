@@ -10,11 +10,10 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Client;
 public class ClientValidator {
 	public void validateAddClientGeneralForm(Client client, Errors errors) {
 		System.out.println("Walidacja general form");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "client.username.required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "client.email.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "client.password.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "client.firstName.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "client.lastName.required");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "client.email.required");
 
 	}
 	
