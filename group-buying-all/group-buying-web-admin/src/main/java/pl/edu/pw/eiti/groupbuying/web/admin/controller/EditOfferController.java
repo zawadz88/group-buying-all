@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
+import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
 
 @Controller("editOfferController")
 public class EditOfferController extends BaseController {
@@ -29,11 +30,11 @@ public class EditOfferController extends BaseController {
 		return offerDAO.getCategories();
 	}
 	
-	public Map<String, String> prepareStates() {
-		Map<String,String> stateMap = new LinkedHashMap<String,String>();
-		stateMap.put("0", "Waiting");
-		stateMap.put("1", "Active");
-		stateMap.put("2", "Finished");
+	public Map<State, String> prepareStates() {
+		Map<State,String> stateMap = new LinkedHashMap<State,String>();
+		stateMap.put(State.WAITING, "Waiting");
+		stateMap.put(State.ACTIVE, "Active");
+		stateMap.put(State.FINISHED, "Finished");
 		return stateMap;
 	}
 	

@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.undo.StateEdit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +18,7 @@ import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Address;
 import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
+import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
 
 @Repository("offerDAO")
 public class MySQLOfferDAO implements OfferDAO {
@@ -41,7 +44,7 @@ public class MySQLOfferDAO implements OfferDAO {
 	public boolean saveOffer(Offer offer) {
 		jdbcTemplate.update(INSERT_OFFER, new Object[] {offer.getTitle(), offer.getDescription(),
 				offer.getAddress().getStreet(), offer.getAddress().getCity(), offer.getAddress().getPostalCode(),
-				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), Offer.STATE_WAITING, offer.getUsername()});
+				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), Offer.State.WAITING.getValue(), offer.getUsername()});
 		return true;
 	}
 	
@@ -49,30 +52,30 @@ public class MySQLOfferDAO implements OfferDAO {
 	public void updateOffer(Offer offer) {
 		jdbcTemplate.update(UPDATE_OFFER, new Object[] {offer.getTitle(), offer.getDescription(),
 				offer.getAddress().getStreet(), offer.getAddress().getCity(), offer.getAddress().getPostalCode(),
-				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), offer.getState(), offer.getUsername(), offer.getOfferId()});
+				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), offer.getState().getValue(), offer.getUsername(), offer.getOfferId()});
 
 		
 	}
 	
 	@Override
 	public List<Offer> getActiveOffers() {
-		return getOffersForState(Offer.STATE_ACTIVE);
+		return getOffersForState(Offer.State.ACTIVE);
 	}
 
 	@Override
 	public List<Offer> getWaitingOffers() {
-		return getOffersForState(Offer.STATE_WAITING);
+		return getOffersForState(Offer.State.WAITING);
 	}
 
 	@Override
 	public List<Offer> getFinishedOffers() {
-		return getOffersForState(Offer.STATE_FINISHED);
+		return getOffersForState(Offer.State.FINISHED);
 	}
 	
-	private List<Offer> getOffersForState(String state) {
+	private List<Offer> getOffersForState(State state) {
 		final List<Offer> offers = new ArrayList<Offer>();
 		try {
-			jdbcTemplate.query(SELECT_OFFERS, new Object[] {state}, new RowCallbackHandler() {
+			jdbcTemplate.query(SELECT_OFFERS, new Object[] {state.getValue()}, new RowCallbackHandler() {
 				
 				@Override
 				public void processRow(ResultSet rs) throws SQLException {
@@ -88,7 +91,7 @@ public class MySQLOfferDAO implements OfferDAO {
 					offer.setStartDate(rs.getDate("start_date"));
 					offer.setImageUrl(rs.getString("image_url"));
 					offer.setPrice(rs.getDouble("price"));
-					offer.setState(rs.getString("state"));
+					offer.setState(State.getState(rs.getInt("state")));
 					offer.setUsername(rs.getString("username"));
 					Address address = new Address();
 					address.setCity(rs.getString("city"));
@@ -101,6 +104,7 @@ public class MySQLOfferDAO implements OfferDAO {
 		} catch (EmptyResultDataAccessException e) {
 			System.err.println("No offers in DB!");
 		}
+		//TODO obsluga setState
 		return offers;
 	}
 	
@@ -126,23 +130,23 @@ public class MySQLOfferDAO implements OfferDAO {
 
 	@Override
 	public List<Offer> getActiveOffers(String username) {
-		return getOffersForState(username, Offer.STATE_ACTIVE);
+		return getOffersForState(username, Offer.State.ACTIVE);
 	}
 
 	@Override
 	public List<Offer> getWaitingOffers(String username) {
-		return getOffersForState(username, Offer.STATE_WAITING);
+		return getOffersForState(username, Offer.State.WAITING);
 	}
 
 	@Override
-	public List<Offer> getFinishedOffers(String username) {
-		return getOffersForState(username, Offer.STATE_FINISHED);
+	public List<Offer> getFinishedOffers(final String username) {
+		return getOffersForState(username, Offer.State.FINISHED);
 	}
 	
-	private List<Offer> getOffersForState(String username, String state) {
+	private List<Offer> getOffersForState(final String username, final State state) {
 		final List<Offer> offers = new ArrayList<Offer>();
 		try {
-			jdbcTemplate.query(SELECT_OFFERS_BY_USERNAME, new Object[] {username, state}, new RowCallbackHandler() {
+			jdbcTemplate.query(SELECT_OFFERS_BY_USERNAME, new Object[] {username, state.getValue()}, new RowCallbackHandler() {
 				
 				@Override
 				public void processRow(ResultSet rs) throws SQLException {
@@ -158,7 +162,7 @@ public class MySQLOfferDAO implements OfferDAO {
 					offer.setStartDate(rs.getDate("start_date"));
 					offer.setImageUrl(rs.getString("image_url"));
 					offer.setPrice(rs.getDouble("price"));
-					offer.setState(rs.getString("state"));
+					offer.setState(State.getState(rs.getInt("state")));
 					offer.setUsername(rs.getString("username"));
 					Address address = new Address();
 					address.setCity(rs.getString("city"));
@@ -171,11 +175,12 @@ public class MySQLOfferDAO implements OfferDAO {
 		} catch (EmptyResultDataAccessException e) {
 			System.err.println("No offers in DB!");
 		}
+		//TODO obsluga bledu state
 		return offers;
 	}
 
 	@Override
-	public Offer getOffer(int offerId) {
+	public Offer getOffer(final int offerId) {
 		Offer offer = null;
 		try{
 			offer = jdbcTemplate.queryForObject(SELECT_OFFER_FOR_OFFER_ID, new Object[] {offerId}, new RowMapper<Offer>() {
@@ -192,7 +197,7 @@ public class MySQLOfferDAO implements OfferDAO {
 					offer.setStartDate(rs.getDate("start_date"));
 					offer.setImageUrl(rs.getString("image_url"));
 					offer.setPrice(rs.getDouble("price"));
-					offer.setState(rs.getString("state"));
+					offer.setState(State.getState(rs.getInt("state")));
 					offer.setUsername(rs.getString("username"));
 					Address address = new Address();
 					address.setCity(rs.getString("city"));

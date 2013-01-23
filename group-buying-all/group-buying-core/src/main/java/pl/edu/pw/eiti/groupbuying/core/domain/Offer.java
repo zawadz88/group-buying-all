@@ -6,12 +6,6 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class Offer implements Serializable {
-
-	public static final String STATE_WAITING = "0";
-	
-	public static final String STATE_ACTIVE = "1";
-
-	public static final String STATE_FINISHED = "2";
 	
 	private int offerId;
 	
@@ -31,7 +25,7 @@ public class Offer implements Serializable {
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private Date endDate;
 	
-	private String state;
+	private State state;
 	
 	private Category category = new Category();
 	
@@ -118,11 +112,11 @@ public class Offer implements Serializable {
 		this.username = username;
 	}
 
-	public String getState() {
+	public State getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(State state) {
 		this.state = state;
 	}
 
@@ -134,6 +128,37 @@ public class Offer implements Serializable {
 				+ ", startDate=" + startDate + ", endDate=" + endDate
 				+ ", state=" + state + ", category=" + category + ", username="
 				+ username + "]";
+	}
+	
+	public static enum State {		
+		WAITING(0), ACTIVE(1), FINISHED(2);
+		private int value;
+		private State(final int number) {
+			this.value = number;
+		}
+		
+		public int getValue() {
+			return value;
+		}
+		
+		public static State getState(final int value) {
+			State state = null;
+			switch(value) {
+			case 0:
+				state = WAITING;
+				break;
+			case 1:
+				state = ACTIVE;
+				break;
+			case 2:
+				state = FINISHED;
+				break;
+			default:
+				throw new IllegalArgumentException("value: '" + value + "' not permitted for Offer.State!");
+			}
+			return state;
+		}
+		
 	}
 	
 }
