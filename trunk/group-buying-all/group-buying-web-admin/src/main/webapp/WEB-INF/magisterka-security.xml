@@ -17,7 +17,6 @@
 		<intercept-url pattern="/*" access="permitAll"/>
 
 		<form-login login-page="/login.do" />
-		<remember-me key="mySuperComplexKeyThatShallNotBeGuessed" token-validity-seconds="3600" data-source-ref="dataSource"/>
 		<logout logout-url="/logout" invalidate-session="true" logout-success-url=""/>
 		<access-denied-handler error-page="/login.do"/>
 	</http>
