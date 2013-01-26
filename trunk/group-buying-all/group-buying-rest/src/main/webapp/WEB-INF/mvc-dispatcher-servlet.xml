@@ -19,8 +19,17 @@
         ">
 
 	<mvc:annotation-driven />
+	
 	<context:component-scan base-package="pl.edu.pw.eiti.groupbuying" />
 	
+	<beans:bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+	
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      	<beans:property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+      	<beans:property name="prefix" value="/WEB-INF/views/" />
+      	<beans:property name="suffix" value=".jsp" />
+  	</beans:bean>
+  	
 		<!-- For S2OAuth endpoints -->
 	<http   pattern="/oauth/token" 
 			create-session="stateless" 
@@ -35,21 +44,15 @@
 	</http>
 
 	<!-- TODO uporządkować to gówno -->
-	<http use-expressions="true">
+	<http use-expressions="true" auto-config="true">
 		<!-- Authentication policy -->
-		<form-login login-page="/signin" login-processing-url="/signin/authenticate" authentication-failure-url="/signin?error=1" />
-		<logout logout-url="/signout" delete-cookies="JSESSIONID" />
-		<!-- Authorization policy definition: TODO consider replacing with @Secured on @Controllers -->
-		<intercept-url pattern="/" access="permitAll" />
-		<intercept-url pattern="/favicon.ico" access="permitAll" />
-		<intercept-url pattern="/members/**" access="permitAll" />
-		<intercept-url pattern="/groups/**" access="permitAll" />
-		<intercept-url pattern="/pubsub/**" access="permitAll" />
-		<intercept-url pattern="/resources/**" access="permitAll" />
-		<intercept-url pattern="/admin/**" access="permitAll" />           
-		<intercept-url pattern="/signin" access="permitAll" />
-		<intercept-url pattern="/signin/*" access="permitAll" />
-		<intercept-url pattern="/**" access="isAuthenticated()" />
+		<intercept-url pattern="/login.do" access="permitAll" />
+		<intercept-url pattern="/offers/*" access="isAuthenticated()" />
+		<intercept-url pattern="/**" access="permitAll"/>
+
+		<form-login login-page="/login.do" authentication-failure-url="/login.do?error=1"/>
+		<logout logout-url="/logout" invalidate-session="true" delete-cookies="JSESSIONID" />
+		
 		<custom-filter ref="resourceServerFilter" before="EXCEPTION_TRANSLATION_FILTER" />
 	</http>
 
