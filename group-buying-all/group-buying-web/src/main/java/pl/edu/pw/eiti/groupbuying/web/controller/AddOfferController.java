@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
-import pl.edu.pw.eiti.groupbuying.web.security.SaltedUser;
+import pl.edu.pw.eiti.groupbuying.security.core.SaltedUser;
 
 @Controller("addOfferController")
 public class AddOfferController extends BaseController {

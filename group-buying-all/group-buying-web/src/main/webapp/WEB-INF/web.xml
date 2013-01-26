@@ -6,7 +6,6 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/magisterka-base.xml
 			/WEB-INF/magisterka-servlet.xml
 			/WEB-INF/magisterka-security.xml
 			/WEB-INF/magisterka-flow.xml

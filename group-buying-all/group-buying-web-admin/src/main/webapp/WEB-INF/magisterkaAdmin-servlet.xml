@@ -13,6 +13,10 @@
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
 	</bean>
 	
+	<context:annotation-config />
+	<context:component-scan base-package="pl.edu.pw.eiti.groupbuying.web.admin"/>
+	<mvc:annotation-driven/>
+	
 	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
 		<property name="order" value="1" />
 	</bean>
@@ -24,9 +28,6 @@
       	<property name="order" value="2"></property>
   	</bean>
   	
-	<mvc:annotation-driven/>
-	<context:annotation-config />
-	<context:component-scan base-package="pl.edu.pw.eiti.groupbuying.web.admin"/>
 	
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basename" value="messages" />
