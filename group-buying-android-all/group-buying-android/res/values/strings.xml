@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello my-android-application!</string>
+    <string name="app_name">${SampleIconsDefaultTitle} - group-buying-android-application</string>
+    
+    <string name="ga_api_key">UA-34170904-1</string>
+	<bool name="ga_enabled">true</bool>
+	<integer name="ga_dispatchPeriod">20</integer>
+	<bool name="ga_auto_activity_tracking">true</bool>
+	<bool name="ga_debug">true</bool>
+	<bool name="ga_dryRun">true</bool>
+</resources>
