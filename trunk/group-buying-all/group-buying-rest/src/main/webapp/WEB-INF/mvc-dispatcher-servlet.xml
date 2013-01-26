@@ -1,22 +1,16 @@
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans:beans 
 	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" 
-	xmlns:oauth="http://www.springframework.org/schema/security/oauth2" 
-	xmlns:sec="http://www.springframework.org/schema/security"
-	xsi:schemaLocation="
+		xsi:schemaLocation="
         http://www.springframework.org/schema/beans     
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd
-		http://www.springframework.org/schema/security
-		http://www.springframework.org/schema/security/spring-security.xsd
-        http://www.springframework.org/schema/security/oauth2
-        http://www.springframework.org/schema/security/spring-security-oauth2.xsd
-        ">
+	        ">
 
 	<mvc:annotation-driven />
 	
@@ -55,121 +49,5 @@
         <beans:property name="prefix" value="/WEB-INF/views/" />
         <beans:property name="suffix" value=".jsp" />
     </beans:bean>
-  	
-		<!-- For S2OAuth endpoints -->
-	<http   pattern="/oauth/token" 
-			create-session="stateless" 
-			authentication-manager-ref="clientAuthenticationManager" 
-			entry-point-ref="oauthAuthenticationEntryPoint"
-			xmlns="http://www.springframework.org/schema/security">
-		<intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
-		<anonymous enabled="false" />
-		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
-		<!-- include this only if you need to authenticate clients via request parameters -->
-		<custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
-		<access-denied-handler ref="oauthAccessDeniedHandler" />
-	</http>
-
-	<!-- TODO uporządkować to gówno -->
-	<http use-expressions="true" auto-config="true">
-		<!-- Authentication policy -->
-		<intercept-url pattern="/login.do" access="permitAll" />
-		<intercept-url pattern="/offers/*" access="isAuthenticated()" />
-		<intercept-url pattern="/**" access="permitAll"/>
-
-		<form-login login-page="/login.do" authentication-failure-url="/login.do?error=1"/>
-		<logout logout-url="/logout" invalidate-session="true" delete-cookies="JSESSIONID" />
-		
-		<custom-filter ref="resourceServerFilter" before="EXCEPTION_TRANSLATION_FILTER" />
-		<access-denied-handler ref="oauthAccessDeniedHandler" />
-	</http>
-
-	<authentication-manager alias="authenticationManager">
-		<authentication-provider>
-			<user-service id="userDetailsService">
-				<user name="marissa" password="koala" authorities="ROLE_USER" />
-				<user name="paul" password="emu" authorities="ROLE_USER" />
-			</user-service>
-		</authentication-provider>
-	</authentication-manager>
-
-	<bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased" xmlns="http://www.springframework.org/schema/beans">
-		<constructor-arg>
-			<list>
-				<bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter" />
-				<bean class="org.springframework.security.access.vote.RoleVoter" />
-				<bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
-			</list>
-		</constructor-arg>
-	</bean>
-
-
-	<!-- For S2OAuth endpoints -->
-	<authentication-manager id="clientAuthenticationManager" xmlns="http://www.springframework.org/schema/security">
-		<authentication-provider user-service-ref="clientDetailsUserService" />
-	</authentication-manager>
-
-	<beans:bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
-		<beans:constructor-arg ref="clientDetails" />
-	</beans:bean>
 	
-	<beans:bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
-		<beans:property name="realmName" value="greenhouseApi" />
-	</beans:bean>
-	
-	<!--  ==============================  -->
-	<!--  OAUTH 2 : AUTHORIZATION SERVER  -->
-	<!--  ==============================  -->
-	<oauth:authorization-server client-details-service-ref="clientDetails" token-services-ref="tokenServices">
-		<oauth:authorization-code />
-		<oauth:implicit />
-		<oauth:refresh-token />
-		<oauth:client-credentials />
-		<oauth:password />
-	</oauth:authorization-server>	
-		
-	<!-- WILL NEED TO REPLACE THIS WITH JDBC OR GH-SPECIFIC IMPL -->
- 	<!-- <beans:bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore" /> -->
-	<beans:bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.JdbcTokenStore">
- 		<beans:constructor-arg ref="dataSource" />
-	</beans:bean>
-
-	<!-- The following 3 elements exist solely to support parameter-based client authentication, which is
-	     discouraged by the OAuth2 spec. At this time, not all OAuth2 client implementations support
-	     HTTP Basic client authentication. Therefore, these are included to allow the client to use
-	     either form of client authentication. We may consider removing these in the future, however,
-	     when HTTP Basic client authentication is fully supported across all client implementations. -->
-	<beans:bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
-		<beans:property name="authenticationManager" ref="clientAuthenticationManager" />
-	</beans:bean>
-
-	<beans:bean id="oauthAccessDeniedHandler" class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
-	
-	<authentication-manager id="clientAuthenticationManager" xmlns="http://www.springframework.org/schema/security">
-		<authentication-provider user-service-ref="clientDetailsUserService" />
-	</authentication-manager>
-
-	
-	<!-- End of configuration to support parameter-based client authentication -->
-	
-	<oauth:client-details-service id="clientDetails">
-		<oauth:client client-id="tonr" resource-ids="greenhouseApi" authorized-grant-types="password,authorization_code,implicit"
-			authorities="ROLE_CLIENT" scope="read,write" secret="secret" />
-	</oauth:client-details-service>
-
-	<!--  =========================  -->
-	<!--  OAUTH 2 : RESOURCE SERVER  -->
-	<!--  =========================  -->
-	<oauth:resource-server id="resourceServerFilter" resource-id="greenhouseApi" token-services-ref="tokenServices" />
-
-
-	<!--  ======================  -->
-	<!--  OAUTH 2 : SHARED BEANS  -->
-	<!--  ======================  -->
-	<beans:bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
-		<beans:property name="tokenStore" ref="tokenStore" />
-		<beans:property name="supportRefreshToken" value="true" />
-		<beans:property name="clientDetailsService" ref="clientDetails"/>
-		<beans:property name="accessTokenValiditySeconds" value="604800" /> <!-- 1 week -->
-	</beans:bean>
 </beans:beans>

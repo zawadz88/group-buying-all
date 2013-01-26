@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
-import pl.edu.pw.eiti.groupbuying.web.security.SaltedUser;
+import pl.edu.pw.eiti.groupbuying.security.core.SaltedUser;
 
 /**
  * 

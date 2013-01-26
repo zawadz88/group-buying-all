@@ -1,4 +1,4 @@
-package pl.edu.pw.eiti.groupbuying.web.admin.security;
+package pl.edu.pw.eiti.groupbuying.security.core;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

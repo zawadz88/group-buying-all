@@ -29,4 +29,26 @@
 		</authentication-provider>
 	</authentication-manager>
 	
+	<beans:bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder"/>
+	
+	<beans:bean class="org.springframework.security.authentication.dao.ReflectionSaltSource" id="saltSource">
+		<beans:property name="userPropertyToUse" value="salt"/>
+	</beans:bean>
+
+	<beans:bean id="myLogoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+		<beans:property name="defaultTargetUrl" value="/" />
+    	<beans:property name="alwaysUseDefaultTargetUrl" value="true" />
+	</beans:bean>
+
+ 	<beans:bean id="jdbcUserServiceCustom" class="pl.edu.pw.eiti.groupbuying.security.core.CustomJdbcDaoImpl">
+		<beans:property name="dataSource" ref="dataSource"/>
+		<beans:property name="enableGroups" value="false"/>
+		<beans:property name="enableAuthorities" value="true"/>
+		<beans:property name="usersByUsernameQuery">
+			<beans:value>select username, password, enabled, salt from admins where username = ?</beans:value>
+		</beans:property>	 
+		<beans:property name="authoritiesByUsernameQuery">
+			<beans:value>select username, authority from admin_authorities where username = ?</beans:value>
+		</beans:property>	 
+	</beans:bean>
 </beans:beans>

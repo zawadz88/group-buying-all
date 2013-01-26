@@ -9,6 +9,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 			/WEB-INF/mvc-dispatcher-servlet.xml
+			/WEB-INF/security-oauth2.xml
 			classpath:/pl/edu/pw/eiti/groupbuying/core/group-buying-core.xml
 		</param-value>
 	</context-param>

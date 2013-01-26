@@ -6,10 +6,9 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/magisterka-base.xml
 			/WEB-INF/magisterkaAdmin-servlet.xml
-			/WEB-INF/magisterka-security.xml
-			/WEB-INF/magisterka-flow.xml
+			/WEB-INF/magisterkaAdmin-security.xml
+			/WEB-INF/magisterkaAdmin-flow.xml
 			classpath:/pl/edu/pw/eiti/groupbuying/core/group-buying-core.xml
 		</param-value>
 	</context-param>

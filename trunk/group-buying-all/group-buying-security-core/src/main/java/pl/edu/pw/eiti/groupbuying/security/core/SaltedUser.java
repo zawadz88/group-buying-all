@@ -1,7 +1,7 @@
 /**
  * 
  */
-package pl.edu.pw.eiti.groupbuying.web.security;
+package pl.edu.pw.eiti.groupbuying.security.core;
 
 import java.util.List;
 
