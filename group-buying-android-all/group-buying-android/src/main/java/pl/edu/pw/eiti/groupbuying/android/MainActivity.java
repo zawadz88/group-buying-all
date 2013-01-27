@@ -55,4 +55,5 @@ public class MainActivity extends AbstractGroupBuyingActivity {
 	private boolean isConnected() {
 		return connectionRepository.findPrimaryConnection(GroupBuyingApi.class) != null;
 	}
+	
 }
