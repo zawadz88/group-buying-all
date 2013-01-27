@@ -86,8 +86,9 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 		protected void onPostExecute(Offer result) {
 			dismissProgressDialog();
 			processException(exception);
-			System.out.println("Offer: " + result.toString());
-			offerView.setText(result.toString());
+			if(result != null) {
+				offerView.setText(result.toString());
+			}
 		}
 	}
 }

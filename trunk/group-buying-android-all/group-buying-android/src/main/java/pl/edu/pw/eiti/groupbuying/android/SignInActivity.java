@@ -100,6 +100,7 @@ public class SignInActivity extends AbstractGroupBuyingActivity {
 
 	private void displayGreenhouseOptions() {
 		Intent intent = new Intent();
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.setClass(this, MainActivity.class);
 		startActivity(intent);
 		setResult(RESULT_OK);
