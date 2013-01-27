@@ -22,7 +22,7 @@
 	</http>
 	 
 	<authentication-manager alias="authenticationManager">
-		<authentication-provider user-service-ref="jdbcUserServiceCustom">
+		<authentication-provider user-service-ref="jdbcAdminUserService">
 			<password-encoder ref="passwordEncoder">
 				<salt-source ref="saltSource"/>
 			</password-encoder>
@@ -40,7 +40,7 @@
     	<beans:property name="alwaysUseDefaultTargetUrl" value="true" />
 	</beans:bean>
 
- 	<beans:bean id="jdbcUserServiceCustom" class="pl.edu.pw.eiti.groupbuying.security.core.CustomJdbcDaoImpl">
+ 	<beans:bean id="jdbcAdminUserService" class="pl.edu.pw.eiti.groupbuying.security.core.CustomJdbcDaoImpl">
 		<beans:property name="dataSource" ref="dataSource"/>
 		<beans:property name="enableGroups" value="false"/>
 		<beans:property name="enableAuthorities" value="true"/>
