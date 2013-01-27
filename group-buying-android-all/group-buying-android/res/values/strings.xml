@@ -9,4 +9,16 @@
 	<bool name="ga_auto_activity_tracking">true</bool>
 	<bool name="ga_debug">true</bool>
 	<bool name="ga_dryRun">true</bool>
+	<string name="client_id">${client.id}</string>
+	<string name="client_secret">${client.secret}</string>
+	<string name="connection_repository_encryption_password">${connection.repository.encryption.password}</string>
+	<string name="connection_repository_encryption_salt">${connection.repository.encryption.salt}</string>
+    <string name="base_url">${base.url}</string>
+    
+    <string name="sign_in">Sign In</string>
+    <string name="cancel">Cancel</string>
+    <!-- Image Content Descriptions -->
+
+    <string name="content_description_greenhouse_header">Greenhouse Header</string>
+    <string name="content_description_springsource_logo">SpringSource Logo</string>
 </resources>

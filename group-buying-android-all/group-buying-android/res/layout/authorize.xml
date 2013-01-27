@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:layout_gravity="fill_vertical"
+	android:background="#ffffff">
+
+	<FrameLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="#6DB33F"
+		android:layout_alignParentTop="true">
+
+	</FrameLayout>
+
+	<FrameLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true">
+		
+		<Button
+		    android:id="@+id/sign_in_button"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="center_horizontal"
+		    android:layout_marginLeft="30dp"
+		    android:layout_marginRight="30dp"
+		    android:text="@string/sign_in" />
+
+	</FrameLayout>
+	
+	<FrameLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true" >
+
+	</FrameLayout>
+
+</RelativeLayout>
