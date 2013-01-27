@@ -14,8 +14,7 @@
         http://www.springframework.org/schema/security/oauth2
         http://www.springframework.org/schema/security/spring-security-oauth2.xsd
         ">
-        
-		<!-- For S2OAuth endpoints -->
+  	<!-- For S2OAuth endpoints -->
 	<http   pattern="/oauth/token" 
 			create-session="stateless" 
 			authentication-manager-ref="clientAuthenticationManager" 
@@ -26,21 +25,19 @@
 		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
 		<!-- include this only if you need to authenticate clients via request parameters -->
 		<custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER" />
-		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
 
 	<!-- TODO uporządkować to gówno -->
-	<http use-expressions="true" auto-config="true">
+	<http use-expressions="true">
 		<!-- Authentication policy -->
 		<intercept-url pattern="/login.do" access="permitAll" />
 		<intercept-url pattern="/offers/*" access="isAuthenticated()" />
 		<intercept-url pattern="/**" access="permitAll"/>
 
 		<form-login login-page="/login.do" authentication-failure-url="/login.do?error=1"/>
-		<logout logout-url="/logout" invalidate-session="true" delete-cookies="JSESSIONID" />
-		
+		<logout logout-url="/logout" delete-cookies="JSESSIONID" />
+	
 		<custom-filter ref="resourceServerFilter" before="EXCEPTION_TRANSLATION_FILTER" />
-		<access-denied-handler ref="oauthAccessDeniedHandler" />
 	</http>
 
 	<authentication-manager alias="authenticationManager">
@@ -102,8 +99,6 @@
 		<beans:property name="authenticationManager" ref="clientAuthenticationManager" />
 	</beans:bean>
 
-	<beans:bean id="oauthAccessDeniedHandler" class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
-	
 	<authentication-manager id="clientAuthenticationManager" xmlns="http://www.springframework.org/schema/security">
 		<authentication-provider user-service-ref="clientDetailsUserService" />
 	</authentication-manager>
