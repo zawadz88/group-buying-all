@@ -21,26 +21,26 @@
 		<access-denied-handler error-page="/login.do"/>
 	</http>
  
+	<beans:bean id="myLogoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+	    <beans:property name="defaultTargetUrl" value="/" />
+	    <beans:property name="alwaysUseDefaultTargetUrl" value="true" />
+	</beans:bean>
+	
 	<authentication-manager alias="authenticationManager">
-		<authentication-provider user-service-ref="jdbcUserServiceCustom">
+		<authentication-provider user-service-ref="jdbcSellerUserService">
 			<password-encoder ref="passwordEncoder">
 				<salt-source ref="saltSource"/>
 			</password-encoder>
 		</authentication-provider>
 	</authentication-manager>
 
-	<beans:bean id="myLogoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
-	    <beans:property name="defaultTargetUrl" value="/" />
-	    <beans:property name="alwaysUseDefaultTargetUrl" value="true" />
-	</beans:bean>
-	
 	<beans:bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder"/>
 
 	<beans:bean class="org.springframework.security.authentication.dao.ReflectionSaltSource" id="saltSource">
 		<beans:property name="userPropertyToUse" value="salt"/>
 	</beans:bean>
 
- 	<beans:bean id="jdbcUserServiceCustom" class="pl.edu.pw.eiti.groupbuying.web.security.ChangePasswordJdbcDaoImpl">
+ 	<beans:bean id="jdbcSellerUserService" class="pl.edu.pw.eiti.groupbuying.web.security.ChangePasswordJdbcDaoImpl">
 		<beans:property name="dataSource" ref="dataSource"/>
 
 		<beans:property name="enableGroups" value="false"/>

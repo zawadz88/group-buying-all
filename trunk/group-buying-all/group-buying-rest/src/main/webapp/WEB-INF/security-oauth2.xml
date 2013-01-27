@@ -41,11 +41,10 @@
 	</http>
 
 	<authentication-manager alias="authenticationManager">
-		<authentication-provider>
-			<user-service id="userDetailsService">
-				<user name="marissa" password="koala" authorities="ROLE_USER" />
-				<user name="paul" password="emu" authorities="ROLE_USER" />
-			</user-service>
+		<authentication-provider user-service-ref="jdbcClientUserService">
+			<password-encoder ref="passwordEncoder">
+				<salt-source ref="saltSource"/>
+			</password-encoder>
 		</authentication-provider>
 	</authentication-manager>
 
@@ -58,7 +57,27 @@
 			</list>
 		</constructor-arg>
 	</bean>
+	
+	<beans:bean class="org.springframework.security.authentication.encoding.ShaPasswordEncoder" id="passwordEncoder"/>
 
+	<beans:bean class="org.springframework.security.authentication.dao.ReflectionSaltSource" id="saltSource">
+		<beans:property name="userPropertyToUse" value="salt"/>
+	</beans:bean>
+
+ 	<beans:bean id="jdbcClientUserService" class="pl.edu.pw.eiti.groupbuying.security.core.CustomJdbcDaoImpl">
+		<beans:property name="dataSource" ref="dataSource"/>
+
+		<beans:property name="enableGroups" value="false"/>
+		<beans:property name="enableAuthorities" value="true"/>
+				
+		<beans:property name="usersByUsernameQuery">
+			<beans:value>select email, password, enabled, salt from clients where email = ?</beans:value>
+		</beans:property>
+		<beans:property name="authoritiesByUsernameQuery">
+			<beans:value>select username, authority from client_authorities where username = ?</beans:value>
+		</beans:property>	 
+		 
+	</beans:bean>
 
 	<!-- For S2OAuth endpoints -->
 	<authentication-manager id="clientAuthenticationManager" xmlns="http://www.springframework.org/schema/security">
