@@ -1,5 +1,5 @@
 /*
-SQLyog Community v9.61 
+SQLyog Community v10.51 
 MySQL - 5.5.27 : Database - test
 *********************************************************************
 */
@@ -21,8 +21,8 @@ USE `test`;
 DROP TABLE IF EXISTS `admin_authorities`;
 
 CREATE TABLE `admin_authorities` (
-  `username` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `authority` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `authority` varchar(50) NOT NULL,
   KEY `fk_admin_authorities_admins` (`username`),
   CONSTRAINT `fk_admin_authorities_admins` FOREIGN KEY (`username`) REFERENCES `admins` (`username`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -36,12 +36,12 @@ insert  into `admin_authorities`(`username`,`authority`) values ('aaa','ROLE_ADM
 DROP TABLE IF EXISTS `admins`;
 
 CREATE TABLE `admins` (
-  `username` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `password` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
   `enabled` tinyint(1) NOT NULL,
-  `salt` varchar(25) CHARACTER SET latin1 NOT NULL,
-  `email` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `phone_number` varchar(15) CHARACTER SET latin1 DEFAULT NULL,
+  `salt` varchar(25) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `phone_number` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS `categories`;
 
 CREATE TABLE `categories` (
   `category_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) CHARACTER SET latin1 NOT NULL,
+  `name` varchar(200) NOT NULL,
   PRIMARY KEY (`category_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
@@ -68,8 +68,8 @@ insert  into `categories`(`category_id`,`name`) values (1,'Gastronomia'),(2,'Tur
 DROP TABLE IF EXISTS `client_authorities`;
 
 CREATE TABLE `client_authorities` (
-  `username` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `authority` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `authority` varchar(50) NOT NULL,
   KEY `fk_client_authorities_clients` (`username`),
   CONSTRAINT `fk_client_authorities_clients` FOREIGN KEY (`username`) REFERENCES `clients` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -83,15 +83,15 @@ insert  into `client_authorities`(`username`,`authority`) values ('zawadz88@gmai
 DROP TABLE IF EXISTS `clients`;
 
 CREATE TABLE `clients` (
-  `email` varchar(64) CHARACTER SET latin1 NOT NULL,
-  `password` varchar(64) CHARACTER SET latin1 NOT NULL,
+  `email` varchar(64) NOT NULL,
+  `password` varchar(64) NOT NULL,
   `salt` varchar(50) NOT NULL,
-  `phone_number` varchar(64) CHARACTER SET latin1 NOT NULL,
-  `first_name` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `last_name` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `street` varchar(150) CHARACTER SET latin1 NOT NULL,
-  `postal_code` varchar(20) CHARACTER SET latin1 NOT NULL,
-  `city` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `phone_number` varchar(64) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `street` varchar(150) NOT NULL,
+  `postal_code` varchar(20) NOT NULL,
+  `city` varchar(100) NOT NULL,
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -111,11 +111,9 @@ CREATE TABLE `oauth_access_token` (
   `client_id` varchar(256) DEFAULT NULL,
   `authentication` blob,
   `refresh_token` varchar(256) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `oauth_access_token` */
-
-insert  into `oauth_access_token`(`token_id`,`token`,`authentication_id`,`user_name`,`client_id`,`authentication`,`refresh_token`) values ('86ab80a0feab57b1829f5515a73f8b8f','¨Ì\0sr\0Corg.springframework.security.oauth2.common.DefaultOAuth2AccessToken≤û6$˙Œ\0L\0additionalInformationt\0Ljava/util/Map;L\0\nexpirationt\0Ljava/util/Date;L\0refreshTokent\0?Lorg/springframework/security/oauth2/common/OAuth2RefreshToken;L\0scopet\0Ljava/util/Set;L\0	tokenTypet\0Ljava/lang/String;L\0valueq\0~\0xpsr\0java.util.Collections$EmptyMapY6ÖZ‹Á–\0\0xpsr\0java.util.DatehjÅKYt\0\0xpw\0\0<ó2ÃËxpsr\0%java.util.Collections$UnmodifiableSetÄí—èõÄU\0\0xr\0,java.util.Collections$UnmodifiableCollectionB\0ÄÀ^˜\0L\0ct\0Ljava/util/Collection;xpsr\0java.util.LinkedHashSetÿl◊Zï›*\0\0xr\0java.util.HashSet∫DÖïñ∏∑4\0\0xpw\0\0\0?@\0\0\0\0\0t\0readt\0writext\0bearert\0$f9a37875-82a9-4db8-b1c3-60b9c97c3c1a','1a28bced3bb8391ffb32f9f5f2285b93','paul','tonr','¨Ì\0sr\0Aorg.springframework.security.oauth2.provider.OAuth2AuthenticationΩ@bR\0L\0clientAuthenticationt\0CLorg/springframework/security/oauth2/provider/AuthorizationRequest;L\0userAuthenticationt\02Lorg/springframework/security/core/Authentication;xr\0Gorg.springframework.security.authentication.AbstractAuthenticationToken”™(~nGd\0Z\0\rauthenticatedL\0authoritiest\0Ljava/util/Collection;L\0detailst\0Ljava/lang/Object;xp\0sr\0&java.util.Collections$UnmodifiableList¸%1µÏé\0L\0listt\0Ljava/util/List;xr\0,java.util.Collections$UnmodifiableCollectionB\0ÄÀ^˜\0L\0cq\0~\0xpsr\0java.util.ArrayListxÅ“ô«aù\0I\0sizexp\0\0\0w\0\0\0sr\0Borg.springframework.security.core.authority.SimpleGrantedAuthority\0\0\0\0\0\06\0L\0rolet\0Ljava/lang/String;xpt\0	ROLE_USERxq\0~\0psr\0Horg.springframework.security.oauth2.provider.DefaultAuthorizationRequest∂õü¸>òÿ\0Z\0approvedL\0approvalParameterst\0Ljava/util/Map;L\0authoritiesq\0~\0L\0authorizationParametersq\0~\0L\0resolvedRedirectUriq\0~\0L\0resourceIdst\0Ljava/util/Set;L\0scopeq\0~\0xpsr\0java.util.HashMap⁄¡√`—\0F\0\nloadFactorI\0	thresholdxp?@\0\0\0\0\0w\0\0\0\0\0\0\0xsr\0java.util.HashSet∫DÖïñ∏∑4\0\0xpw\0\0\0?@\0\0\0\0\0sq\0~\0\rt\0ROLE_CLIENTxsq\0~\0?@\0\0\0\0\0w\0\0\0\0\0\0t\0usernamet\0pault\0\rclient_secrett\0secrett\0scopet\0\nread writet\0\ngrant_typet\0passwordt\0	client_idt\0tonrt\0passwordt\0emuxpsq\0~\0w\0\0\0?@\0\0\0\0\0t\0\rgreenhouseApixsr\0java.util.LinkedHashSetÿl◊Zï›*\0\0xq\0~\0w\0\0\0?@\0\0\0\0\0t\0readt\0writexsr\0Oorg.springframework.security.authentication.UsernamePasswordAuthenticationToken\0\0\0\0\0\06\0L\0credentialsq\0~\0L\0	principalq\0~\0xq\0~\0sq\0~\0sq\0~\0\0\0\0w\0\0\0q\0~\0xq\0~\01ppsr\02org.springframework.security.core.userdetails.User\0\0\0\0\0\06\0Z\0accountNonExpiredZ\0accountNonLockedZ\0credentialsNonExpiredZ\0enabledL\0authoritiesq\0~\0L\0passwordq\0~\0L\0usernameq\0~\0xpsr\0%java.util.Collections$UnmodifiableSetÄí—èõÄU\0\0xq\0~\0	sr\0java.util.TreeSet›òPìïÌá[\0\0xpsr\0Forg.springframework.security.core.userdetails.User$AuthorityComparator\0\0\0\0\0\06\0\0xpw\0\0\0q\0~\0xpt\0paul',NULL);
 
 /*Table structure for table `oauth_refresh_token` */
 
@@ -125,7 +123,7 @@ CREATE TABLE `oauth_refresh_token` (
   `token_id` varchar(256) DEFAULT NULL,
   `token` blob,
   `authentication` blob
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `oauth_refresh_token` */
 
@@ -135,18 +133,18 @@ DROP TABLE IF EXISTS `offers`;
 
 CREATE TABLE `offers` (
   `offer_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `description` varchar(1000) CHARACTER SET latin1 NOT NULL,
-  `street` varchar(200) CHARACTER SET latin1 NOT NULL,
-  `city` varchar(200) CHARACTER SET latin1 NOT NULL,
-  `postal_code` varchar(20) CHARACTER SET latin1 NOT NULL,
-  `image_url` varchar(300) CHARACTER SET latin1 NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `description` varchar(1000) NOT NULL,
+  `street` varchar(200) NOT NULL,
+  `city` varchar(200) NOT NULL,
+  `postal_code` varchar(20) NOT NULL,
+  `image_url` varchar(300) NOT NULL,
   `category_id` bigint(20) NOT NULL,
   `price` double NOT NULL,
   `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `end_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `state` char(1) CHARACTER SET latin1 NOT NULL,
-  `username` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `state` char(1) NOT NULL,
+  `username` varchar(50) NOT NULL,
   `lead` varchar(400) NOT NULL,
   `price_before_discount` double NOT NULL,
   PRIMARY KEY (`offer_id`),
@@ -165,24 +163,22 @@ insert  into `offers`(`offer_id`,`title`,`description`,`street`,`city`,`postal_c
 DROP TABLE IF EXISTS `persistent_logins`;
 
 CREATE TABLE `persistent_logins` (
-  `username` varchar(64) CHARACTER SET latin1 NOT NULL,
-  `series` varchar(64) CHARACTER SET latin1 NOT NULL,
-  `token` varchar(64) CHARACTER SET latin1 NOT NULL,
+  `username` varchar(64) NOT NULL,
+  `series` varchar(64) NOT NULL,
+  `token` varchar(64) NOT NULL,
   `last_used` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`series`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `persistent_logins` */
 
-insert  into `persistent_logins`(`username`,`series`,`token`,`last_used`) values ('zawadz88@gmail.com','wKRk+9mSkfvbInLC4UjcLw==','hx4RmKjE2inct8CKGQ0Xxg==','2013-01-24 20:38:08');
-
 /*Table structure for table `seller_authorities` */
 
 DROP TABLE IF EXISTS `seller_authorities`;
 
 CREATE TABLE `seller_authorities` (
-  `username` varchar(50) CHARACTER SET latin1 NOT NULL,
-  `authority` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `authority` varchar(50) NOT NULL,
   KEY `fk_seller_authorities_sellers` (`username`),
   CONSTRAINT `fk_seller_authorities_sellers` FOREIGN KEY (`username`) REFERENCES `sellers` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -196,16 +192,16 @@ insert  into `seller_authorities`(`username`,`authority`) values ('zawadz88@gmai
 DROP TABLE IF EXISTS `sellers`;
 
 CREATE TABLE `sellers` (
-  `email` varchar(150) CHARACTER SET latin1 NOT NULL,
-  `password` varchar(50) CHARACTER SET latin1 NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `password` varchar(50) NOT NULL,
   `enabled` tinyint(1) NOT NULL,
-  `salt` varchar(25) CHARACTER SET latin1 NOT NULL,
-  `phone_number` varchar(15) CHARACTER SET latin1 NOT NULL,
-  `trade` varchar(150) CHARACTER SET latin1 NOT NULL,
-  `description` varchar(1000) CHARACTER SET latin1 DEFAULT NULL,
-  `street` varchar(200) CHARACTER SET latin1 NOT NULL,
-  `postal_code` varchar(20) CHARACTER SET latin1 NOT NULL,
-  `city` varchar(200) CHARACTER SET latin1 NOT NULL,
+  `salt` varchar(25) NOT NULL,
+  `phone_number` varchar(15) NOT NULL,
+  `trade` varchar(150) NOT NULL,
+  `description` varchar(1000) DEFAULT NULL,
+  `street` varchar(200) NOT NULL,
+  `postal_code` varchar(20) NOT NULL,
+  `city` varchar(200) NOT NULL,
   `nip` varchar(100) NOT NULL,
   `name` varchar(200) NOT NULL,
   PRIMARY KEY (`email`)
