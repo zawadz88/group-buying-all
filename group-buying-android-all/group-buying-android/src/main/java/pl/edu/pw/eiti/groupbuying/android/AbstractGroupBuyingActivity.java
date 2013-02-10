@@ -30,7 +30,7 @@ import android.widget.Toast;
 /**
  * @author Roy Clarkson
  */
-public abstract class AbstractGroupBuyingActivity extends Activity implements GroupBuyingActivity {
+public abstract class AbstractGroupBuyingActivity extends Activity {
 	
 	protected static final String TAG = AbstractGroupBuyingActivity.class.getSimpleName();
 	
