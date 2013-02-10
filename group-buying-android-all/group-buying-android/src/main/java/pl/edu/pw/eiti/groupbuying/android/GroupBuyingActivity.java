@@ -20,7 +20,7 @@ package pl.edu.pw.eiti.groupbuying.android;
  */
 public interface GroupBuyingActivity {
 	
-	MainApplication getApplicationContext(); 
+	GroupBuyingApplication getApplicationContext(); 
 	
 	void showProgressDialog();
 	

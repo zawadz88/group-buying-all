@@ -40,8 +40,8 @@ public abstract class AbstractGroupBuyingActivity extends Activity implements Gr
 	//***************************************
     // GreenhouseActivity methods
     //***************************************
-	public MainApplication getApplicationContext() {
-		return (MainApplication) super.getApplicationContext();
+	public GroupBuyingApplication getApplicationContext() {
+		return (GroupBuyingApplication) super.getApplicationContext();
 	}
 	
 	public void showProgressDialog() {

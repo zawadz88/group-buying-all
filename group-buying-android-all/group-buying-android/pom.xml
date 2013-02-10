@@ -17,7 +17,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.google.android</groupId>
+			<groupId>android</groupId>
 			<artifactId>android</artifactId>
 			<scope>provided</scope>
 		</dependency>
@@ -27,14 +27,18 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.google.android.apps.easytracker</groupId>
-			<artifactId>easytracker-lib</artifactId>
-			<type>apklib</type>
-		</dependency>
-		<dependency>
 			<groupId>android.support</groupId>
 			<artifactId>compatibility-v4</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.google.android.analytics</groupId>
+			<artifactId>google-analytics-android</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android.gcm</groupId>
+			<artifactId>gcm-client</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>com.viewpagerindicator</groupId>
 			<artifactId>viewpagerindicator-library</artifactId>
