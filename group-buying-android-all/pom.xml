@@ -10,6 +10,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.6</java.version>
 		<platform.version>4.2_r1</platform.version>
 		<android.platform>17</android.platform>
 		<spring-android.version>1.0.1.RELEASE</spring-android.version>
@@ -25,7 +26,6 @@
 		<lifecycle.mapping.plugin.version>1.0.0</lifecycle.mapping.plugin.version>
 		<google.analytics.android.version>2.0b4</google.analytics.android.version>
 		<com.facebook.sdk.version>3.0.0-SNAPSHOT</com.facebook.sdk.version>
-		<viewpager.indicator.version>1.0.0-SNAPSHOT</viewpager.indicator.version>
 		<android.query.version>0.24.3</android.query.version>
 		<google.cloud.messaging.client.version>3</google.cloud.messaging.client.version>
 	</properties>
@@ -58,19 +58,6 @@
 				<artifactId>maps</artifactId>
 				<version>16_r3</version>
 				<scope>provided</scope>
-			</dependency>
-			
-			<dependency>
-				<groupId>com.viewpagerindicator</groupId>
-				<artifactId>viewpagerindicator-library</artifactId>
-				<type>apklib</type>
-				<version>${viewpager.indicator.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.facebook</groupId>
-				<artifactId>facebook-android-sdk-mvn</artifactId>
-				<type>apklib</type>
-				<version>${com.facebook.sdk.version}</version>
 			</dependency>
 			
 			<dependency>
@@ -133,16 +120,6 @@
 					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
 					<artifactId>android-maven-plugin</artifactId>
 					<version>${maven.android.plugin.version}</version>
-
-					<configuration>
-						<sdk>
-							<platform>${android.platform}</platform>
-						</sdk>
-						<zipalign>
-							<verbose>true</verbose>
-						</zipalign>
-						<undeployBeforeDeploy>true</undeployBeforeDeploy>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -179,6 +156,8 @@
 		</pluginManagement>
 	</build>
 	<modules>
+		<module>facebook-android-sdk</module>
+		<module>viewpagerindicator-library</module>
 		<module>group-buying-android</module>
 	</modules>
 
