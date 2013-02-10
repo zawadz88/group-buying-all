@@ -1,5 +1,8 @@
-package pl.edu.pw.eiti.groupbuying.android;
+package pl.edu.pw.eiti.groupbuying.android.adapter;
 
+import pl.edu.pw.eiti.groupbuying.android.R;
+import pl.edu.pw.eiti.groupbuying.android.R.drawable;
+import pl.edu.pw.eiti.groupbuying.android.fragment.TestFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -7,7 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.viewpagerindicator.IconPagerAdapter;
 
 
-class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
+public class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
     protected static final String[] CONTENT = new String[] { "This", "Is", "A", "Test", };
     protected static final int[] ICONS = new int[] {
             R.drawable.perm_group_calendar,
