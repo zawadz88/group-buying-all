@@ -40,15 +40,18 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>com.viewpagerindicator</groupId>
+			<groupId>pl.edu.pw.eiti.groupbuying.android</groupId>
 			<artifactId>viewpagerindicator-library</artifactId>
 			<type>apklib</type>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.facebook</groupId>
-			<artifactId>facebook-android-sdk-mvn</artifactId>
+			<groupId>pl.edu.pw.eiti.groupbuying.android</groupId>
+			<artifactId>facebook-android-sdk</artifactId>
 			<type>apklib</type>
+			<version>${project.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-auth</artifactId>
@@ -106,8 +109,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -132,6 +135,13 @@
 					<resourceDirectory>${project.build.directory}/filtered-res</resourceDirectory>
 
 					<deleteConflictingFiles>true</deleteConflictingFiles>
+					<sdk>
+						<platform>${android.platform}</platform>
+					</sdk>
+					<zipalign>
+						<verbose>true</verbose>
+					</zipalign>
+					<undeployBeforeDeploy>true</undeployBeforeDeploy>
 				</configuration>
 				<executions>
 					<execution>
