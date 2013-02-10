@@ -19,12 +19,12 @@
 		<dependency>
 			<groupId>pl.edu.pw.eiti.groupbuying</groupId>
 			<artifactId>group-buying-core</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>pl.edu.pw.eiti.groupbuying</groupId>
 			<artifactId>group-buying-security-core</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- Spring Security -->
