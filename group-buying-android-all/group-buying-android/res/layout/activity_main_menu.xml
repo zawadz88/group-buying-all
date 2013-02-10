@@ -21,14 +21,37 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/com_facebook_blue" >
+
+        <ImageView
+            android:id="@+id/logoIcon"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/icon" />
+
+        <ImageView
+            android:id="@+id/optionsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:padding="5dip"
+            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light" />
+        
+    </RelativeLayout>
+
     <com.viewpagerindicator.TitlePageIndicator
         android:id="@+id/indicator"
         android:padding="10dip"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:background="#18FF0000"
+        android:background="#FFFFFFFF"
         android:textColor="#AA000000"
-        app:footerColor="#FFAA2222"
+        app:footerColor="@color/com_facebook_blue"
         app:footerLineHeight="1dp"
         app:footerIndicatorHeight="3dp"
         app:footerIndicatorStyle="none"
