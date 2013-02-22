@@ -3,7 +3,6 @@ package pl.edu.pw.eiti.groupbuying.android.api;
 import java.io.Serializable;
 import java.util.Date;
 
-
 public class Offer implements Serializable {
 
 	private int offerId;
@@ -134,6 +133,26 @@ public class Offer implements Serializable {
 
 	public void setPriceBeforeDiscount(double priceBeforeDiscount) {
 		this.priceBeforeDiscount = priceBeforeDiscount;
+	}
+
+	public Offer(int offerId, String title, String lead, String description,
+			Address address, String imageUrl, double price,
+			double priceBeforeDiscount, Date startDate, Date endDate,
+			State state, Category category, String username) {
+		super();
+		this.offerId = offerId;
+		this.title = title;
+		this.lead = lead;
+		this.description = description;
+		this.address = address;
+		this.imageUrl = imageUrl;
+		this.price = price;
+		this.priceBeforeDiscount = priceBeforeDiscount;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.state = state;
+		this.category = category;
+		this.username = username;
 	}
 
 	@Override

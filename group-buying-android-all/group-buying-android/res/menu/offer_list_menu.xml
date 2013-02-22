@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_item_options"
+        android:icon="@drawable/abs__ic_menu_moreoverflow_holo_dark"
+        android:showAsAction="ifRoom|withText"
+        android:title="Options">
+    	<menu>
+            <item android:id="@+id/options_menu_settings"
+                  android:title="Settings" />
+            <item android:id="@+id/options_menu_coupons"
+                  android:title="My coupons" />
+            <item android:id="@+id/options_menu_refresh"
+                  android:title="Refresh" />
+        </menu>    
+    </item>
+
+</menu>

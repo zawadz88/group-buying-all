@@ -1,9 +1,9 @@
 package pl.edu.pw.eiti.groupbuying.android.adapter;
 
-import pl.edu.pw.eiti.groupbuying.android.fragment.OffersFromTheCityFragment;
-import pl.edu.pw.eiti.groupbuying.android.fragment.OffersNearbyFragment;
-import pl.edu.pw.eiti.groupbuying.android.fragment.OffersShoppingFragment;
-import pl.edu.pw.eiti.groupbuying.android.fragment.OffersTravelFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.CityOffersFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.NearbyOffersFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.ShoppingOffersFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.TravelOffersFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -31,16 +31,16 @@ public class OffersFragmentAdapter extends FragmentPagerAdapter {
     	Fragment fragment = null;
     	switch(position) {
     	case OFFERS_NEARBY_FRAGMENT:
-    		fragment = OffersNearbyFragment.newInstance(fragmentTitles[position]);
+    		fragment = NearbyOffersFragment.newInstance(fragmentTitles[position]);
     		break;
     	case OFFERS_FROM_THE_CITY_FRAGMENT:
-    		fragment = OffersFromTheCityFragment.newInstance(fragmentTitles[position]);
+    		fragment = CityOffersFragment.newInstance(fragmentTitles[position]);
     		break;
     	case OFFERS_SHOPPING_FRAGMENT:
-    		fragment = OffersShoppingFragment.newInstance(fragmentTitles[position]);
+    		fragment = ShoppingOffersFragment.newInstance(fragmentTitles[position]);
     		break;
     	case OFFERS_TRAVEL_FRAGMENT:
-    		fragment = OffersTravelFragment.newInstance(fragmentTitles[position]);
+    		fragment = TravelOffersFragment.newInstance(fragmentTitles[position]);
     		break;
     	default:
     		throw new IllegalArgumentException("Unsupported position: " + position);

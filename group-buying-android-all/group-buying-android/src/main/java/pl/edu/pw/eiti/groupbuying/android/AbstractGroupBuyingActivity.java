@@ -19,24 +19,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.SherlockActivity;
 
 /**
  * @author Roy Clarkson
  */
-public abstract class AbstractGroupBuyingActivity extends Activity {
+public abstract class AbstractGroupBuyingActivity extends SherlockActivity {
 	
 	protected static final String TAG = AbstractGroupBuyingActivity.class.getSimpleName();
 	
 	private ProgressDialog progressDialog;
 	
-	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		//setTheme(R.style.Theme_Sherlock);
+	}
 	//***************************************
     // GreenhouseActivity methods
     //***************************************

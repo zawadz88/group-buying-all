@@ -1,16 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/offer"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/buyLayout" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <pl.edu.pw.eiti.groupbuying.android.view.AspectRatioImageView
+                android:id="@+id/offerImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/offerTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/offerImage"
+                android:textSize="20sp"
+                android:text="asdsadsa sdad sadsad" />
+            <TextView
+                android:id="@+id/offerLead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/offerTitle"
+                android:textSize="18sp"
+                android:text="XXX dsa asd asd sad dsd" />
+            <TextView
+                android:id="@+id/offerDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/offerLead"
+                android:textSize="16sp"
+                android:text="XXX sad sad sad" />
+        </RelativeLayout>
+    </ScrollView>
+    
+    <RelativeLayout
+        android:id="@+id/buyLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="XXX"
-         >
+		android:layout_alignParentBottom="true" >
 
-    </TextView>
+        <Button
+            android:id="@+id/buyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip"
+            android:paddingLeft="15dip"
+            android:paddingRight="15dip"
+			android:text="@string/buy_now_button_text"
+ />
+    </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
