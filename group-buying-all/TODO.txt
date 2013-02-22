@@ -2,12 +2,13 @@
 #- poprawa kodowania haseł dla klientów
 #- uwspólnienie klientów i sprzedawców? - to sie pobawimy dopiero przy oauth
 #- persistent_logins rozroznic - ROZWIAZANO przez wywalenie dla admina :)
-- OAuth2 serwer + Android
+#- OAuth2 serwer + Android
 - interfejs androida podstawowy bez logiki
 - wyciąganie dobre ofert
 - zakup ofert + wyświetlanie zakupionych ofert
 - QR code + NFC
 - miejsca w pobliżu przez SOLR lub Redis
+- notyfikacje
 - Redis do ofert w ogóle
 - Async z Servletu 3.0
 - poprawa walidacji formularzy
