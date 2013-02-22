@@ -59,6 +59,11 @@
 				<version>16_r3</version>
 				<scope>provided</scope>
 			</dependency>
+			<dependency>
+				<groupId>com.androidquery</groupId>
+				<artifactId>android-query-full</artifactId>
+				<version>${android.query.version}</version>
+			</dependency>
 			
 			<dependency>
 				<groupId>org.springframework.android</groupId>
@@ -159,6 +164,7 @@
 		<module>facebook-android-sdk</module>
 		<module>viewpagerindicator-library</module>
 		<module>group-buying-android</module>
+		<module>actionbarsherlock</module>
 	</modules>
 
 
