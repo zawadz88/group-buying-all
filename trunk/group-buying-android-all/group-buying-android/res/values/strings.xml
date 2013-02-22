@@ -23,4 +23,6 @@
 
     <string name="content_description_greenhouse_header">Greenhouse Header</string>
     <string name="content_description_springsource_logo">SpringSource Logo</string>
+    <string name="buy_now_button_text">Buy now!</string>
+    
 </resources>

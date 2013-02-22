@@ -38,6 +38,17 @@
 			<groupId>com.google.android.gcm</groupId>
 			<artifactId>gcm-client</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.androidquery</groupId>
+			<artifactId>android-query-full</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.actionbarsherlock</groupId>
+			<artifactId>actionbarsherlock</artifactId>
+			<version>4.2.0</version>
+			<type>apklib</type>
+		</dependency>
 		
 		<dependency>
 			<groupId>pl.edu.pw.eiti.groupbuying.android</groupId>
@@ -51,7 +62,7 @@
 			<type>apklib</type>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-auth</artifactId>

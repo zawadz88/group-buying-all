@@ -1,5 +1,6 @@
 package pl.edu.pw.eiti.groupbuying.android;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,7 +9,7 @@ import android.os.SystemClock;
 import com.google.analytics.tracking.android.EasyTracker;
 
 
-public class SplashScreenActivity extends AbstractGroupBuyingActivity {
+public class SplashScreenActivity extends Activity {
 
 	private SplashThread splashTread = null;
 
@@ -16,8 +17,6 @@ public class SplashScreenActivity extends AbstractGroupBuyingActivity {
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-				
 		setContentView(R.layout.activity_splash_screen);
 		
 		splashTread = (SplashThread) getLastNonConfigurationInstance();
