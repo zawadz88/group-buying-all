@@ -1,6 +1,6 @@
 /*
 SQLyog Community v10.51 
-MySQL - 5.5.27 : Database - test
+MySQL - 5.5.29 : Database - test
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.5.27 : Database - test
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`test` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`test` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `test`;
 
@@ -78,6 +78,23 @@ CREATE TABLE `client_authorities` (
 
 insert  into `client_authorities`(`username`,`authority`) values ('zawadz88@gmail.com','ROLE_USER'),('zawadz88a@gmail.com','ROLE_USER');
 
+/*Table structure for table `client_offers` */
+
+DROP TABLE IF EXISTS `client_offers`;
+
+CREATE TABLE `client_offers` (
+  `email` varchar(64) NOT NULL,
+  `offer_id` bigint(20) NOT NULL,
+  `use_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `security_key` varchar(64) NOT NULL,
+  PRIMARY KEY (`email`,`offer_id`),
+  KEY `FK_client_offers_offers` (`offer_id`),
+  CONSTRAINT `FK_client_offers_clients` FOREIGN KEY (`email`) REFERENCES `clients` (`email`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_client_offers_offers` FOREIGN KEY (`offer_id`) REFERENCES `offers` (`offer_id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `client_offers` */
+
 /*Table structure for table `clients` */
 
 DROP TABLE IF EXISTS `clients`;
@@ -134,19 +151,21 @@ DROP TABLE IF EXISTS `offers`;
 CREATE TABLE `offers` (
   `offer_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
+  `lead` varchar(400) NOT NULL,
   `description` varchar(1000) NOT NULL,
-  `street` varchar(200) NOT NULL,
+  `conditions` varchar(1000) NOT NULL,
+  `category_id` bigint(20) NOT NULL,
   `city` varchar(200) NOT NULL,
   `postal_code` varchar(20) NOT NULL,
   `image_url` varchar(300) NOT NULL,
-  `category_id` bigint(20) NOT NULL,
-  `price` double NOT NULL,
   `start_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `end_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `state` char(1) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `lead` varchar(400) NOT NULL,
+  `price` double NOT NULL,
   `price_before_discount` double NOT NULL,
+  `state` char(1) NOT NULL,
+  `street` varchar(200) NOT NULL,
+  `end_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `expiration_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `username` varchar(50) NOT NULL,
   PRIMARY KEY (`offer_id`),
   KEY `FK_OFFERS_USERS` (`username`),
   KEY `FK_OFFERS_CATEGORIES` (`category_id`),
@@ -156,7 +175,7 @@ CREATE TABLE `offers` (
 
 /*Data for the table `offers` */
 
-insert  into `offers`(`offer_id`,`title`,`description`,`street`,`city`,`postal_code`,`image_url`,`category_id`,`price`,`start_date`,`end_date`,`state`,`username`,`lead`,`price_before_discount`) values (13,'oferta1','opis','Or??na 48','Warsaw','02-938','http://aaa.pl',1,2,'2012-04-09 00:00:00','2012-04-11 00:00:00','0','zawadz88@gmail.com','asddsadsasa',2);
+insert  into `offers`(`offer_id`,`title`,`lead`,`description`,`conditions`,`category_id`,`city`,`postal_code`,`image_url`,`start_date`,`price`,`price_before_discount`,`state`,`street`,`end_date`,`expiration_date`,`username`) values (13,'oferta1','asddsadsasa','opis','',1,'Warsaw','02-938','http://aaa.pl','2012-04-09 00:00:00',2,2,'0','Or??na 48','2012-04-11 00:00:00','0000-00-00 00:00:00','zawadz88@gmail.com');
 
 /*Table structure for table `persistent_logins` */
 
