@@ -37,6 +37,14 @@
 					<form:errors path="description" />
 				</td>
 			</tr>
+			
+			<tr>
+				<td><spring:message code="offer.conditions.label" /></td>
+				<td>
+					<form:input path="conditions" />
+					<form:errors path="conditions" />
+				</td>
+			</tr>
 			<tr>
 				<td><spring:message code="offer.imageUrl.label" /></td>
 				<td>

@@ -3,36 +3,72 @@ package pl.edu.pw.eiti.groupbuying.core.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity
+@Table(name = "offers")
 public class Offer implements Serializable {
 
+	@Id
+	@Column(name="offer_id")
 	private int offerId;
 
+	@Column(name="title")
 	private String title;
 
+	@Column(name="lead")
 	private String lead;
 
+	@Column(name="description")
 	private String description;
 
+	@Column(name="conditions")
+	private String conditions;
+
+	@Embedded
 	private Address address = new Address();
 
+	@Column(name="image_url")
 	private String imageUrl;
 
+	@Column(name="price")
 	private double price;
 
+	@Column(name="price_before_discount")
 	private double priceBeforeDiscount;
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	@Column(name="start_date")
 	private Date startDate;
 
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	@Column(name="end_date")
 	private Date endDate;
+	
+	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	@Column(name="expiration_date")
+	private Date expirationDate;
 
+	@Column(name="state")
+    @Enumerated(EnumType.ORDINAL)
 	private State state;
 
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="category_id")
 	private Category category = new Category();
 
+	@Column(name="username")
 	private String username;
 
 	public int getOfferId() {
@@ -139,28 +175,36 @@ public class Offer implements Serializable {
 		this.priceBeforeDiscount = priceBeforeDiscount;
 	}
 
+	public String getConditions() {
+		return conditions;
+	}
+
+	public void setConditions(String conditions) {
+		this.conditions = conditions;
+	}
+
+	public Date getExpirationDate() {
+		return expirationDate;
+	}
+
+	public void setExpirationDate(Date expirationDate) {
+		this.expirationDate = expirationDate;
+	}
+
 	@Override
 	public String toString() {
 		return "Offer [offerId=" + offerId + ", title=" + title + ", lead="
-				+ lead + ", description=" + description + ", address="
-				+ address + ", imageUrl=" + imageUrl + ", price=" + price
-				+ ", priceBeforeDiscount=" + priceBeforeDiscount
-				+ ", startDate=" + startDate + ", endDate=" + endDate
+				+ lead + ", description=" + description + ", conditions="
+				+ conditions + ", address=" + address + ", imageUrl="
+				+ imageUrl + ", price=" + price + ", priceBeforeDiscount="
+				+ priceBeforeDiscount + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate
 				+ ", state=" + state + ", category=" + category + ", username="
 				+ username + "]";
 	}
 
 	public static enum State {
-		WAITING(0), ACTIVE(1), FINISHED(2);
-		private int value;
-
-		private State(final int number) {
-			this.value = number;
-		}
-
-		public int getValue() {
-			return value;
-		}
+		WAITING, ACTIVE, FINISHED;
 
 		public static State getState(final int value) {
 			State state = null;

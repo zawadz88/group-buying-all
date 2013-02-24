@@ -15,6 +15,7 @@ public class OfferValidator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "offer.title.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lead", "offer.lead.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "offer.description.required");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "conditions", "offer.conditions.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "imageUrl", "offer.imageUrl.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "price", "offer.price.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "priceBeforeDiscount", "offer.priceBeforeDiscount.required");

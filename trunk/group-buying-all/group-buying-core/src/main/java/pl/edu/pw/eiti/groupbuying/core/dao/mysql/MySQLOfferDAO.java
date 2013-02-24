@@ -5,7 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.undo.StateEdit;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Address;
@@ -39,20 +41,25 @@ public class MySQLOfferDAO implements OfferDAO {
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
-	public boolean saveOffer(Offer offer) {
-		jdbcTemplate.update(INSERT_OFFER, new Object[] {offer.getTitle(), offer.getLead(), offer.getDescription(),
+	@Transactional
+	public boolean saveOffer(final Offer offer) {
+		entityManager.persist(offer);
+		/*jdbcTemplate.update(INSERT_OFFER, new Object[] {offer.getTitle(), offer.getLead(), offer.getDescription(),
 				offer.getAddress().getStreet(), offer.getAddress().getCity(), offer.getAddress().getPostalCode(),
-				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getPriceBeforeDiscount(), offer.getStartDate(), offer.getEndDate(), Offer.State.WAITING.getValue(), offer.getUsername()});
+				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getPriceBeforeDiscount(), offer.getStartDate(), offer.getEndDate(), Offer.State.WAITING.getValue(), offer.getUsername()});*/
 		return true;
 	}
 	
 	@Override
-	public void updateOffer(Offer offer) {
+	public void updateOffer(final Offer offer) {
 		jdbcTemplate.update(UPDATE_OFFER, new Object[] {offer.getTitle(), offer.getLead(), offer.getDescription(),
 				offer.getAddress().getStreet(), offer.getAddress().getCity(), offer.getAddress().getPostalCode(),
-				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), offer.getState().getValue(), offer.getUsername(), offer.getOfferId()});
+				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), offer.getState().ordinal(), offer.getUsername(), offer.getOfferId()});
 
 		
 	}
@@ -75,7 +82,7 @@ public class MySQLOfferDAO implements OfferDAO {
 	private List<Offer> getOffersForState(State state) {
 		final List<Offer> offers = new ArrayList<Offer>();
 		try {
-			jdbcTemplate.query(SELECT_OFFERS, new Object[] {state.getValue()}, new RowCallbackHandler() {
+			jdbcTemplate.query(SELECT_OFFERS, new Object[] {state.ordinal()}, new RowCallbackHandler() {
 				
 				@Override
 				public void processRow(ResultSet rs) throws SQLException {
@@ -148,7 +155,7 @@ public class MySQLOfferDAO implements OfferDAO {
 	private List<Offer> getOffersForState(final String username, final State state) {
 		final List<Offer> offers = new ArrayList<Offer>();
 		try {
-			jdbcTemplate.query(SELECT_OFFERS_BY_USERNAME, new Object[] {username, state.getValue()}, new RowCallbackHandler() {
+			jdbcTemplate.query(SELECT_OFFERS_BY_USERNAME, new Object[] {username, state.ordinal()}, new RowCallbackHandler() {
 				
 				@Override
 				public void processRow(ResultSet rs) throws SQLException {

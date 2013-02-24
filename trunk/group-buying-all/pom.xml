@@ -253,7 +253,25 @@
 				<artifactId>commons-dbcp</artifactId>
 				<version>1.4</version>
 			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>4.1.9.Final</version>
+				<!-- will come with Hibernate core -->
+			</dependency>
 
+			<dependency>
+				<groupId>javax.transaction</groupId>
+				<artifactId>jta</artifactId>
+				<version>1.1</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>cglib</groupId>
+				<artifactId>cglib</artifactId>
+				<version>2.2.2</version>
+			</dependency>
+			
 			<!-- File Upload -->
 			<!-- <dependency> <groupId>commons-fileupload</groupId> <artifactId>commons-fileupload</artifactId> 
 				<version>1.2.2</version> </dependency> <dependency> <groupId>commons-io</groupId> 
@@ -292,12 +310,12 @@
 		</dependencies>
 
 	</dependencyManagement>
-	
+
 	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
-         			<groupId>org.apache.maven.plugins</groupId>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.0</version>
 				</plugin>

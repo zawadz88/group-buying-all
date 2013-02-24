@@ -38,6 +38,13 @@
 				</td>
 			</tr>
 			<tr>
+				<td><spring:message code="offer.description.label" /></td>
+				<td>
+					<form:input path="description" />
+					<form:errors path="description" />
+				</td>
+			</tr>
+			<tr>
 				<td><spring:message code="offer.imageUrl.label" /></td>
 				<td>
 					<form:input path="imageUrl" />

@@ -1,6 +1,6 @@
 /*
 SQLyog Community v10.51 
-MySQL - 5.5.29 : Database - test
+MySQL - 5.5.27 : Database - test
 *********************************************************************
 */
 
@@ -12,7 +12,7 @@ MySQL - 5.5.29 : Database - test
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`test` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`test` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 USE `test`;
 
@@ -38,7 +38,7 @@ DROP TABLE IF EXISTS `admins`;
 CREATE TABLE `admins` (
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
-  `enabled` tinyint(1) NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
   `salt` varchar(25) NOT NULL,
   `email` varchar(50) NOT NULL,
   `phone_number` varchar(15) DEFAULT NULL,
@@ -102,6 +102,7 @@ DROP TABLE IF EXISTS `clients`;
 CREATE TABLE `clients` (
   `email` varchar(64) NOT NULL,
   `password` varchar(64) NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
   `salt` varchar(50) NOT NULL,
   `phone_number` varchar(64) NOT NULL,
   `first_name` varchar(100) NOT NULL,
@@ -114,7 +115,7 @@ CREATE TABLE `clients` (
 
 /*Data for the table `clients` */
 
-insert  into `clients`(`email`,`password`,`salt`,`phone_number`,`first_name`,`last_name`,`street`,`postal_code`,`city`) values ('zawadz88@gmail.com','7c2c606721d27e38a168ee6a0ca47862f0416da2','9.279226179353936E8','233336','Piotr','Zawadzki','Or??na 48','02-938','Warsaw'),('zawadz88a@gmail.com','72f7c121ef66cb0403a8a31184fdc2e47f4465f8','5.853564610400964E8','qqqqqq','qqqq','qqqq','Or??na 48','02-938','Warsaw');
+insert  into `clients`(`email`,`password`,`enabled`,`salt`,`phone_number`,`first_name`,`last_name`,`street`,`postal_code`,`city`) values ('zawadz88@gmail.com','7c2c606721d27e38a168ee6a0ca47862f0416da2',1,'9.279226179353936E8','233336','Piotr','Zawadzki','Or??na 48','02-938','Warsaw'),('zawadz88a@gmail.com','72f7c121ef66cb0403a8a31184fdc2e47f4465f8',1,'5.853564610400964E8','qqqqqq','qqqq','qqqq','Or??na 48','02-938','Warsaw');
 
 /*Table structure for table `oauth_access_token` */
 
@@ -204,7 +205,7 @@ CREATE TABLE `seller_authorities` (
 
 /*Data for the table `seller_authorities` */
 
-insert  into `seller_authorities`(`username`,`authority`) values ('zawadz88@gmail.com','ROLE_USER');
+insert  into `seller_authorities`(`username`,`authority`) values ('zawadz88@gmail.com','ROLE_USER'),('ttt','ROLE_USER');
 
 /*Table structure for table `sellers` */
 
@@ -213,7 +214,7 @@ DROP TABLE IF EXISTS `sellers`;
 CREATE TABLE `sellers` (
   `email` varchar(150) NOT NULL,
   `password` varchar(50) NOT NULL,
-  `enabled` tinyint(1) NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT '1',
   `salt` varchar(25) NOT NULL,
   `phone_number` varchar(15) NOT NULL,
   `trade` varchar(150) NOT NULL,
@@ -228,7 +229,7 @@ CREATE TABLE `sellers` (
 
 /*Data for the table `sellers` */
 
-insert  into `sellers`(`email`,`password`,`enabled`,`salt`,`phone_number`,`trade`,`description`,`street`,`postal_code`,`city`,`nip`,`name`) values ('zawadz88@gmail.com','935465469b6a216c7213f27b75071706bbee3145',1,'2.215009137433447E8','23333','?????óaaa','saddadsa','Or??na 48','02-938','Warsaw','1234566778','seeeellerrrr');
+insert  into `sellers`(`email`,`password`,`enabled`,`salt`,`phone_number`,`trade`,`description`,`street`,`postal_code`,`city`,`nip`,`name`) values ('ttt','dc5d9c3e70b7b844cc24bf16cb670cca41033002',1,'4.692781723418692E8','23333','?????óaaa','opis','Or??na 48','02-938','Warsaw','1234566778','F-D'),('zawadz88@gmail.com','935465469b6a216c7213f27b75071706bbee3145',1,'2.215009137433447E8','23333','?????óaaa','saddadsa','Or??na 48','02-938','Warsaw','1234566778','seeeellerrrr');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
