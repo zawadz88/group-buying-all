@@ -2,12 +2,19 @@ package pl.edu.pw.eiti.groupbuying.core.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Address implements Serializable {
 
+	@Column(name = "city")
 	private String city;
 
+	@Column(name = "street")
 	private String street;
-	
+
+	@Column(name = "postal_code")
 	private String postalCode;
 
 	public String getCity() {

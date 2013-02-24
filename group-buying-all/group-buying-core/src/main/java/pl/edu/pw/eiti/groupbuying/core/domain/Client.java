@@ -2,20 +2,36 @@ package pl.edu.pw.eiti.groupbuying.core.domain;
 
 import java.io.Serializable;
 
-public class Client implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-	private String email;
+@Entity
+@Table(name="clients")
+public class Client implements Serializable {
 	
+	@Id
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "password")
 	private String password;
 	
+	@Column(name = "first_name")
 	private String firstName;
-	
+
+	@Column(name = "last_name")
 	private String lastName;
 		
+	@Embedded
 	private Address address = new Address();
-	
+
+	@Column(name = "phone_number")
 	private String phoneNumber;
-	
+
+	@Column(name = "salt")
 	private String salt;
 
 	public String getPassword() {
