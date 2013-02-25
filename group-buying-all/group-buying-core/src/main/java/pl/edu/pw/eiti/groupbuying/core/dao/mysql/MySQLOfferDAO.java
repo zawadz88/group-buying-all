@@ -1,23 +1,18 @@
 package pl.edu.pw.eiti.groupbuying.core.dao.mysql;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowCallbackHandler;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
-import pl.edu.pw.eiti.groupbuying.core.domain.Address;
 import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
@@ -25,19 +20,7 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
 @Repository("offerDAO")
 public class MySQLOfferDAO implements OfferDAO {
 	
-	private static final String INSERT_OFFER = "insert into offers(title, lead, description, street, city, postal_code, image_url, category_id, price, price_before_discount, start_date, end_date, state, username) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-	
-	private static final String SELECT_CATEGORIES = "SELECT * FROM CATEGORIES";
-
-	private static final String SELECT_OFFERS_BY_USERNAME = "select o.*, c.name as category_name from offers o, categories c where username= ? and state = ? and o.category_id = c.category_id";
-	
-	private static final String SELECT_OFFERS = "select o.*, c.name as category_name from offers o, categories c where state = ? and o.category_id = c.category_id";
-
-	private static final String SELECT_OFFER_FOR_OFFER_ID = "select o.*, c.name as category_name from offers o, categories c where offer_id = ? and o.category_id = c.category_id";
-
 	private static final String SELECT_USERNAME_FROM_OFFER = "select username from offers where offer_id = ?";
-	
-	private static final String UPDATE_OFFER = "update offers set title = ?, lead = ?, description = ?, street = ?, city = ?, postal_code = ?, image_url = ?, category_id = ?, price = ?, price_before_discount = ?, start_date = ?, end_date = ?, state = ?, username = ? where offer_id = ?";
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -49,19 +32,13 @@ public class MySQLOfferDAO implements OfferDAO {
 	@Transactional
 	public boolean saveOffer(final Offer offer) {
 		entityManager.persist(offer);
-		/*jdbcTemplate.update(INSERT_OFFER, new Object[] {offer.getTitle(), offer.getLead(), offer.getDescription(),
-				offer.getAddress().getStreet(), offer.getAddress().getCity(), offer.getAddress().getPostalCode(),
-				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getPriceBeforeDiscount(), offer.getStartDate(), offer.getEndDate(), Offer.State.WAITING.getValue(), offer.getUsername()});*/
 		return true;
 	}
 	
 	@Override
+	@Transactional
 	public void updateOffer(final Offer offer) {
-		jdbcTemplate.update(UPDATE_OFFER, new Object[] {offer.getTitle(), offer.getLead(), offer.getDescription(),
-				offer.getAddress().getStreet(), offer.getAddress().getCity(), offer.getAddress().getPostalCode(),
-				offer.getImageUrl(), offer.getCategory().getCategoryId(), offer.getPrice(), offer.getPrice(), offer.getStartDate(), offer.getEndDate(), offer.getState().ordinal(), offer.getUsername(), offer.getOfferId()});
-
-		
+		entityManager.merge(offer);
 	}
 	
 	@Override
@@ -78,63 +55,21 @@ public class MySQLOfferDAO implements OfferDAO {
 	public List<Offer> getFinishedOffers() {
 		return getOffersForState(Offer.State.FINISHED);
 	}
-	
+
+	@Transactional
 	private List<Offer> getOffersForState(State state) {
-		final List<Offer> offers = new ArrayList<Offer>();
-		try {
-			jdbcTemplate.query(SELECT_OFFERS, new Object[] {state.ordinal()}, new RowCallbackHandler() {
-				
-				@Override
-				public void processRow(ResultSet rs) throws SQLException {
-					Offer offer = new Offer();
-					offer.setOfferId(rs.getInt("offer_id"));
-					offer.setTitle(rs.getString("title"));
-					offer.setLead(rs.getString("lead"));
-					offer.setDescription(rs.getString("description"));
-					Category category = new Category();
-					category.setCategoryId(rs.getInt("category_id"));
-					category.setName(rs.getString("category_name"));
-					offer.setCategory(category);
-					offer.setEndDate(rs.getDate("end_date"));
-					offer.setStartDate(rs.getDate("start_date"));
-					offer.setImageUrl(rs.getString("image_url"));
-					offer.setPrice(rs.getDouble("price"));
-					offer.setPriceBeforeDiscount(rs.getDouble("price_before_discount"));
-					offer.setState(State.getState(rs.getInt("state")));
-					offer.setUsername(rs.getString("username"));
-					Address address = new Address();
-					address.setCity(rs.getString("city"));
-					address.setPostalCode(rs.getString("postal_code"));
-					address.setStreet(rs.getString("street"));
-					offer.setAddress(address);
-					offers.add(offer);
-				}
-			});
-		} catch (EmptyResultDataAccessException e) {
-			System.err.println("No offers in DB!");
-		}
-		//TODO obsluga setState
-		return offers;
+		TypedQuery<Offer> query = entityManager.createQuery("select o from Offer o where o.state = :state", Offer.class);
+		query.setParameter("state", state);
+
+		return query.getResultList();
 	}
 	
 	@Override
+	@Transactional
 	public List<Category> getCategories() {
-		final List<Category> categories = new ArrayList<Category>();
-		try {
-			jdbcTemplate.query(SELECT_CATEGORIES, new RowCallbackHandler() {
-				
-				@Override
-				public void processRow(ResultSet rs) throws SQLException {
-					Category category = new Category();
-					category.setCategoryId(rs.getLong("category_id"));
-					category.setName(rs.getString("name"));
-					categories.add(category);
-				}
-			});
-		} catch (EmptyResultDataAccessException e) {
-			System.err.println("No categories in DB!");
-		}
-		return categories;
+		TypedQuery<Category> query = entityManager.createQuery("select c from Category c", Category.class);
+
+		return query.getResultList();
 	}
 
 	@Override
@@ -151,80 +86,20 @@ public class MySQLOfferDAO implements OfferDAO {
 	public List<Offer> getFinishedOffers(final String username) {
 		return getOffersForState(username, Offer.State.FINISHED);
 	}
-	
+
+	@Transactional
 	private List<Offer> getOffersForState(final String username, final State state) {
-		final List<Offer> offers = new ArrayList<Offer>();
-		try {
-			jdbcTemplate.query(SELECT_OFFERS_BY_USERNAME, new Object[] {username, state.ordinal()}, new RowCallbackHandler() {
-				
-				@Override
-				public void processRow(ResultSet rs) throws SQLException {
-					Offer offer = new Offer();
-					offer.setOfferId(rs.getInt("offer_id"));
-					offer.setTitle(rs.getString("title"));
-					offer.setLead(rs.getString("lead"));
-					offer.setDescription(rs.getString("description"));
-					Category category = new Category();
-					category.setCategoryId(rs.getInt("category_id"));
-					category.setName(rs.getString("category_name"));
-					offer.setCategory(category);
-					offer.setEndDate(rs.getDate("end_date"));
-					offer.setStartDate(rs.getDate("start_date"));
-					offer.setImageUrl(rs.getString("image_url"));
-					offer.setPrice(rs.getDouble("price"));
-					offer.setPriceBeforeDiscount(rs.getDouble("price_before_discount"));
-					offer.setState(State.getState(rs.getInt("state")));
-					offer.setUsername(rs.getString("username"));
-					Address address = new Address();
-					address.setCity(rs.getString("city"));
-					address.setPostalCode(rs.getString("postal_code"));
-					address.setStreet(rs.getString("street"));
-					offer.setAddress(address);
-					offers.add(offer);
-				}
-			});
-		} catch (EmptyResultDataAccessException e) {
-			System.err.println("No offers in DB!");
-		}
-		//TODO obsluga bledu state
-		return offers;
+		TypedQuery<Offer> query = entityManager.createQuery("select o from Offer o where o.state = :state and o.username = :username", Offer.class);
+		query.setParameter("state", state);
+		query.setParameter("username", username);
+
+		return query.getResultList();
 	}
 
 	@Override
+	@Transactional
 	public Offer getOffer(final int offerId) {
-		Offer offer = null;
-		try{
-			offer = jdbcTemplate.queryForObject(SELECT_OFFER_FOR_OFFER_ID, new Object[] {offerId}, new RowMapper<Offer>() {
-				public Offer mapRow(ResultSet rs, int arg1) throws SQLException {
-					Offer offer = new Offer();
-					offer.setOfferId(rs.getInt("offer_id"));
-					offer.setTitle(rs.getString("title"));
-					offer.setLead(rs.getString("lead"));
-					offer.setDescription(rs.getString("description"));
-					Category category = new Category();
-					category.setCategoryId(rs.getInt("category_id"));
-					category.setName(rs.getString("category_name"));
-					offer.setCategory(category);
-					offer.setEndDate(rs.getDate("end_date"));
-					offer.setStartDate(rs.getDate("start_date"));
-					offer.setImageUrl(rs.getString("image_url"));
-					offer.setPrice(rs.getDouble("price"));
-					offer.setPriceBeforeDiscount(rs.getDouble("price_before_discount"));
-					offer.setState(State.getState(rs.getInt("state")));
-					offer.setUsername(rs.getString("username"));
-					Address address = new Address();
-					address.setCity(rs.getString("city"));
-					address.setPostalCode(rs.getString("postal_code"));
-					address.setStreet(rs.getString("street"));
-					offer.setAddress(address);
-					return offer;
-				};
-			}
-			);
-			
-		} catch (EmptyResultDataAccessException e) {
-			System.err.println("No offer for offerId: " + offerId);
-		}
+		Offer offer = entityManager.find(Offer.class, offerId);		
 		return offer;
 	}
 

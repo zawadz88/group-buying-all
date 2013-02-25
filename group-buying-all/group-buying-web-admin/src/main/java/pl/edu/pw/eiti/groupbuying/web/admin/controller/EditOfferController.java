@@ -40,6 +40,7 @@ public class EditOfferController extends BaseController {
 	
 	public Offer populateOffer(int offerId) {
 		Offer offer = offerDAO.getOffer(offerId);
+		System.out.println("Offer found: " + offer);
 		return offer;
 	}
 

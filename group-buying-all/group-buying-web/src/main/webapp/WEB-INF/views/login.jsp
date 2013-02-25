@@ -2,6 +2,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <html>
+	<HEAD>		
+    	<meta charset="UTF-8">
+    </HEAD>
 	<body>
 		<h1>Please Log Into Your Account</h1>
 		<p>
