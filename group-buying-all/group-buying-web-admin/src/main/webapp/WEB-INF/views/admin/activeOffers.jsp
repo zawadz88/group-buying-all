@@ -42,7 +42,7 @@
 							<c:out value="${offer.title}"></c:out>
 						</td>
 						<td>
-							<c:out value="${offer.username}"></c:out>
+							<c:out value="${offer.seller.email}"></c:out>
 						</td>
 						<td>
 							<c:out value="${offer.startDate}"></c:out>

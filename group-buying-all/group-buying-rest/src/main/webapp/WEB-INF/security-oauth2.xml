@@ -31,7 +31,8 @@
 	<http use-expressions="true">
 		<!-- Authentication policy -->
 		<intercept-url pattern="/login.do" access="permitAll" />
-		<intercept-url pattern="/offers/*" access="isAuthenticated()" />
+		<intercept-url pattern="/offers/*" access="permitAll" />
+		<!-- <intercept-url pattern="/offers/*" access="isAuthenticated()" /> -->
 		<intercept-url pattern="/**" access="permitAll"/>
 
 		<form-login login-page="/login.do" authentication-failure-url="/login.do?error=1"/>
