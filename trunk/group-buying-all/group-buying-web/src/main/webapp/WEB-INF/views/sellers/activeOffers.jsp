@@ -2,7 +2,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html>
 	<head>
-		<title>For sellers</title>
+		<title>For sellers</title>		
+    	<meta charset="UTF-8">
 	</head>
 	<body>
 		<h1>Welcome <authz:authentication property="principal.username"/></h1>
