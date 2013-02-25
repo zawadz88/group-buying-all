@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 @Entity
 @Table(name = "sellers")
 public class Seller implements Serializable{
@@ -20,6 +22,7 @@ public class Seller implements Serializable{
 	private String name;
 
 	@Column(name = "password")
+	@JsonIgnore
 	private String password;	
 
 	@Column(name = "phone_number")
@@ -38,6 +41,7 @@ public class Seller implements Serializable{
 	private String nip;
 
 	@Column(name = "salt")
+	@JsonIgnore
 	private String salt;
 
 	public String getPassword() {

@@ -14,6 +14,7 @@ import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
+import pl.edu.pw.eiti.groupbuying.core.domain.Seller;
 import pl.edu.pw.eiti.groupbuying.security.core.SaltedUser;
 
 @Controller("addOfferController")
@@ -26,7 +27,9 @@ public class AddOfferController extends BaseController {
 		System.out.println("Saving offer: " + offer.toString());
 		SecurityContext context = SecurityContextHolder.getContext();
 		SaltedUser saltedUser = (SaltedUser) context.getAuthentication().getPrincipal();
-		offer.setUsername(saltedUser.getUsername());
+		Seller seller = new Seller();
+		seller.setEmail(saltedUser.getUsername());
+		offer.setSeller(seller);
 		offer.setState(State.WAITING);
 		offerDAO.saveOffer(offer);
 	}

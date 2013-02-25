@@ -68,8 +68,9 @@ public class Offer implements Serializable {
 	@JoinColumn(name="category_id")
 	private Category category = new Category();
 
-	@Column(name="username")
-	private String username;
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="username")
+	private Seller seller;
 
 	public int getOfferId() {
 		return offerId;
@@ -143,14 +144,6 @@ public class Offer implements Serializable {
 		this.endDate = endDate;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public State getState() {
 		return state;
 	}
@@ -191,6 +184,14 @@ public class Offer implements Serializable {
 		this.expirationDate = expirationDate;
 	}
 
+	public Seller getSeller() {
+		return seller;
+	}
+
+	public void setSeller(Seller seller) {
+		this.seller = seller;
+	}
+
 	@Override
 	public String toString() {
 		return "Offer [offerId=" + offerId + ", title=" + title + ", lead="
@@ -199,9 +200,10 @@ public class Offer implements Serializable {
 				+ imageUrl + ", price=" + price + ", priceBeforeDiscount="
 				+ priceBeforeDiscount + ", startDate=" + startDate
 				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate
-				+ ", state=" + state + ", category=" + category + ", username="
-				+ username + "]";
+				+ ", state=" + state + ", category=" + category + ", seller="
+				+ seller + "]";
 	}
+
 
 	public static enum State {
 		WAITING, ACTIVE, FINISHED;
