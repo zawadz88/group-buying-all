@@ -28,6 +28,7 @@
 		<com.facebook.sdk.version>3.0.0-SNAPSHOT</com.facebook.sdk.version>
 		<android.query.version>0.24.3</android.query.version>
 		<google.cloud.messaging.client.version>3</google.cloud.messaging.client.version>
+		<google.play.services.version>4</google.play.services.version>
 	</properties>
 
 	<dependencyManagement>
@@ -54,6 +55,12 @@
 				<version>${google.cloud.messaging.client.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>com.google.android.gms</groupId>
+				<artifactId>google-play-services</artifactId>
+				<version>${google.play.services.version}</version>
+				<type>jar</type>
+			</dependency>
+			<dependency>
 				<groupId>com.google.android.maps</groupId>
 				<artifactId>maps</artifactId>
 				<version>16_r3</version>
@@ -64,7 +71,7 @@
 				<artifactId>android-query-full</artifactId>
 				<version>${android.query.version}</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>org.springframework.android</groupId>
 				<artifactId>spring-android-auth</artifactId>
@@ -165,6 +172,7 @@
 		<module>viewpagerindicator-library</module>
 		<module>group-buying-android</module>
 		<module>actionbarsherlock</module>
+		<module>google-play-services-library</module>
 	</modules>
 
 
