@@ -1,61 +1,141 @@
 package pl.edu.pw.eiti.groupbuying.android.fragment;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import pl.edu.pw.eiti.groupbuying.android.OfferActivity;
+import pl.edu.pw.eiti.groupbuying.android.R;
+import pl.edu.pw.eiti.groupbuying.android.adapter.OfferListAdapter;
+import pl.edu.pw.eiti.groupbuying.android.api.Address;
+import pl.edu.pw.eiti.groupbuying.android.api.Category;
+import pl.edu.pw.eiti.groupbuying.android.api.Offer;
+import pl.edu.pw.eiti.groupbuying.android.api.Offer.State;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
+import android.widget.AdapterView;
 
-public final class TravelOffersFragment extends Fragment {
-    private static final String KEY_CONTENT = "TestFragment:Content";
+import com.androidquery.AQuery;
 
-    public static TravelOffersFragment newInstance(String content) {
-        TravelOffersFragment fragment = new TravelOffersFragment();
+public final class TravelOffersFragment extends AbstractListFragment {
 
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 20; i++) {
-            builder.append(content).append(" ");
-        }
-        builder.deleteCharAt(builder.length() - 1);
-        fragment.mContent = builder.toString();
+	private List<Offer> offerList = Arrays
+			.asList(new Offer[] {
+					new Offer(
+							0,
+							"Super lightbulbs",
+							"Integer rhoncus sodales augue in adipiscing.",
+							"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur iaculis leo eget mauris gravida placerat a eu libero. Fusce rutrum tincidunt nibh non rhoncus. Quisque viverra pretium aliquam. Praesent eu pretium orci. Nulla erat orci, luctus sed facilisis ac, faucibus et lorem. Phasellus malesuada mauris at sapien hendrerit consequat ac nec eros. Donec sodales urna quis turpis gravida quis elementum velit fermentum. Pellentesque luctus aliquet nisi, non condimentum neque malesuada id. Nullam magna neque, porta eu tincidunt id, ultrices eu dui. Suspendisse gravida velit et nisi sodales vitae auctor mi porttitor. Curabitur hendrerit dictum purus a rhoncus.",
+							new Address(),
+							"http://bi.gazeta.pl/im/0a/ac/cc/z13413386F,Agnieszka-Radwanska.jpg",
+							150, 300, new Date(), new Date(), State.ACTIVE,
+							new Category(), "BOSCH"),
+					new Offer(
+							1,
+							"Nauka języków",
+							"ciekawy lead",
+							"Integer ac erat a velit ultricies accumsan nec ut tortor. Phasellus congue mi sit amet dui viverra malesuada. Donec feugiat vestibulum diam non suscipit. Aliquam tempus, metus sed tincidunt suscipit, leo massa sagittis dui, non commodo enim dolor nec quam. Fusce fermentum egestas pellentesque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur laoreet elementum mattis. Phasellus suscipit, justo id tempus tristique, lacus risus blandit nunc, non malesuada orci risus vel lectus. Vestibulum ac purus neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam in purus purus, vel condimentum enim. Vestibulum tempor fermentum ante, quis laoreet velit molestie ac.",
+							new Address(),
+							"http://static.pl.groupon-content.net/27/39/1361209483927.jpg",
+							150, 300, new Date(), new Date(), State.ACTIVE,
+							new Category(), "BOSCH"),
+					new Offer(
+							2,
+							"Super iPad",
+							"ciekawy lead",
+							"Suspendisse a accumsan lorem. Curabitur pulvinar interdum urna, et luctus dolor pellentesque eget. Aliquam et justo eu magna imperdiet lacinia nec ut enim. Curabitur id turpis eget risus congue elementum. Curabitur vestibulum est a neque eleifend pretium. Curabitur ut erat dui, et vulputate lacus. Mauris id massa elit. Praesent ullamcorper consectetur fermentum. Etiam feugiat sollicitudin nibh in varius. In consequat, lacus ac pellentesque fermentum, orci mauris molestie nisi, fermentum semper leo lacus eu tellus. Aliquam laoreet sem at nisi facilisis et interdum dolor suscipit. Aenean interdum rutrum lacus sed lobortis. Proin tempor rutrum justo, eget lobortis purus condimentum non.",
+							new Address(),
+							"http://static.pl.groupon-content.net/55/37/1361292093755.jpg",
+							150, 300, new Date(), new Date(), State.ACTIVE,
+							new Category(), "BOSCH"),
+					new Offer(
+							3,
+							"Super laptop",
+							"ciekawy lead",
+							"ciekawy opis",
+							new Address(),
+							"http://static.pl.groupon-content.net/25/83/1361446708325.jpg",
+							150, 300, new Date(), new Date(), State.ACTIVE,
+							new Category(), "BOSCH"),
+					new Offer(
+							4,
+							"Super garnki",
+							"ciekawy lead",
+							"ciekawy opis",
+							new Address(),
+							"http://static.pl.groupon-content.net/63/61/1360919626163.jpg",
+							150, 300, new Date(), new Date(), State.ACTIVE,
+							new Category(), "BOSCH") });
 
-        return fragment;
-    }
+	public static TravelOffersFragment newInstance(String content) {
+		TravelOffersFragment fragment = new TravelOffersFragment();
+		return fragment;
+	}
 
-    private String mContent = "???";
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+		// if ((savedInstanceState != null) &&
+		// savedInstanceState.containsKey(KEY_CONTENT)) { }
+	}
 
-        if ((savedInstanceState != null) && savedInstanceState.containsKey(KEY_CONTENT)) {
-            mContent = savedInstanceState.getString(KEY_CONTENT);
-        }
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		final View rootView = inflater.inflate(R.layout.fragment_city_offers,
+				container, false);
+		AQuery aq = new AQuery(getActivity(), rootView);
+		listView = aq.id(android.R.id.list).getListView();
+		loadingView = aq.id(R.id.list_loading).getProgressBar();
+		emptyView = aq.id(R.id.list_empty).getTextView();
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        TextView text = new TextView(getActivity());
-        text.setGravity(Gravity.CENTER);
-        text.setText(mContent);
-        text.setTextSize(20 * getResources().getDisplayMetrics().density);
-        text.setPadding(20, 20, 20, 20);
+		listView.setBackgroundResource(android.R.color.white);
+		//listView.setDivider(getResources().getDrawable(android.R.color.white));
+		//listView.setDividerHeight(1 * (int) (getResources().getDisplayMetrics().density + 0.5f));
 
-        LinearLayout layout = new LinearLayout(getActivity());
-        layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        layout.setGravity(Gravity.CENTER);
-        layout.addView(text);
+		listView.setOnItemClickListener(this);
 
-        return layout;
-    }
+		return rootView;
+	}
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(KEY_CONTENT, mContent);
-    }
+	@Override
+	public void onStart() {
+		super.onStart();
+		if (offerList != null
+				&& offerList.size() > 0) {
+			// Set new adapter
+			setListAdapter(new OfferListAdapter(getActivity(), 0, offerList));
+			setListViewState(ListViewState.CONTENT);
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		// outState.putString(KEY_CONTENT, mContent);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+		Offer selectedOffer = offerList.get(position);
+		Intent intent = new Intent(getActivity(), OfferActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra("offer", selectedOffer);
+		startActivity(intent);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
+
+	@Override
+	public void refreshList() {
+		// TODO Auto-generated method stub
+
+	}
 }

@@ -6,18 +6,17 @@ import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.android.OfferActivity;
 import pl.edu.pw.eiti.groupbuying.android.R;
+import pl.edu.pw.eiti.groupbuying.android.adapter.OfferListAdapter;
 import pl.edu.pw.eiti.groupbuying.android.api.Address;
 import pl.edu.pw.eiti.groupbuying.android.api.Category;
 import pl.edu.pw.eiti.groupbuying.android.api.Offer;
 import pl.edu.pw.eiti.groupbuying.android.api.Offer.State;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 import com.androidquery.AQuery;
 
@@ -139,49 +138,5 @@ public final class CityOffersFragment extends AbstractListFragment {
 		// TODO Auto-generated method stub
 
 	}
-	
-	public class OfferListAdapter extends ArrayAdapter<Offer> {
 
-		private LayoutInflater inflater;
-
-		public OfferListAdapter(Context context, int textViewResourceId, List<Offer> objects) {
-			super(context, textViewResourceId, objects);
-			inflater = LayoutInflater.from(getContext());
-		}
-
-		@Override
-		public int getCount() {
-			return offerList.size();
-		}
-
-		@Override
-		public int getViewTypeCount() {
-			return 1;
-		}
-
-		@Override
-		public int getItemViewType(int position) {
-			return 0;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-
-			final Offer offer = offerList.get(position);
-			View hView = convertView;
-			if (convertView == null) {
-				hView = inflater.inflate(R.layout.offer_row, null);
-
-			}
-			AQuery aq = new AQuery(getActivity(), hView);
-
-			aq.id(R.id.offerImage).image(offer.getImageUrl()).getImageView();
-			aq.id(R.id.offerTitle).text(offer.getTitle()).getTextView();
-			aq.id(R.id.offerPrice).text(String.valueOf(offer.getPrice())).getTextView();
-			aq.id(R.id.offersSold).text(String.valueOf(24) + " sold").getTextView();
-
-			return hView;
-		}
-
-	}
 }
