@@ -86,7 +86,7 @@ public final class ShoppingOffersFragment extends AbstractListFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View rootView = inflater.inflate(R.layout.fragment_city_offers,
+		final View rootView = inflater.inflate(R.layout.fragment_basic_offers,
 				container, false);
 		AQuery aq = new AQuery(getActivity(), rootView);
 		listView = aq.id(android.R.id.list).getListView();
