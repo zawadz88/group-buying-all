@@ -1,8 +1,8 @@
 package pl.edu.pw.eiti.groupbuying.android;
 
 import pl.edu.pw.eiti.groupbuying.android.adapter.OffersFragmentAdapter;
+import pl.edu.pw.eiti.groupbuying.android.view.MapFragmentScrollOverrideViewPager;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -12,7 +12,7 @@ import com.viewpagerindicator.TitlePageIndicator;
 
 public class MainMenuActivity extends SherlockFragmentActivity {
     protected OffersFragmentAdapter mAdapter;
-    protected ViewPager mPager;
+    protected MapFragmentScrollOverrideViewPager mPager;
     protected PageIndicator mIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class MainMenuActivity extends SherlockFragmentActivity {
 
         mAdapter = new OffersFragmentAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.offers_fragment_titles));
 
-        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager = (MapFragmentScrollOverrideViewPager) findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
         mPager.setCurrentItem(OffersFragmentAdapter.OFFERS_FROM_THE_CITY_FRAGMENT, false);
 
