@@ -12,15 +12,15 @@ package pl.edu.pw.eiti.groupbuying.android;
 
 import pl.edu.pw.eiti.groupbuying.android.adapter.OffersFragmentAdapter;
 import pl.edu.pw.eiti.groupbuying.android.view.MapFragmentScrollOverrideViewPager;
+import android.content.Intent;
 import android.os.Bundle;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.TitlePageIndicator;
 
-public class MainMenuActivity extends SherlockFragmentActivity {
+public class MainMenuActivity extends AbstractGroupBuyingActivity {
     protected OffersFragmentAdapter mAdapter;
     protected MapFragmentScrollOverrideViewPager mPager;
     protected PageIndicator mIndicator;
@@ -52,6 +52,8 @@ public class MainMenuActivity extends SherlockFragmentActivity {
 		case R.id.options_menu_settings:
 			break;
 		case R.id.options_menu_coupons:
+			Intent intent = new Intent(this, MyCouponsActivity.class);
+			this.startActivity(intent);
 			break;
 		case R.id.options_menu_refresh:
 			break;

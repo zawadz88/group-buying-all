@@ -35,4 +35,8 @@
     <string name="content_description_springsource_logo">SpringSource Logo</string>
     <string name="buy_now_button_text">Buy now!</string>
     
+    <string name="coupon_expired_title">Expired</string>
+    <string name="coupon_used_title">Used</string>
+    <string name="coupon_available_title">Available</string>
+    
 </resources>

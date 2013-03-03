@@ -32,7 +32,7 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.offer_activity);
+		setContentView(R.layout.activity_offer);
 		aq = new AQuery(this);
 		if (getIntent().getSerializableExtra("offer") != null) {
 			offer = (Offer) getIntent().getSerializableExtra("offer");
@@ -94,9 +94,6 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 		new DownloadOfferTask().execute();
 	}
 
-	// ***************************************
-	// Private classes
-	// ***************************************
 	private class DownloadOfferTask extends AsyncTask<Void, Void, Offer> {
 
 		private Exception exception;
