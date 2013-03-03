@@ -60,27 +60,23 @@
             android:theme="@style/Theme.groupbuying" >
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:label="Autoryzacja"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name=".MyCouponsIntermediateActivity"
+            android:label=""
+            android:theme="@style/Theme.groupbuying" >
         </activity>
         <activity
-            android:name=".AuthorizeActivity"
-            android:theme="@android:style/Theme.Light.NoTitleBar" />
+            android:name=".MyCouponsActivity"
+            android:label=""
+            android:theme="@style/Theme.groupbuying" >
+        </activity>
         <activity
             android:name=".SignInActivity"
-            android:theme="@android:style/Theme.Light.NoTitleBar" />
+            android:label=""
+            android:theme="@style/Theme.groupbuying" />
         <activity
             android:name=".OfferActivity"
             android:label=""
             android:theme="@style/Theme.groupbuying" />
-        <activity android:name=".HelloAndroidActivity" >
-        </activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

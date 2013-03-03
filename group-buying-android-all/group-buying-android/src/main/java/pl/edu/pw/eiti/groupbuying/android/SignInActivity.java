@@ -1,18 +1,4 @@
-/*
- * Copyright 2012 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package pl.edu.pw.eiti.groupbuying.android;
 
 import java.util.Map;
@@ -22,7 +8,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.DuplicateConnectionException;
@@ -33,9 +18,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import pl.edu.pw.eiti.groupbuying.android.api.GroupBuyingApi;
-import pl.edu.pw.eiti.groupbuying.android.api.Offer;
 import pl.edu.pw.eiti.groupbuying.android.connect.GroupBuyingConnectionFactory;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -45,20 +28,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
-/**
- * @author Roy Clarkson
- */
 public class SignInActivity extends AbstractGroupBuyingActivity {
 
 	private static final String TAG = SignInActivity.class.getSimpleName();
 
-	//***************************************
-	// Activity methods
-	//***************************************
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.sign_in);
+		setContentView(R.layout.activity_sign_in);
 
 		findViewById(R.id.cancel_button).setOnClickListener(new OnClickListener() {
 			@Override
@@ -79,9 +56,6 @@ public class SignInActivity extends AbstractGroupBuyingActivity {
 		});
 	}
 
-	// ***************************************
-	// Private methods
-	// ***************************************
 	private boolean validateFormData() {
 		EditText editText = (EditText) findViewById(R.id.username);
 		String username = editText.getText().toString().trim();
@@ -101,7 +75,7 @@ public class SignInActivity extends AbstractGroupBuyingActivity {
 	private void displayGreenhouseOptions() {
 		Intent intent = new Intent();
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.setClass(this, MainActivity.class);
+		intent.setClass(this, MyCouponsIntermediateActivity.class);
 		startActivity(intent);
 		setResult(RESULT_OK);
 		finish();
@@ -121,9 +95,6 @@ public class SignInActivity extends AbstractGroupBuyingActivity {
 		}
 	}
 
-	//***************************************
-	// Private classes
-	//***************************************
 	private class SignInTask extends AsyncTask<Void, Void, Void> {
 		private MultiValueMap<String, String> formData;
 
@@ -162,12 +133,7 @@ public class SignInActivity extends AbstractGroupBuyingActivity {
 				Map<String, Object> responseBody = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class).getBody();
 				Log.d(TAG, responseBody.toString());
 				
-				/*restTemplate = new RestTemplate(true);
-				restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-				MultiValueMap<String, String> newQuery = new LinkedMultiValueMap<String, String>();
-				Offer result = restTemplate.getForObject("http://192.168.0.199:8080/group-buying-rest/offers/13.json?access_token=" + (String) responseBody.get("access_token"), Offer.class, newQuery);
-				Log.d(TAG, result != null ? result.toString() : "null:(");
-				*/// Persist the connection and AccessGrant to the repository
+				// Persist the connection and AccessGrant to the repository
 				AccessGrant accessGrant = extractAccessGrant(responseBody);
 				GroupBuyingConnectionFactory connectionFactory = getApplicationContext().getConnectionFactory();
 				ConnectionRepository connectionRepository = getApplicationContext().getConnectionRepository();
