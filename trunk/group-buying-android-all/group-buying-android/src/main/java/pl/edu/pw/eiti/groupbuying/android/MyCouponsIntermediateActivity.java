@@ -21,7 +21,7 @@ public class MyCouponsIntermediateActivity extends AbstractGroupBuyingActivity {
 
 		Intent intent;
 		if (isConnected()) {
-			intent = new Intent(this, OfferActivity.class);
+			intent = new Intent(this, MyCouponsActivity.class);
 		} else {
 			intent = new Intent(this, SignInActivity.class);
 		}
