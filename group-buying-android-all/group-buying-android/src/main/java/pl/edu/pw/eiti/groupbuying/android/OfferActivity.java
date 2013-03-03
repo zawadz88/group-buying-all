@@ -12,9 +12,7 @@ package pl.edu.pw.eiti.groupbuying.android;
 
 import pl.edu.pw.eiti.groupbuying.android.api.Offer;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -47,10 +45,6 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-
-		if (offer == null) {
-			downloadOffer();
-		}
 	}
 
 	@Override
@@ -81,6 +75,8 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 		case R.id.options_menu_settings:
 			break;
 		case R.id.options_menu_coupons:
+			Intent intent = new Intent(this, MyCouponsIntermediateActivity.class);
+			this.startActivity(intent);
 			break;
 		case R.id.options_menu_offers:
 			break;
@@ -90,39 +86,4 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 		return true;
 	}
 
-	private void downloadOffer() {
-		new DownloadOfferTask().execute();
-	}
-
-	private class DownloadOfferTask extends AsyncTask<Void, Void, Offer> {
-
-		private Exception exception;
-
-		@Override
-		protected void onPreExecute() {
-			showProgressDialog();
-		}
-
-		@Override
-		protected Offer doInBackground(Void... params) {
-			try {
-				return getApplicationContext().getGroupBuyingApi()
-						.offerOperations().getOfferById(13);
-			} catch (Exception e) {
-				Log.e(TAG, e.getLocalizedMessage(), e);
-				exception = e;
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Offer result) {
-			dismissProgressDialog();
-			processException(exception);
-			if (result != null) {
-				// aq.id(R.id.offer).text(result.toString());
-			}
-		}
-	}
 }

@@ -28,6 +28,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+
 public class SignInActivity extends AbstractGroupBuyingActivity {
 
 	private static final String TAG = SignInActivity.class.getSimpleName();
@@ -56,6 +59,30 @@ public class SignInActivity extends AbstractGroupBuyingActivity {
 		});
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.my_coupons_menu, menu);
+		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		case R.id.options_menu_settings:
+			break;
+		case R.id.options_menu_offers:
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
+	}
+	
 	private boolean validateFormData() {
 		EditText editText = (EditText) findViewById(R.id.username);
 		String username = editText.getText().toString().trim();

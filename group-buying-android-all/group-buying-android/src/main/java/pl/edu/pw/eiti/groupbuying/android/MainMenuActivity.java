@@ -52,7 +52,7 @@ public class MainMenuActivity extends AbstractGroupBuyingActivity {
 		case R.id.options_menu_settings:
 			break;
 		case R.id.options_menu_coupons:
-			Intent intent = new Intent(this, MyCouponsActivity.class);
+			Intent intent = new Intent(this, MyCouponsIntermediateActivity.class);
 			this.startActivity(intent);
 			break;
 		case R.id.options_menu_refresh:
