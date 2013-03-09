@@ -10,15 +10,20 @@ import pl.edu.pw.eiti.groupbuying.android.api.Address;
 import pl.edu.pw.eiti.groupbuying.android.api.Category;
 import pl.edu.pw.eiti.groupbuying.android.api.Offer;
 import pl.edu.pw.eiti.groupbuying.android.api.Offer.State;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class MyCouponsActivity extends AbstractGroupBuyingActivity {
+public class MyCouponsActivity extends AbstractGroupBuyingActivity implements OnChildClickListener {
 	protected static final String TAG = MyCouponsActivity.class.getSimpleName();
 	
 	private ExpandableListView offerExpandableListView;
@@ -88,6 +93,7 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity {
 		offerExpandableListView.setAdapter(listAdapter);
 		offerExpandableListView.setGroupIndicator(this.getResources().getDrawable(R.drawable.expander_group));
 		offerExpandableListView.expandGroup(0);
+		offerExpandableListView.setOnChildClickListener(this);
 	}
 
 	@Override
@@ -118,6 +124,16 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+		return true;
+	}
+
+	@Override
+	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+		Offer selectedOffer = offers.get(childPosition);
+		Intent intent = new Intent(this, CouponPreviewActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra("offer", selectedOffer);
+		startActivity(intent);
 		return true;
 	}
 
@@ -159,8 +175,5 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity {
 			}
 		}
 	}
-	
-	static class OfferGroup {
-		
-	}
+
 }

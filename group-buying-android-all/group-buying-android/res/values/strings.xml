@@ -38,5 +38,17 @@
     <string name="coupon_expired_title">Expired</string>
     <string name="coupon_used_title">Used</string>
     <string name="coupon_available_title">Available</string>
+    <string name="paypal_payment_method_title">Paypal</string>
+    <string name="select_payment_method_title">Select payment method:</string>
+    <string name="selected_offer_label">Selected offer:</string>
+    <string name="payment_details_label">Payment details:</string>
+    <string name="payment_sum_label">Sum</string>
+    <string name="payment_method_label">Method</string>
+    <string name="confirm_purchase_button_title">Confirm purchase</string>
+    <string name="post_purchase_thank_you_message">"Thank you for buying "</string>
+    <string name="post_order_message">You coupon should be available shortly from your account.</string>
+    <string name="see_more_offers_button">See more offers</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="view_coupon_button">View coupon</string>
     
 </resources>

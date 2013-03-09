@@ -10,44 +10,45 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android;
 
-import pl.edu.pw.eiti.groupbuying.android.api.Offer;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.ShareActionProvider;
 import com.androidquery.AQuery;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.android.encode.QRCodeEncoder;
 
-public class OfferActivity extends AbstractGroupBuyingActivity {
+public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 
-	protected static final String TAG = OfferActivity.class.getSimpleName();
-
-	private Offer offer;
+	protected static final String TAG = CouponDetailsActivity.class.getSimpleName();
 
 	private AQuery aq;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_offer);
+		setContentView(R.layout.activity_coupon_details);
 		aq = new AQuery(this);
-		if (getIntent().getSerializableExtra("offer") != null) {
-			offer = (Offer) getIntent().getSerializableExtra("offer");
+
+		Bitmap qrcode = null;
+		
+		try {
+			QRCodeEncoder qrCodeEncoder = new QRCodeEncoder("http://www.elka.pw.edu.pl", 400);
+			qrcode = qrCodeEncoder.encodeAsBitmap();
+		} catch (WriterException e) {
+			Log.e(TAG, e.getLocalizedMessage(), e);
 		}
-		aq.id(R.id.offerImage).image(offer.getImageUrl());
-		aq.id(R.id.offerTitle).text(offer.getTitle());
-		aq.id(R.id.offerLead).text(offer.getLead());
-		aq.id(R.id.offerDescription).text(offer.getDescription());
-		aq.id(R.id.buyButton).clicked(new OnClickListener() {
+		aq.id(R.id.qrCode).image(qrcode);
+		aq.id(R.id.cancelButton).clicked(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(OfferActivity.this, PaymentMethodActivity.class);
-				intent.putExtra("offer", offer);
-				startActivity(intent);				
+				finish();			
 			}
 		});
 	}
@@ -59,18 +60,7 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.offer_menu, menu);
-		
-		MenuItem actionItem = menu.findItem(R.id.menu_item_share);
-	    ShareActionProvider actionProvider = (ShareActionProvider) actionItem.getActionProvider();
-	    actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
-	    
-	    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-		shareIntent.setType("text/plain");
-		shareIntent.putExtra(Intent.EXTRA_SUBJECT, offer.getTitle());
-		shareIntent.putExtra(Intent.EXTRA_TEXT, "http://www.google.com");
-	    
-	    actionProvider.setShareIntent(shareIntent);
+		getSupportMenuInflater().inflate(R.menu.coupon_menu, menu);
 		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		return super.onCreateOptionsMenu(menu);
@@ -86,6 +76,7 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 			break;
 		case R.id.options_menu_coupons:
 			Intent intent = new Intent(this, MyCouponsIntermediateActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			this.startActivity(intent);
 			break;
 		case R.id.options_menu_offers:

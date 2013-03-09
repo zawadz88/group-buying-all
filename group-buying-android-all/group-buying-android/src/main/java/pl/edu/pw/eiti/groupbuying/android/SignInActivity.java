@@ -179,10 +179,16 @@ public class SignInActivity extends AbstractGroupBuyingActivity {
 			dismissProgressDialog();
 			if (exception != null) {
 				String message;
-				if (exception instanceof HttpClientErrorException
-						&& (((HttpClientErrorException) exception).getStatusCode() == HttpStatus.BAD_REQUEST)
-						|| ((HttpClientErrorException) exception).getStatusCode() == HttpStatus.UNAUTHORIZED) {
-					message = "Your email or password was entered incorrectly.";
+				System.out.println("ex: " + exception.getLocalizedMessage());
+				System.out.println("ex: " + exception.getClass());
+				System.out.println("exception instanceof HttpClientErrorException: " + (exception instanceof HttpClientErrorException));
+				if (exception instanceof HttpClientErrorException) {
+					if((((HttpClientErrorException) exception).getStatusCode() == HttpStatus.BAD_REQUEST) || ((HttpClientErrorException) exception).getStatusCode() == HttpStatus.UNAUTHORIZED) {
+						message = "Your email or password was entered incorrectly.";
+					} else {
+						Log.e(TAG, exception.getLocalizedMessage(), exception);
+						message = "A problem occurred with the network connection. Please try again in a few minutes.";
+					}
 				} else if (exception instanceof DuplicateConnectionException) {
 					message = "The connection already exists.";
 				} else {
