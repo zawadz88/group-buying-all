@@ -18,12 +18,11 @@ import android.view.View.OnClickListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.ShareActionProvider;
 import com.androidquery.AQuery;
 
-public class OfferActivity extends AbstractGroupBuyingActivity {
+public class PaymentConfirmedActivity extends AbstractGroupBuyingActivity {
 
-	protected static final String TAG = OfferActivity.class.getSimpleName();
+	protected static final String TAG = PaymentConfirmedActivity.class.getSimpleName();
 
 	private Offer offer;
 
@@ -32,22 +31,25 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_offer);
+		setContentView(R.layout.activity_payment_confirmed);
 		aq = new AQuery(this);
 		if (getIntent().getSerializableExtra("offer") != null) {
 			offer = (Offer) getIntent().getSerializableExtra("offer");
+		} else {
+			finish();
 		}
+		
+		aq.id(R.id.selectedOfferTitle).text(offer.getTitle());
 		aq.id(R.id.offerImage).image(offer.getImageUrl());
-		aq.id(R.id.offerTitle).text(offer.getTitle());
-		aq.id(R.id.offerLead).text(offer.getLead());
-		aq.id(R.id.offerDescription).text(offer.getDescription());
-		aq.id(R.id.buyButton).clicked(new OnClickListener() {
+		
+		aq.id(R.id.viewOffersButton).clicked(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(OfferActivity.this, PaymentMethodActivity.class);
-				intent.putExtra("offer", offer);
-				startActivity(intent);				
+				Intent intent = new Intent(PaymentConfirmedActivity.this, MainMenuActivity.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+				
 			}
 		});
 	}
@@ -59,19 +61,8 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.offer_menu, menu);
-		
-		MenuItem actionItem = menu.findItem(R.id.menu_item_share);
-	    ShareActionProvider actionProvider = (ShareActionProvider) actionItem.getActionProvider();
-	    actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
-	    
-	    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-		shareIntent.setType("text/plain");
-		shareIntent.putExtra(Intent.EXTRA_SUBJECT, offer.getTitle());
-		shareIntent.putExtra(Intent.EXTRA_TEXT, "http://www.google.com");
-	    
-	    actionProvider.setShareIntent(shareIntent);
-		
+		getSupportMenuInflater().inflate(R.menu.payment_method_menu, menu);
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -80,13 +71,9 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
-			break;
-		case R.id.options_menu_settings:
-			break;
-		case R.id.options_menu_coupons:
-			Intent intent = new Intent(this, MyCouponsIntermediateActivity.class);
-			this.startActivity(intent);
+			Intent intent = new Intent(PaymentConfirmedActivity.this, MainMenuActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			break;
 		case R.id.options_menu_offers:
 			break;
@@ -96,4 +83,10 @@ public class OfferActivity extends AbstractGroupBuyingActivity {
 		return true;
 	}
 
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(PaymentConfirmedActivity.this, MainMenuActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+	}
 }

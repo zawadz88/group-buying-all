@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (c) 2013 Piotr Zawadzki.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Public License v3.0
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/gpl.html
+  
+  Contributors:
+  	Piotr Zawadzki - initial API and implementation
+      
+-->
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/buyLayout"
+    android:layout_alignParentTop="true"
+    android:background="#DDDDDD" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+         >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+	        android:gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:padding="5dp"
+            android:background="#FFFFFF"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:text="@string/select_payment_method_title" />
+        
+        <LinearLayout
+            android:id="@+id/paypalPaymentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:background="#FFFFFF" >
+
+	        <pl.edu.pw.eiti.groupbuying.android.view.AspectRatioImageView
+                android:id="@+id/paypalLogo"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:padding="20dp"
+                android:adjustViewBounds="true"
+	            android:layout_weight="1"
+	            android:src="@drawable/paypal_logo" />
+            
+            
+            <TextView
+                android:id="@+id/paypalTitle"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+	            android:layout_weight="1"
+	            android:gravity="center"
+                android:text="@string/paypal_payment_method_title"
+                android:textColor="@android:color/black"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>

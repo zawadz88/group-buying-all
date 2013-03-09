@@ -20,6 +20,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!--
@@ -77,7 +78,23 @@
             android:name=".OfferActivity"
             android:label=""
             android:theme="@style/Theme.groupbuying" />
-
+        <activity
+            android:name=".PaymentMethodActivity"
+            android:label=""
+            android:theme="@style/Theme.groupbuying" />
+        <activity
+            android:name=".ConfirmPaymentActivity"
+            android:label=""
+            android:theme="@style/Theme.groupbuying" />
+        <activity
+            android:name=".CouponPreviewActivity"
+            android:label=""
+            android:theme="@style/Theme.groupbuying" />
+        <activity
+            android:name=".CouponDetailsActivity"
+            android:label=""
+            android:theme="@style/Theme.groupbuying" />
+		
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCJSWAUotAVQoMDObi3x55AkoAPgj2ENwM" />
