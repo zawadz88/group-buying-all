@@ -3,16 +3,20 @@
 #- uwspólnienie klientów i sprzedawców? - to sie pobawimy dopiero przy oauth
 #- persistent_logins rozroznic - ROZWIAZANO przez wywalenie dla admina :)
 #- OAuth2 serwer + Android
-- interfejs androida podstawowy bez logiki
-- wyciąganie dobre ofert
-- zakup ofert + wyświetlanie zakupionych ofert
-- QR code + NFC
-- miejsca w pobliżu przez SOLR lub Redis
+#- interfejs androida podstawowy bez logiki
+- wyciąganie dobre ofert z netu
+- zakup ofert przez Paypal
+- wyświetlanie zakupionych ofert
+- miejsca w pobliżu przez SOLR, Hibernate Search lub Redis
 - notyfikacje
-- Redis do ofert w ogóle
-- Async z Servletu 3.0
+#- QR code
+- NFC
+- odbieranie kuponów na telefonie
+- odbieranie kuponów - backend
+- panel sprzedawcy wzbogacony o ilość sprzedanych ofert
+- Redis do ofert w ogóle?
+- Async z Servletu 3.0?
 - poprawa walidacji formularzy
-- JPA
 - panel Account do zmiany hasła użytkowników
 - profile Mavenowe
 - Javadoc
