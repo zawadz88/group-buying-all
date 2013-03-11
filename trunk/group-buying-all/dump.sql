@@ -76,24 +76,7 @@ CREATE TABLE `client_authorities` (
 
 /*Data for the table `client_authorities` */
 
-insert  into `client_authorities`(`username`,`authority`) values ('zawadz88@gmail.com','ROLE_USER'),('zawadz88a@gmail.com','ROLE_USER');
-
-/*Table structure for table `client_offers` */
-
-DROP TABLE IF EXISTS `client_offers`;
-
-CREATE TABLE `client_offers` (
-  `email` varchar(64) NOT NULL,
-  `offer_id` bigint(20) NOT NULL,
-  `use_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `security_key` varchar(64) NOT NULL,
-  PRIMARY KEY (`email`,`offer_id`),
-  KEY `FK_client_offers_offers` (`offer_id`),
-  CONSTRAINT `FK_client_offers_clients` FOREIGN KEY (`email`) REFERENCES `clients` (`email`) ON UPDATE CASCADE,
-  CONSTRAINT `FK_client_offers_offers` FOREIGN KEY (`offer_id`) REFERENCES `offers` (`offer_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-/*Data for the table `client_offers` */
+insert  into `client_authorities`(`username`,`authority`) values ('zawadz88@gmail.com','ROLE_USER'),('zawadz88a@gmail.com','ROLE_USER'),('qqq','ROLE_USER');
 
 /*Table structure for table `clients` */
 
@@ -115,7 +98,27 @@ CREATE TABLE `clients` (
 
 /*Data for the table `clients` */
 
-insert  into `clients`(`email`,`password`,`enabled`,`salt`,`phone_number`,`first_name`,`last_name`,`street`,`postal_code`,`city`) values ('zawadz88@gmail.com','7c2c606721d27e38a168ee6a0ca47862f0416da2',1,'9.279226179353936E8','233336','Piotr','Zawadzki','Or??na 48','02-938','Warsaw'),('zawadz88a@gmail.com','72f7c121ef66cb0403a8a31184fdc2e47f4465f8',1,'5.853564610400964E8','qqqqqq','qqqq','qqqq','Or??na 48','02-938','Warsaw');
+insert  into `clients`(`email`,`password`,`enabled`,`salt`,`phone_number`,`first_name`,`last_name`,`street`,`postal_code`,`city`) values ('qqq','59ef1b30337370964392714cea8f5665a5489792',1,'4.0098423241752E8','24444','Piotr','Zawadzki','Orƒô≈ºna 48','02-938','Warsaw'),('zawadz88@gmail.com','7c2c606721d27e38a168ee6a0ca47862f0416da2',1,'9.279226179353936E8','233336','Piotr','Zawadzki','Or??na 48','02-938','Warsaw'),('zawadz88a@gmail.com','72f7c121ef66cb0403a8a31184fdc2e47f4465f8',1,'5.853564610400964E8','qqqqqq','qqqq','qqqq','Or??na 48','02-938','Warsaw');
+
+/*Table structure for table `coupons` */
+
+DROP TABLE IF EXISTS `coupons`;
+
+CREATE TABLE `coupons` (
+  `id` bigint(20) NOT NULL,
+  `email` varchar(64) NOT NULL,
+  `offer_id` bigint(20) NOT NULL,
+  `use_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `security_key` varchar(64) NOT NULL,
+  `coupon_state` tinyint(2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `FK_client_offers_offers` (`offer_id`),
+  KEY `FK_client_offers_clients` (`email`),
+  CONSTRAINT `FK_client_offers_clients` FOREIGN KEY (`email`) REFERENCES `clients` (`email`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_client_offers_offers` FOREIGN KEY (`offer_id`) REFERENCES `offers` (`offer_id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+/*Data for the table `coupons` */
 
 /*Table structure for table `oauth_access_token` */
 
@@ -132,6 +135,8 @@ CREATE TABLE `oauth_access_token` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `oauth_access_token` */
+
+insert  into `oauth_access_token`(`token_id`,`token`,`authentication_id`,`user_name`,`client_id`,`authentication`,`refresh_token`) values ('43a776db6d4adf9fc0abfec3179771fc','¨Ì\0sr\0Corg.springframework.security.oauth2.common.DefaultOAuth2AccessToken≤û6$˙Œ\0L\0additionalInformationt\0Ljava/util/Map;L\0\nexpirationt\0Ljava/util/Date;L\0refreshTokent\0?Lorg/springframework/security/oauth2/common/OAuth2RefreshToken;L\0scopet\0Ljava/util/Set;L\0	tokenTypet\0Ljava/lang/String;L\0valueq\0~\0xpsr\0java.util.Collections$EmptyMapY6ÖZ‹Á–\0\0xpsr\0java.util.DatehjÅKYt\0\0xpw\0\0=Uûãxpsr\0%java.util.Collections$UnmodifiableSetÄí—èõÄU\0\0xr\0,java.util.Collections$UnmodifiableCollectionB\0ÄÀ^˜\0L\0ct\0Ljava/util/Collection;xpsr\0java.util.LinkedHashSetÿl◊Zï›*\0\0xr\0java.util.HashSet∫DÖïñ∏∑4\0\0xpw\0\0\0?@\0\0\0\0\0t\0readt\0writext\0bearert\0$2670cba0-858e-431e-94c3-d376eebbd263','32fa397764054149d77c968e3f8db3f8','qqq','tonr','¨Ì\0sr\0Aorg.springframework.security.oauth2.provider.OAuth2AuthenticationΩ@bR\0L\0clientAuthenticationt\0CLorg/springframework/security/oauth2/provider/AuthorizationRequest;L\0userAuthenticationt\02Lorg/springframework/security/core/Authentication;xr\0Gorg.springframework.security.authentication.AbstractAuthenticationToken”™(~nGd\0Z\0\rauthenticatedL\0authoritiest\0Ljava/util/Collection;L\0detailst\0Ljava/lang/Object;xp\0sr\0&java.util.Collections$UnmodifiableList¸%1µÏé\0L\0listt\0Ljava/util/List;xr\0,java.util.Collections$UnmodifiableCollectionB\0ÄÀ^˜\0L\0cq\0~\0xpsr\0java.util.ArrayListxÅ“ô«aù\0I\0sizexp\0\0\0w\0\0\0sr\0Borg.springframework.security.core.authority.SimpleGrantedAuthority\0\0\0\0\0\06\0L\0rolet\0Ljava/lang/String;xpt\0	ROLE_USERxq\0~\0psr\0Horg.springframework.security.oauth2.provider.DefaultAuthorizationRequest∂õü¸>òÿ\0Z\0approvedL\0approvalParameterst\0Ljava/util/Map;L\0authoritiesq\0~\0L\0authorizationParametersq\0~\0L\0resolvedRedirectUriq\0~\0L\0resourceIdst\0Ljava/util/Set;L\0scopeq\0~\0xpsr\0java.util.HashMap⁄¡√`—\0F\0\nloadFactorI\0	thresholdxp?@\0\0\0\0\0w\0\0\0\0\0\0\0xsr\0java.util.HashSet∫DÖïñ∏∑4\0\0xpw\0\0\0?@\0\0\0\0\0sq\0~\0\rt\0ROLE_CLIENTxsq\0~\0?@\0\0\0\0\0w\0\0\0\0\0\0t\0usernamet\0qqqt\0\rclient_secrett\0secrett\0scopet\0\nread writet\0\ngrant_typet\0passwordt\0	client_idt\0tonrt\0passwordt\0qqqxpsq\0~\0w\0\0\0?@\0\0\0\0\0t\0\rgreenhouseApixsr\0java.util.LinkedHashSetÿl◊Zï›*\0\0xq\0~\0w\0\0\0?@\0\0\0\0\0t\0readt\0writexsr\0Oorg.springframework.security.authentication.UsernamePasswordAuthenticationToken\0\0\0\0\0\06\0L\0credentialsq\0~\0L\0	principalq\0~\0xq\0~\0sq\0~\0sq\0~\0\0\0\0w\0\0\0q\0~\0xq\0~\01ppsr\03pl.edu.pw.eiti.groupbuying.security.core.SaltedUserÂ’ø\n≤åó\0L\0saltq\0~\0xr\02org.springframework.security.core.userdetails.User\0\0\0\0\0\06\0Z\0accountNonExpiredZ\0accountNonLockedZ\0credentialsNonExpiredZ\0enabledL\0authoritiesq\0~\0L\0passwordq\0~\0L\0usernameq\0~\0xpsr\0%java.util.Collections$UnmodifiableSetÄí—èõÄU\0\0xq\0~\0	sr\0java.util.TreeSet›òPìïÌá[\0\0xpsr\0Forg.springframework.security.core.userdetails.User$AuthorityComparator\0\0\0\0\0\06\0\0xpw\0\0\0q\0~\0xpt\0qqqt\04.0098423241752E8',NULL);
 
 /*Table structure for table `oauth_refresh_token` */
 
@@ -155,7 +160,7 @@ CREATE TABLE `offers` (
   `lead` varchar(400) NOT NULL,
   `description` varchar(1000) NOT NULL,
   `conditions` varchar(1000) NOT NULL,
-  `category_id` bigint(20) NOT NULL,
+  `category` varchar(20) NOT NULL,
   `city` varchar(200) NOT NULL,
   `postal_code` varchar(20) NOT NULL,
   `image_url` varchar(300) NOT NULL,
@@ -169,14 +174,13 @@ CREATE TABLE `offers` (
   `username` varchar(50) NOT NULL,
   PRIMARY KEY (`offer_id`),
   KEY `FK_OFFERS_USERS` (`username`),
-  KEY `FK_OFFERS_CATEGORIES` (`category_id`),
-  CONSTRAINT `FK_OFFERS_CATEGORIES` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `FK_OFFERS_CATEGORIES` (`category`),
   CONSTRAINT `FK_OFFERS_USERS` FOREIGN KEY (`username`) REFERENCES `sellers` (`email`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 /*Data for the table `offers` */
 
-insert  into `offers`(`offer_id`,`title`,`lead`,`description`,`conditions`,`category_id`,`city`,`postal_code`,`image_url`,`start_date`,`price`,`price_before_discount`,`state`,`street`,`end_date`,`expiration_date`,`username`) values (13,'oferta1','asddsadsasa','opis','',1,'Warsaw','02-938','http://aaa.pl','2012-04-09 00:00:00',2,2,'0','Or??na 48','2012-04-11 00:00:00','0000-00-00 00:00:00','zawadz88@gmail.com');
+insert  into `offers`(`offer_id`,`title`,`lead`,`description`,`conditions`,`category`,`city`,`postal_code`,`image_url`,`start_date`,`price`,`price_before_discount`,`state`,`street`,`end_date`,`expiration_date`,`username`) values (17,'Sylwek Val d\'Allos 2012/13','asddsadsasaƒÖƒô','errewr','ƒÖ≈õƒô≈º≈∫','TRAVEL','Warsaw','02-938','http://aaa.pl','2013-03-11 22:37:37',0,0,'0','Orƒô≈ºna 48','2013-04-11 00:00:00','2013-02-25 20:02:33','ttt'),(18,'Wielkie ≈ªarcie, January 5, 2013','asddsadsasa','opis','ƒÖ≈õƒô≈º≈∫','SHOPPING','Warsaw','02-938','http://aaa.pl','2013-03-11 22:37:29',0,0,'0','Orƒô≈ºna 482','2013-04-11 00:00:00','2013-02-25 22:13:26','ttt');
 
 /*Table structure for table `persistent_logins` */
 
