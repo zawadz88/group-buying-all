@@ -4,6 +4,7 @@
 #- persistent_logins rozroznic - ROZWIAZANO przez wywalenie dla admina :)
 #- OAuth2 serwer + Android
 #- interfejs androida podstawowy bez logiki
+- wystawianie ofert z netu
 - wyciąganie dobre ofert z netu
 - zakup ofert przez Paypal
 - wyświetlanie zakupionych ofert

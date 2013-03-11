@@ -41,10 +41,21 @@
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="database" value="MYSQL" />
+				<property name="showSql" value="true" />
 			</bean>
 		</property>
 		<property name="loadTimeWeaver">
 			<bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
+		</property>
+		<property name="jpaPropertyMap">
+		    <map>
+		        <entry>
+		            <key>
+		                <value>hibernate.show_sql</value>
+		            </key>
+		            <value>true</value>
+		        </entry>		        
+		    </map>
 		</property>
 	</bean>
 

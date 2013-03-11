@@ -8,10 +8,21 @@
  * Contributors:
  *     Piotr Zawadzki - initial API and implementation
  ******************************************************************************/
-package pl.edu.pw.eiti.groupbuying.core.domain;
+package pl.edu.pw.eiti.groupbuying.core.dao;
 
-public enum Category {
+import java.util.List;
+
+import pl.edu.pw.eiti.groupbuying.core.domain.Coupon;
+
+
+public interface CouponDAO {
+
+	boolean persistCoupon(Coupon coupon);
 	
-	SHOPPING, TRAVEL, CITY;
+	boolean updateCoupon(Coupon coupon);
+
+	List<Coupon> getCouponsForClientId(String email);
 	
+	Coupon getCoupon(int couponId);
+
 }

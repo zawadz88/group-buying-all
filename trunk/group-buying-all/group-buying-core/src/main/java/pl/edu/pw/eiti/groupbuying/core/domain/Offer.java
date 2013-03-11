@@ -74,9 +74,9 @@ public class Offer implements Serializable {
     @Enumerated(EnumType.ORDINAL)
 	private State state;
 
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="category_id")
-	private Category category = new Category();
+	@JoinColumn(name="category")
+    @Enumerated(EnumType.STRING)
+	private Category category;
 
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="username")

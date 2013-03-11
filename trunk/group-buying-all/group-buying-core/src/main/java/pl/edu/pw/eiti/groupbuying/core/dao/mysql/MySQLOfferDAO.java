@@ -31,7 +31,7 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
 public class MySQLOfferDAO implements OfferDAO {
 	
 	private static final String SELECT_USERNAME_FROM_OFFER = "select username from offers where offer_id = ?";
-	
+		
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -75,14 +75,6 @@ public class MySQLOfferDAO implements OfferDAO {
 	}
 	
 	@Override
-	@Transactional
-	public List<Category> getCategories() {
-		TypedQuery<Category> query = entityManager.createQuery("select c from Category c", Category.class);
-
-		return query.getResultList();
-	}
-
-	@Override
 	public List<Offer> getActiveOffers(String username) {
 		return getOffersForState(username, Offer.State.ACTIVE);
 	}
@@ -122,6 +114,22 @@ public class MySQLOfferDAO implements OfferDAO {
 			System.err.println("No username for offerId: " + offerId);
 		}
 		return username;
+	}
+
+	@Override
+	public List<Offer> getOffersByCategoryAndPageNumber(final Category category, final State state, final int pageNumber, final int pageSize) {
+		
+		TypedQuery<Offer> query = null;
+		if(category != null) {
+			query = entityManager.createQuery("select o from Offer o where o.category = :category and o.state = :state", Offer.class);
+			query.setParameter("category", category);
+		} else {
+			query = entityManager.createQuery("select o from Offer o where o.state = :state", Offer.class);			
+		}
+		query.setParameter("state", state);
+		query.setFirstResult(pageNumber * pageSize);
+		query.setMaxResults(pageSize);
+		return query.getResultList();
 	}
 
 }
