@@ -57,11 +57,8 @@
 				<tr>
 					<td><spring:message code="offer.category.label" /></td>
 					<td>
-						<form:select path="category.categoryId">
-							<form:option value="0" label="Select a category" />
-							<form:options items="${categories}" itemLabel="name" itemValue="categoryId"/>
-						</form:select>
-						<form:errors path="category.categoryId" />
+						<form:select path="category" />
+						<form:errors path="category" />
 					</td>
 				</tr>
 				<tr>

@@ -14,6 +14,7 @@ import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
+import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
 
 
 public interface OfferDAO {
@@ -21,8 +22,8 @@ public interface OfferDAO {
 	public boolean saveOffer(Offer offer);
 
 	public void updateOffer(Offer offer);
-	
-	public List<Category> getCategories();
+		
+	public List<Offer> getOffersByCategoryAndPageNumber(Category category, State state, int pageNumber, int pageSize);
 
 	public List<Offer> getActiveOffers(String username);
 	

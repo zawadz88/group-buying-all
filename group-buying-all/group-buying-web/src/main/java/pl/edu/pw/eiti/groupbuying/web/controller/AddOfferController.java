@@ -13,6 +13,7 @@
  */
 package pl.edu.pw.eiti.groupbuying.web.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class AddOfferController extends BaseController {
 	}
 	
 	public List<Category> prepareCategories() {
-		return offerDAO.getCategories();
+		return Arrays.asList(Category.values());
 	}
 
 }
