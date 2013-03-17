@@ -12,9 +12,10 @@ package pl.edu.pw.eiti.groupbuying.core.dao;
 
 import java.util.List;
 
-import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
-import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
+import pl.edu.pw.eiti.groupbuying.core.dto.Category;
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferEssentialDTO;
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
 
 public interface OfferDAO {
@@ -23,7 +24,7 @@ public interface OfferDAO {
 
 	public void updateOffer(Offer offer);
 		
-	public List<Offer> getOffersByCategoryAndPageNumber(Category category, State state, int pageNumber, int pageSize);
+	public List<OfferEssentialDTO> getOfferEssentialsByCategoryAndPageNumber(Category category, OfferState state, int pageNumber, int pageSize);
 
 	public List<Offer> getActiveOffers(String username);
 	

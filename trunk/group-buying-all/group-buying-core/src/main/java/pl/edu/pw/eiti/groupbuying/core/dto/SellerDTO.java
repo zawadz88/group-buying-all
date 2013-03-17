@@ -8,61 +8,26 @@
  * Contributors:
  *     Piotr Zawadzki - initial API and implementation
  ******************************************************************************/
-package pl.edu.pw.eiti.groupbuying.core.domain;
+package pl.edu.pw.eiti.groupbuying.core.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+@SuppressWarnings("serial")
+public class SellerDTO implements Serializable {
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
-import pl.edu.pw.eiti.groupbuying.core.dto.SellerDTO;
-
-@Entity
-@Table(name = "sellers")
-public class Seller implements Serializable{
-
-	@Id
-	@Column(name = "email")
 	private String email;
 
-	@Column(name = "name")
 	private String name;
 
-	@Column(name = "password")
-	@JsonIgnore
-	private String password;	
-
-	@Column(name = "phone_number")
 	private String phoneNumber;
 
-	@Column(name = "trade")
 	private String trade;
 
-	@Column(name = "description")
 	private String description;
 
-	@Embedded
-	private Address address = new Address();
+	private AddressDTO address = new AddressDTO();
 
-	@Column(name = "nip")
 	private String nip;
-
-	@Column(name = "salt")
-	@JsonIgnore
-	private String salt;
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	public String getEmail() {
 		return email;
@@ -78,14 +43,6 @@ public class Seller implements Serializable{
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-	}
-
-	public String getSalt() {
-		return salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
 	}
 
 	public String getTrade() {
@@ -104,11 +61,11 @@ public class Seller implements Serializable{
 		this.description = description;
 	}
 
-	public Address getAddress() {
+	public AddressDTO getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AddressDTO address) {
 		this.address = address;
 	}
 
@@ -128,16 +85,19 @@ public class Seller implements Serializable{
 		this.nip = nip;
 	}
 
-	@Override
-	public String toString() {
-		return "Seller [email=" + email + ", name=" + name + ", password="
-				+ password + ", phoneNumber=" + phoneNumber + ", trade="
-				+ trade + ", description=" + description + ", address="
-				+ address + ", nip=" + nip + ", salt=" + salt + "]";
+	public SellerDTO(String email, String name, String phoneNumber,
+			String trade, String description, AddressDTO address, String nip) {
+		super();
+		this.email = email;
+		this.name = name;
+		this.phoneNumber = phoneNumber;
+		this.trade = trade;
+		this.description = description;
+		this.address = address;
+		this.nip = nip;
 	}
-	
-	public SellerDTO getSellerDTO() {
-		SellerDTO sellerDTO = new SellerDTO(email, name, phoneNumber, trade, description, address.getAddressDTO(), nip);
-		return sellerDTO;
+
+	public SellerDTO() {
 	}
+
 }

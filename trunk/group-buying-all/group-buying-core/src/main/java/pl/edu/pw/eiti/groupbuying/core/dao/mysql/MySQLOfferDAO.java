@@ -10,11 +10,16 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.dao.mysql;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -23,9 +28,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
-import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
-import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
+import pl.edu.pw.eiti.groupbuying.core.dto.Category;
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferEssentialDTO;
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
 @Repository("offerDAO")
 public class MySQLOfferDAO implements OfferDAO {
@@ -53,21 +59,21 @@ public class MySQLOfferDAO implements OfferDAO {
 	
 	@Override
 	public List<Offer> getActiveOffers() {
-		return getOffersForState(Offer.State.ACTIVE);
+		return getOffersForState(OfferState.ACTIVE);
 	}
 
 	@Override
 	public List<Offer> getWaitingOffers() {
-		return getOffersForState(Offer.State.WAITING);
+		return getOffersForState(OfferState.WAITING);
 	}
 
 	@Override
 	public List<Offer> getFinishedOffers() {
-		return getOffersForState(Offer.State.FINISHED);
+		return getOffersForState(OfferState.FINISHED);
 	}
 
 	@Transactional
-	private List<Offer> getOffersForState(State state) {
+	private List<Offer> getOffersForState(OfferState state) {
 		TypedQuery<Offer> query = entityManager.createQuery("select o from Offer o where o.state = :state", Offer.class);
 		query.setParameter("state", state);
 
@@ -76,21 +82,21 @@ public class MySQLOfferDAO implements OfferDAO {
 	
 	@Override
 	public List<Offer> getActiveOffers(String username) {
-		return getOffersForState(username, Offer.State.ACTIVE);
+		return getOffersForState(username, OfferState.ACTIVE);
 	}
 
 	@Override
 	public List<Offer> getWaitingOffers(String username) {
-		return getOffersForState(username, Offer.State.WAITING);
+		return getOffersForState(username, OfferState.WAITING);
 	}
 
 	@Override
 	public List<Offer> getFinishedOffers(final String username) {
-		return getOffersForState(username, Offer.State.FINISHED);
+		return getOffersForState(username, OfferState.FINISHED);
 	}
 
 	@Transactional
-	private List<Offer> getOffersForState(final String username, final State state) {
+	private List<Offer> getOffersForState(final String username, final OfferState state) {
 		TypedQuery<Offer> query = entityManager.createQuery("select o from Offer o where o.state = :state and o.username = :username", Offer.class);
 		query.setParameter("state", state);
 		query.setParameter("username", username);
@@ -117,19 +123,27 @@ public class MySQLOfferDAO implements OfferDAO {
 	}
 
 	@Override
-	public List<Offer> getOffersByCategoryAndPageNumber(final Category category, final State state, final int pageNumber, final int pageSize) {
+	public List<OfferEssentialDTO> getOfferEssentialsByCategoryAndPageNumber(final Category category, final OfferState state, final int pageNumber, final int pageSize) {
+		CriteriaBuilder qb = entityManager.getCriteriaBuilder();
 		
-		TypedQuery<Offer> query = null;
+	
+		CriteriaQuery<OfferEssentialDTO> c = qb.createQuery(OfferEssentialDTO.class);
+		Root<Offer> p = c.from(Offer.class);
+		Predicate stateCondition = qb.equal(p.get("state"), state);
 		if(category != null) {
-			query = entityManager.createQuery("select o from Offer o where o.category = :category and o.state = :state", Offer.class);
-			query.setParameter("category", category);
+			Predicate categoryCondition = qb.equal(p.get("category"), category);
+			c.where(qb.and(stateCondition, categoryCondition));			
 		} else {
-			query = entityManager.createQuery("select o from Offer o where o.state = :state", Offer.class);			
+			c.where(stateCondition);		
 		}
-		query.setParameter("state", state);
+
+		c.multiselect(p.get("offerId"), p.get("title"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"));
+		TypedQuery<OfferEssentialDTO> query = entityManager.createQuery(c); 
 		query.setFirstResult(pageNumber * pageSize);
 		query.setMaxResults(pageSize);
-		return query.getResultList();
+		List<OfferEssentialDTO> result = query.getResultList();
+		
+		return result;
 	}
 
 }

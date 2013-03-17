@@ -8,7 +8,7 @@
  * Contributors:
  *     Piotr Zawadzki - initial API and implementation
  ******************************************************************************/
-package pl.edu.pw.eiti.groupbuying.core.domain;
+package pl.edu.pw.eiti.groupbuying.core.dto;
 
 public enum Category {
 	

@@ -22,10 +22,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
-import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
-import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
 import pl.edu.pw.eiti.groupbuying.core.domain.Seller;
+import pl.edu.pw.eiti.groupbuying.core.dto.Category;
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 import pl.edu.pw.eiti.groupbuying.security.core.SaltedUser;
 
 @Controller("addOfferController")
@@ -41,7 +41,7 @@ public class AddOfferController extends BaseController {
 		Seller seller = new Seller();
 		seller.setEmail(saltedUser.getUsername());
 		offer.setSeller(seller);
-		offer.setState(State.WAITING);
+		offer.setState(OfferState.WAITING);
 		offerDAO.saveOffer(offer);
 	}
 	

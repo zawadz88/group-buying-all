@@ -22,9 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
-import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
-import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
+import pl.edu.pw.eiti.groupbuying.core.dto.Category;
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
 @Controller("editOfferController")
 public class EditOfferController extends BaseController {
@@ -41,11 +41,11 @@ public class EditOfferController extends BaseController {
 		return Arrays.asList(Category.values());
 	}
 	
-	public Map<State, String> prepareStates() {
-		Map<State,String> stateMap = new LinkedHashMap<State,String>();
-		stateMap.put(State.WAITING, "Waiting");
-		stateMap.put(State.ACTIVE, "Active");
-		stateMap.put(State.FINISHED, "Finished");
+	public Map<OfferState, String> prepareStates() {
+		Map<OfferState,String> stateMap = new LinkedHashMap<OfferState,String>();
+		stateMap.put(OfferState.WAITING, "Waiting");
+		stateMap.put(OfferState.ACTIVE, "Active");
+		stateMap.put(OfferState.FINISHED, "Finished");
 		return stateMap;
 	}
 	
