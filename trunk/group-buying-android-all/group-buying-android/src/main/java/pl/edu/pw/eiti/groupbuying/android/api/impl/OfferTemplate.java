@@ -1,36 +1,58 @@
-/*
- * Copyright 2011-2012 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package pl.edu.pw.eiti.groupbuying.android.api.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import pl.edu.pw.eiti.groupbuying.android.api.Offer;
+import pl.edu.pw.eiti.groupbuying.android.api.OfferEssential;
 import pl.edu.pw.eiti.groupbuying.android.api.OfferOperations;
 
-public class OfferTemplate extends AbstractGroupBuyingOperations implements OfferOperations {
-	
+public class OfferTemplate extends AbstractGroupBuyingOperations implements
+		OfferOperations {
+
 	private final RestTemplate restTemplate;
 
-	public OfferTemplate(RestTemplate restTemplate, boolean isAuthorizedForUser, String apiUrlBase) {
+	public OfferTemplate(RestTemplate restTemplate,
+			boolean isAuthorizedForUser, String apiUrlBase) {
 		super(isAuthorizedForUser, apiUrlBase);
 		this.restTemplate = restTemplate;
 	}
 
 	@Override
 	public Offer getOfferById(int id) {
-		return restTemplate.getForObject(buildUri("offers/" + id), Offer.class);
+		return restTemplate.getForObject(buildUri("offers/offer/" + id),
+				Offer.class);
 	}
+
+	@Override
+	public List<OfferEssential> getOffers(String category, int pageNumber) {
+		// Set the Accept header for "application/json"
+		HttpHeaders requestHeaders = new HttpHeaders();
+		List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
+		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+		requestHeaders.setAccept(acceptableMediaTypes);
+
+		// Populate the headers in an HttpEntity object to use for the request
+		HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+		ResponseEntity<OfferEssential[]> responseEntity = restTemplate.exchange(
+				buildUri("offers/" + category, "page",Integer.toString(pageNumber)),
+				HttpMethod.GET,
+				requestEntity,
+				OfferEssential[].class);
+		OfferEssential[] offers = responseEntity.getBody();
+		if (offers != null) {
+			return Arrays.asList(offers);
+		} else {
+			return new ArrayList<OfferEssential>();
+		}
+	}
+
 }

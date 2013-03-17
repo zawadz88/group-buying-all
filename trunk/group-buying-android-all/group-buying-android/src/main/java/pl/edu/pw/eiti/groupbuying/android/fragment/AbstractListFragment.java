@@ -10,6 +10,8 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android.fragment;
 
+import pl.edu.pw.eiti.groupbuying.android.GroupBuyingApplication;
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.AdapterView.OnItemClickListener;
@@ -21,11 +23,18 @@ public abstract class AbstractListFragment extends Fragment implements OnItemCli
 	protected ListView listView;
 	protected View loadingView;
 	protected View emptyView;
-
+	protected GroupBuyingApplication application;
+	
 	public enum ListViewState {
-		IN_PROGRESS, CONTENT, EMPTY
+		LOADING, CONTENT, EMPTY
 	}
-
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		application = (GroupBuyingApplication) activity.getApplication();
+	}
+	
 	public ListView getListView() {
 		return listView;
 	}
@@ -43,7 +52,7 @@ public abstract class AbstractListFragment extends Fragment implements OnItemCli
 
 	protected void setListViewState(ListViewState newState) {
 		switch (newState) {
-		case IN_PROGRESS:
+		case LOADING:
 			listView.setVisibility(View.GONE);
 			emptyView.setVisibility(View.GONE);
 			loadingView.setVisibility(View.VISIBLE);
@@ -65,11 +74,10 @@ public abstract class AbstractListFragment extends Fragment implements OnItemCli
 	public void onResume() {
 		super.onResume();
 		if (getListAdapter() == null) {
-			setListViewState(ListViewState.IN_PROGRESS);
+			setListViewState(ListViewState.LOADING);
 		}
 	}
 
-	/** Used to refresh screen state (list, infos, etc). */
 	public abstract void refreshList();
 
 }

@@ -25,7 +25,7 @@ import org.springframework.util.MultiValueMap;
 /**
  * @author Roy Clarkson
  */
-class AbstractGroupBuyingOperations {
+public class AbstractGroupBuyingOperations {
 		
 	private final boolean isAuthorized;
 	

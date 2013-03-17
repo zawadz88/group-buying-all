@@ -12,12 +12,13 @@ package pl.edu.pw.eiti.groupbuying.android.api;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class Address implements Serializable {
 
 	private String city;
 
 	private String street;
-	
+
 	private String postalCode;
 
 	public String getCity() {
@@ -44,10 +45,20 @@ public class Address implements Serializable {
 		this.postalCode = postalCode;
 	}
 
+	public Address(String city, String street, String postalCode) {
+		super();
+		this.city = city;
+		this.street = street;
+		this.postalCode = postalCode;
+	}
+
+	public Address() {
+	}
+
 	@Override
 	public String toString() {
-		return "Address [city=" + city + ", street=" + street + ", postalCode="
-				+ postalCode + "]";
+		return "AddressDTO [city=" + city + ", street=" + street
+				+ ", postalCode=" + postalCode + "]";
 	}
 
 }

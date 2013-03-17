@@ -13,7 +13,7 @@ package pl.edu.pw.eiti.groupbuying.android.adapter;
 import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.android.R;
-import pl.edu.pw.eiti.groupbuying.android.api.Offer;
+import pl.edu.pw.eiti.groupbuying.android.api.OfferEssential;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +22,14 @@ import android.widget.ArrayAdapter;
 
 import com.androidquery.AQuery;
 
-public class OfferListAdapter extends ArrayAdapter<Offer> {
+public class OfferEssentialListAdapter extends ArrayAdapter<OfferEssential> {
 
 	private LayoutInflater inflater;
 	
-	private List<Offer> offerList;
+	private List<OfferEssential> offerList;
 	Activity activity;
 
-	public OfferListAdapter(Activity activity, int textViewResourceId, List<Offer> objects) {
+	public OfferEssentialListAdapter(Activity activity, int textViewResourceId, List<OfferEssential> objects) {
 		super(activity, textViewResourceId, objects);
 		this.activity = activity;
 		inflater = LayoutInflater.from(getContext());
@@ -54,7 +54,7 @@ public class OfferListAdapter extends ArrayAdapter<Offer> {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		final Offer offer = offerList.get(position);
+		final OfferEssential offer = offerList.get(position);
 		View hView = convertView;
 		if (convertView == null) {
 			hView = inflater.inflate(R.layout.offer_row, null);

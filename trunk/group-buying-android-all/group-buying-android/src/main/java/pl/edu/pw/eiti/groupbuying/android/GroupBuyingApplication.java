@@ -18,6 +18,7 @@ import org.springframework.social.connect.sqlite.support.SQLiteConnectionReposit
 import org.springframework.social.connect.support.ConnectionFactoryRegistry;
 
 import pl.edu.pw.eiti.groupbuying.android.api.GroupBuyingApi;
+import pl.edu.pw.eiti.groupbuying.android.api.impl.GroupBuyingTemplate;
 import pl.edu.pw.eiti.groupbuying.android.connect.GroupBuyingConnectionFactory;
 import android.app.Application;
 
@@ -88,9 +89,9 @@ public class GroupBuyingApplication extends Application {
 		Connection<GroupBuyingApi> connection = getPrimaryConnection();
 		if (connection != null) {
 			return connection.getApi();
+		} else {
+			return new GroupBuyingTemplate(getApiUrlBase());
 		}
-
-		return null;
 	}
 
 }

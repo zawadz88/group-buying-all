@@ -21,12 +21,17 @@
     </string-array>
     
     
-    <string name="client_id">${client.id}</string>
+    <!-- <string name="client_id">${client.id}</string>
 	<string name="client_secret">${client.secret}</string>
 	<string name="connection_repository_encryption_password">${connection.repository.encryption.password}</string>
 	<string name="connection_repository_encryption_salt">${connection.repository.encryption.salt}</string>
-    <string name="base_url">${base.url}</string>
-    
+    <string name="base_url">${base.url}</string> -->
+    <string name="base_url">http://192.168.0.197:8080/group-buying-rest/</string>
+    <string name="client_id">tonr</string>
+	<string name="client_secret">secret</string>
+	<string name="connection_repository_encryption_password">password</string>
+	<string name="connection_repository_encryption_salt">5c0744940b5c369b</string>
+	
     <string name="sign_in">Sign In</string>
     <string name="cancel">Cancel</string>
     <!-- Image Content Descriptions -->
@@ -50,5 +55,6 @@
     <string name="see_more_offers_button">See more offers</string>
     <string name="cancel_button">Cancel</string>
     <string name="view_coupon_button">View coupon</string>
+    <string name="empty_list_text">No offers available</string>
     
 </resources>

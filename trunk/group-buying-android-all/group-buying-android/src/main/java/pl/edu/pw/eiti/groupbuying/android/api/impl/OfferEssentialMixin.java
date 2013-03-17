@@ -21,33 +21,23 @@ import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import pl.edu.pw.eiti.groupbuying.android.api.Address;
 import pl.edu.pw.eiti.groupbuying.android.api.Category;
-import pl.edu.pw.eiti.groupbuying.android.api.OfferState;
-import pl.edu.pw.eiti.groupbuying.android.api.Seller;
 
 /**
  * Mixin class for adding Jackson annotations to Offer.
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-abstract class OfferMixin {	
+abstract class OfferEssentialMixin {	
 
 	@JsonCreator
-	OfferMixin(
+	OfferEssentialMixin(
 			@JsonProperty("offerId") int offerId, 
 			@JsonProperty("title") String title, 
-			@JsonProperty("lead") String lead, 
-			@JsonProperty("description") String description, 
-			@JsonProperty("conditions") String conditions, 
-			@JsonProperty("address") Address address, 
 			@JsonProperty("imageUrl") String imageUrl, 
 			@JsonProperty("price") double price, 
-			@JsonProperty("priceBeforeDiscount") double priceBeforeDiscount, 
+			@JsonProperty("priceBeforeDiscount") double priceBeforeDiscount/*, 
 			@JsonProperty("startDate") Date startDate, 
 			@JsonProperty("endDate") Date endDate, 
-			@JsonProperty("expirationDate") Date expirationDate, 
-			@JsonProperty("state") OfferState state, 
-			@JsonProperty("category") Category category, 
-			@JsonProperty("seller") Seller seller) {}
+			@JsonProperty("category") Category category*/) {}
 }

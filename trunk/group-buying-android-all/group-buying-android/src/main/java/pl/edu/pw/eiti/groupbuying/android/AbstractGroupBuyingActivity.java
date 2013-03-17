@@ -15,9 +15,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public abstract class AbstractGroupBuyingActivity extends SherlockFragmentActivity {
-	
-	protected static final String TAG = AbstractGroupBuyingActivity.class.getSimpleName();
-	
+		
 	private ProgressDialog progressDialog;
 	
 	@Override

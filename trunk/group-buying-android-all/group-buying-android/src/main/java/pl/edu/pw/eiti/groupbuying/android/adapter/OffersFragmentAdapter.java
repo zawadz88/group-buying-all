@@ -47,7 +47,7 @@ public class OffersFragmentAdapter extends FragmentPagerAdapter {
     		fragment = CityOffersFragment.newInstance(fragmentTitles[position]);
     		break;
     	case OFFERS_SHOPPING_FRAGMENT:
-    		fragment = ShoppingOffersFragment.newInstance(fragmentTitles[position]);
+    		fragment = ShoppingOffersFragment.newInstance();
     		break;
     	case OFFERS_TRAVEL_FRAGMENT:
     		fragment = TravelOffersFragment.newInstance(fragmentTitles[position]);

@@ -1,34 +1,21 @@
-/*
- * Copyright 2011-2012 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package pl.edu.pw.eiti.groupbuying.android.api.impl;
+
+import static pl.edu.pw.eiti.groupbuying.android.util.Constants.CONNECTION_TIMEOUT;
+import static pl.edu.pw.eiti.groupbuying.android.util.Constants.READ_TIMEOUT;
 
 import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
+import org.springframework.web.client.RestTemplate;
 
 import pl.edu.pw.eiti.groupbuying.android.api.GroupBuyingApi;
 import pl.edu.pw.eiti.groupbuying.android.api.OfferOperations;
 
-/**
- * This is the central class for interacting with Greenhouse.
- * @author Roy Clarkson
- */
 public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements GroupBuyingApi {
 	
 	private final String apiUrlBase;
@@ -38,7 +25,15 @@ public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements Gro
 	public GroupBuyingTemplate(String accessToken, String apiUrlBase) {
 		super(accessToken);
 		this.apiUrlBase = apiUrlBase;
-		registerGreenhouseJsonModule();
+		registerGroupBuyingJsonModule();
+		getRestTemplate().setErrorHandler(new GroupBuyingErrorHandler());
+		initSubApis();
+	}
+	
+	public GroupBuyingTemplate(String apiUrlBase) {
+		super();
+		this.apiUrlBase = apiUrlBase;
+		registerGroupBuyingJsonModule();
 		getRestTemplate().setErrorHandler(new GroupBuyingErrorHandler());
 		initSubApis();
 	}
@@ -47,9 +42,19 @@ public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements Gro
 		return offerOperations;
 	}
 	
+	@Override
+	protected void configureRestTemplate(RestTemplate restTemplate) {
+		if (restTemplate.getRequestFactory() instanceof SimpleClientHttpRequestFactory) {
+            ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setConnectTimeout(CONNECTION_TIMEOUT);
+            ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setReadTimeout(READ_TIMEOUT);
+        } else if (restTemplate.getRequestFactory() instanceof HttpComponentsClientHttpRequestFactory) {
+            ((HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory()).setConnectTimeout(CONNECTION_TIMEOUT);
+            ((HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory()).setReadTimeout(READ_TIMEOUT);
+        }
+	}
 	// private helper 
 
-	private void registerGreenhouseJsonModule() {
+	private void registerGroupBuyingJsonModule() {
 		List<HttpMessageConverter<?>> converters = getRestTemplate().getMessageConverters();
 		for (HttpMessageConverter<?> converter : converters) {
 			if(converter instanceof MappingJacksonHttpMessageConverter) {
@@ -66,7 +71,7 @@ public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements Gro
 	}
 	
 	private void initSubApis() {
-			this.offerOperations = new OfferTemplate(getRestTemplate(), isAuthorized(), getApiUrlBase());
+			this.offerOperations = new OfferTemplate(getRestTemplate(), true, getApiUrlBase());//public api
 	}
 	
 }
