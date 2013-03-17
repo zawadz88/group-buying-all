@@ -39,6 +39,7 @@
 		<android.query.version>0.24.3</android.query.version>
 		<google.cloud.messaging.client.version>3</google.cloud.messaging.client.version>
 		<google.play.services.version>4</google.play.services.version>
+		<paypal.mecl.version>1.0</paypal.mecl.version>
 	</properties>
 
 	<dependencyManagement>
@@ -115,6 +116,11 @@
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
 				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.paypal.android</groupId>
+				<artifactId>MECL</artifactId>
+				<version>${paypal.mecl.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
