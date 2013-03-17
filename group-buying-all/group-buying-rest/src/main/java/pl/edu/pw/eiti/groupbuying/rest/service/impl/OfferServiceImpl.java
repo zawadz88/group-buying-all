@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
-import pl.edu.pw.eiti.groupbuying.core.domain.Category;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
-import pl.edu.pw.eiti.groupbuying.core.domain.Offer.State;
+import pl.edu.pw.eiti.groupbuying.core.dto.Category;
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferDTO;
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferEssentialDTO;
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 import pl.edu.pw.eiti.groupbuying.rest.service.OfferService;
 
 @Service("offerService")
@@ -20,9 +22,18 @@ public class OfferServiceImpl implements OfferService {
 	private OfferDAO offerDAO;
 	
 	@Override
-	public List<Offer> getOffers(Category category, int pageNumber) {
-		List<Offer> selectedOffers = offerDAO.getOffersByCategoryAndPageNumber(category, State.ACTIVE, pageNumber, DEFAULT_PAGE_SIZE);
+	public List<OfferEssentialDTO> getOfferEssentials(Category category, int pageNumber) {
+		List<OfferEssentialDTO> selectedOffers = offerDAO.getOfferEssentialsByCategoryAndPageNumber(category, OfferState.ACTIVE, pageNumber, DEFAULT_PAGE_SIZE);
 		return selectedOffers;
+	}
+
+	@Override
+	public OfferDTO getOfferDTO(int offerId) {
+		Offer offer = offerDAO.getOffer(offerId);
+		if(offer != null) {
+			return offer.getOfferDTO();
+		}		
+		return null;
 	}
 
 }

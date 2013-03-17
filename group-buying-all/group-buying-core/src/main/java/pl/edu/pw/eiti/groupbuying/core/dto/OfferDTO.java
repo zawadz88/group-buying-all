@@ -8,83 +8,43 @@
  * Contributors:
  *     Piotr Zawadzki - initial API and implementation
  ******************************************************************************/
-package pl.edu.pw.eiti.groupbuying.core.domain;
+package pl.edu.pw.eiti.groupbuying.core.dto;
 
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+@SuppressWarnings("serial")
+public class OfferDTO implements Serializable {
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import pl.edu.pw.eiti.groupbuying.core.dto.Category;
-import pl.edu.pw.eiti.groupbuying.core.dto.OfferDTO;
-import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
-
-@Entity
-@Table(name = "offers")
-public class Offer implements Serializable {
-
-	@Id
-	@Column(name="offer_id")
 	private int offerId;
 
-	@Column(name="title")
 	private String title;
 
-	@Column(name="lead")
 	private String lead;
 
-	@Column(name="description")
 	private String description;
 
-	@Column(name="conditions")
 	private String conditions;
 
-	@Embedded
-	private Address address = new Address();
+	private AddressDTO address = new AddressDTO();
 
-	@Column(name="image_url")
 	private String imageUrl;
 
-	@Column(name="price")
 	private double price;
 
-	@Column(name="price_before_discount")
 	private double priceBeforeDiscount;
 
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	@Column(name="start_date")
 	private Date startDate;
 
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	@Column(name="end_date")
 	private Date endDate;
-	
-	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	@Column(name="expiration_date")
+
 	private Date expirationDate;
 
-	@Column(name="state")
-    @Enumerated(EnumType.ORDINAL)
 	private OfferState state;
 
-	@JoinColumn(name="category")
-    @Enumerated(EnumType.STRING)
 	private Category category;
 
-	@OneToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="username")
-	private Seller seller;
+	private SellerDTO seller;
 
 	public int getOfferId() {
 		return offerId;
@@ -110,11 +70,11 @@ public class Offer implements Serializable {
 		this.description = description;
 	}
 
-	public Address getAddress() {
+	public AddressDTO getAddress() {
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(AddressDTO address) {
 		this.address = address;
 	}
 
@@ -198,17 +158,43 @@ public class Offer implements Serializable {
 		this.expirationDate = expirationDate;
 	}
 
-	public Seller getSeller() {
+	public SellerDTO getSeller() {
 		return seller;
 	}
 
-	public void setSeller(Seller seller) {
+	public void setSeller(SellerDTO seller) {
+		this.seller = seller;
+	}
+
+	public OfferDTO() {
+	}
+
+	public OfferDTO(int offerId, String title, String lead, String description,
+			String conditions, AddressDTO address, String imageUrl,
+			double price, double priceBeforeDiscount, Date startDate,
+			Date endDate, Date expirationDate, OfferState state,
+			Category category, SellerDTO seller) {
+		super();
+		this.offerId = offerId;
+		this.title = title;
+		this.lead = lead;
+		this.description = description;
+		this.conditions = conditions;
+		this.address = address;
+		this.imageUrl = imageUrl;
+		this.price = price;
+		this.priceBeforeDiscount = priceBeforeDiscount;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.expirationDate = expirationDate;
+		this.state = state;
+		this.category = category;
 		this.seller = seller;
 	}
 
 	@Override
 	public String toString() {
-		return "Offer [offerId=" + offerId + ", title=" + title + ", lead="
+		return "OfferDTO [offerId=" + offerId + ", title=" + title + ", lead="
 				+ lead + ", description=" + description + ", conditions="
 				+ conditions + ", address=" + address + ", imageUrl="
 				+ imageUrl + ", price=" + price + ", priceBeforeDiscount="
@@ -216,11 +202,6 @@ public class Offer implements Serializable {
 				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate
 				+ ", state=" + state + ", category=" + category + ", seller="
 				+ seller + "]";
-	}
-	
-	public OfferDTO getOfferDTO() {
-		OfferDTO offerDTO = new OfferDTO(offerId, title, lead, description, conditions, address.getAddressDTO(), imageUrl, price, priceBeforeDiscount, startDate, endDate, expirationDate, state, category, seller.getSellerDTO());
-		return offerDTO;
 	}
 
 }

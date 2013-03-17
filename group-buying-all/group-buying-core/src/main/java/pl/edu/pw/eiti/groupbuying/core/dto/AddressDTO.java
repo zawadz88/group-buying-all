@@ -8,26 +8,17 @@
  * Contributors:
  *     Piotr Zawadzki - initial API and implementation
  ******************************************************************************/
-package pl.edu.pw.eiti.groupbuying.core.domain;
+package pl.edu.pw.eiti.groupbuying.core.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
-import pl.edu.pw.eiti.groupbuying.core.dto.AddressDTO;
-
 @SuppressWarnings("serial")
-@Embeddable
-public class Address implements Serializable {
+public class AddressDTO implements Serializable {
 
-	@Column(name = "city")
 	private String city;
 
-	@Column(name = "street")
 	private String street;
 
-	@Column(name = "postal_code")
 	private String postalCode;
 
 	public String getCity() {
@@ -54,15 +45,20 @@ public class Address implements Serializable {
 		this.postalCode = postalCode;
 	}
 
+	public AddressDTO(String city, String street, String postalCode) {
+		super();
+		this.city = city;
+		this.street = street;
+		this.postalCode = postalCode;
+	}
+
+	public AddressDTO() {
+	}
+
 	@Override
 	public String toString() {
-		return "Address [city=" + city + ", street=" + street + ", postalCode="
-				+ postalCode + "]";
-	}
-	
-	public AddressDTO getAddressDTO() {
-		final AddressDTO addressDTO = new AddressDTO(city, street, postalCode);
-		return addressDTO;
+		return "AddressDTO [city=" + city + ", street=" + street
+				+ ", postalCode=" + postalCode + "]";
 	}
 
 }
