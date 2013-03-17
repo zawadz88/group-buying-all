@@ -13,6 +13,7 @@ package pl.edu.pw.eiti.groupbuying.android.api;
 import java.io.Serializable;
 import java.util.Date;
 
+@SuppressWarnings("serial")
 public class Offer implements Serializable {
 
 	private int offerId;
@@ -22,6 +23,8 @@ public class Offer implements Serializable {
 	private String lead;
 
 	private String description;
+
+	private String conditions;
 
 	private Address address = new Address();
 
@@ -35,11 +38,13 @@ public class Offer implements Serializable {
 
 	private Date endDate;
 
-	private State state;
+	private Date expirationDate;
 
-	private Category category = new Category();
+	private OfferState state;
 
-	private String username;
+	private Category category;
+
+	private Seller seller;
 
 	public int getOfferId() {
 		return offerId;
@@ -113,19 +118,11 @@ public class Offer implements Serializable {
 		this.endDate = endDate;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public State getState() {
+	public OfferState getState() {
 		return state;
 	}
 
-	public void setState(State state) {
+	public void setState(OfferState state) {
 		this.state = state;
 	}
 
@@ -145,68 +142,66 @@ public class Offer implements Serializable {
 		this.priceBeforeDiscount = priceBeforeDiscount;
 	}
 
+	public String getConditions() {
+		return conditions;
+	}
+
+	public void setConditions(String conditions) {
+		this.conditions = conditions;
+	}
+
+	public Date getExpirationDate() {
+		return expirationDate;
+	}
+
+	public void setExpirationDate(Date expirationDate) {
+		this.expirationDate = expirationDate;
+	}
+
+	public Seller getSeller() {
+		return seller;
+	}
+
+	public void setSeller(Seller seller) {
+		this.seller = seller;
+	}
+
+	public Offer() {
+	}
+
 	public Offer(int offerId, String title, String lead, String description,
-			Address address, String imageUrl, double price,
-			double priceBeforeDiscount, Date startDate, Date endDate,
-			State state, Category category, String username) {
+			String conditions, Address address, String imageUrl,
+			double price, double priceBeforeDiscount, Date startDate,
+			Date endDate, Date expirationDate, OfferState state,
+			Category category, Seller seller) {
 		super();
 		this.offerId = offerId;
 		this.title = title;
 		this.lead = lead;
 		this.description = description;
+		this.conditions = conditions;
 		this.address = address;
 		this.imageUrl = imageUrl;
 		this.price = price;
 		this.priceBeforeDiscount = priceBeforeDiscount;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		this.expirationDate = expirationDate;
 		this.state = state;
 		this.category = category;
-		this.username = username;
+		this.seller = seller;
 	}
 
 	@Override
 	public String toString() {
-		return "Offer [offerId=" + offerId + ", title=" + title + ", lead="
-				+ lead + ", description=" + description + ", address="
-				+ address + ", imageUrl=" + imageUrl + ", price=" + price
-				+ ", priceBeforeDiscount=" + priceBeforeDiscount
-				+ ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", state=" + state + ", category=" + category + ", username="
-				+ username + "]";
-	}
-
-	public static enum State {
-		WAITING(0), ACTIVE(1), FINISHED(2);
-		private int value;
-
-		private State(final int number) {
-			this.value = number;
-		}
-
-		public int getValue() {
-			return value;
-		}
-
-		public static State getState(final int value) {
-			State state = null;
-			switch (value) {
-			case 0:
-				state = WAITING;
-				break;
-			case 1:
-				state = ACTIVE;
-				break;
-			case 2:
-				state = FINISHED;
-				break;
-			default:
-				throw new IllegalArgumentException("value: '" + value
-						+ "' not permitted for Offer.State!");
-			}
-			return state;
-		}
-
+		return "OfferDTO [offerId=" + offerId + ", title=" + title + ", lead="
+				+ lead + ", description=" + description + ", conditions="
+				+ conditions + ", address=" + address + ", imageUrl="
+				+ imageUrl + ", price=" + price + ", priceBeforeDiscount="
+				+ priceBeforeDiscount + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate
+				+ ", state=" + state + ", category=" + category + ", seller="
+				+ seller + "]";
 	}
 
 }

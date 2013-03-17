@@ -15,6 +15,8 @@
  */
 package pl.edu.pw.eiti.groupbuying.android.api;
 
+import java.util.List;
+
 
 
 /**
@@ -26,5 +28,6 @@ public interface OfferOperations {
 	
 	Offer getOfferById(int id);
 	
+	List<OfferEssential> getOffers(String category, int pageNumber);
 
 }

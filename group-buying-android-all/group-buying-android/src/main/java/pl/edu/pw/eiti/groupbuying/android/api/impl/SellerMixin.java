@@ -19,14 +19,22 @@ import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import pl.edu.pw.eiti.groupbuying.android.api.Address;
+
 /**
- * Mixin class for adding Jackson annotations to Category.
+ * Mixin class for adding Jackson annotations to Offer.
  * 
  */
 @JsonIgnoreProperties(ignoreUnknown=true)
-abstract class CategoryMixin {	
+abstract class SellerMixin {	
+
 	@JsonCreator
-	CategoryMixin(
-			@JsonProperty("categoryId") long categoryId, 
-			@JsonProperty("name") String name) {}
+	SellerMixin(
+			@JsonProperty("email") String email, 
+			@JsonProperty("name") String name, 
+			@JsonProperty("phoneNumber") String phoneNumber, 
+			@JsonProperty("trade") String trade, 
+			@JsonProperty("description") String description, 
+			@JsonProperty("address") Address address, 
+			@JsonProperty("nip") String nip) {}
 }
