@@ -19,6 +19,8 @@ public class OfferEssentialDTO implements Serializable {
 	private int offerId;
 
 	private String title;
+
+	private String imageUrl;
 	
 	private double price;
 
@@ -86,12 +88,21 @@ public class OfferEssentialDTO implements Serializable {
 		this.category = category;
 	}
 
-	public OfferEssentialDTO(int offerId, String title,
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public OfferEssentialDTO(int offerId, String title, String imageUrl,
 			double price, double priceBeforeDiscount, Date startDate,
 			Date endDate, Category category) {
 		super();
 		this.offerId = offerId;
 		this.title = title;
+		this.imageUrl = imageUrl;
 		this.price = price;
 		this.priceBeforeDiscount = priceBeforeDiscount;
 		this.startDate = startDate;

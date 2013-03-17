@@ -137,7 +137,7 @@ public class MySQLOfferDAO implements OfferDAO {
 			c.where(stateCondition);		
 		}
 
-		c.multiselect(p.get("offerId"), p.get("title"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"));
+		c.multiselect(p.get("offerId"), p.get("title"), p.get("imageUrl"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"));
 		TypedQuery<OfferEssentialDTO> query = entityManager.createQuery(c); 
 		query.setFirstResult(pageNumber * pageSize);
 		query.setMaxResults(pageSize);
