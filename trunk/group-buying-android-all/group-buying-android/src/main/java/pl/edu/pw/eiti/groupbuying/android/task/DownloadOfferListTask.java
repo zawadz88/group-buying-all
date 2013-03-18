@@ -1,13 +1,10 @@
 package pl.edu.pw.eiti.groupbuying.android.task;
 
-import static pl.edu.pw.eiti.groupbuying.android.util.Constants.TAG;
-
 import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.android.GroupBuyingApplication;
 import pl.edu.pw.eiti.groupbuying.android.api.OfferEssential;
 import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
-import android.util.Log;
 
 public class DownloadOfferListTask extends AbstractGroupBuyingTask<Void> {
 	
@@ -26,8 +23,7 @@ public class DownloadOfferListTask extends AbstractGroupBuyingTask<Void> {
 
 	@Override
 	protected void doInBackgroundSafe() throws Exception {
-		offerList = application.getGroupBuyingApi().offerOperations().getOffers(category, pageNumber);
-		Log.i(TAG, "offers: " + offerList);
+		offerList = application.getUnauthorizedGroupBuyingApi().offerOperations().getOffers(category, pageNumber);
 	}
 	
 	public List<OfferEssential> getOfferList() {
