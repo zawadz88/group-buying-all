@@ -85,13 +85,16 @@ public class GroupBuyingApplication extends Application {
 		return getConnectionRepository().findPrimaryConnection(GroupBuyingApi.class);
 	}
 
-	public GroupBuyingApi getGroupBuyingApi() {
+	public GroupBuyingApi getAuthorizedGroupBuyingApi() {
 		Connection<GroupBuyingApi> connection = getPrimaryConnection();
 		if (connection != null) {
 			return connection.getApi();
-		} else {
-			return new GroupBuyingTemplate(getApiUrlBase());
 		}
+		return null;
+	}
+	
+	public GroupBuyingApi getUnauthorizedGroupBuyingApi() {
+		return new GroupBuyingTemplate(getApiUrlBase());
 	}
 
 }
