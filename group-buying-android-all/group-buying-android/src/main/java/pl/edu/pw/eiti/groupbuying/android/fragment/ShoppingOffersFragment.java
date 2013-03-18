@@ -12,16 +12,22 @@ package pl.edu.pw.eiti.groupbuying.android.fragment;
 
 import java.util.List;
 
+import org.springframework.social.connect.DuplicateConnectionException;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
+
 import pl.edu.pw.eiti.groupbuying.android.OfferActivity;
 import pl.edu.pw.eiti.groupbuying.android.R;
 import pl.edu.pw.eiti.groupbuying.android.adapter.OfferEssentialListAdapter;
 import pl.edu.pw.eiti.groupbuying.android.api.OfferEssential;
+import pl.edu.pw.eiti.groupbuying.android.fragment.util.AlertDialogListener;
 import pl.edu.pw.eiti.groupbuying.android.task.AbstractGroupBuyingTask;
 import pl.edu.pw.eiti.groupbuying.android.task.DownloadOfferListTask;
 import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
 import pl.edu.pw.eiti.groupbuying.android.task.util.TaskResult;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +35,7 @@ import android.widget.AdapterView;
 
 import com.androidquery.AQuery;
 
-public final class ShoppingOffersFragment extends AbstractListFragment implements AsyncTaskListener {
+public final class ShoppingOffersFragment extends AbstractListFragment implements AsyncTaskListener, AlertDialogListener {
 
 	private List<OfferEssential> offerList;
 
@@ -90,7 +96,7 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 		OfferEssential selectedOffer = offerList.get(position);
 		Intent intent = new Intent(getActivity(), OfferActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra("offer", selectedOffer);
+		intent.putExtra("offerId", selectedOffer.getOfferId());
 		startActivity(intent);
 	}
 
@@ -104,7 +110,12 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	private void showAlertDialog(int title, int message, int okText, Object relatedObject) {
+	    DialogFragment newFragment = AlertDialogFragment.newInstance(title, message, okText, this, relatedObject);
+	    newFragment.show(getFragmentManager(), "dialog");
+	}
+	
 	@Override
 	public void onTaskFinished(AbstractGroupBuyingTask<?> task,	TaskResult result) {
 		//TODO obsluzyc doczytywanie ofert
@@ -118,8 +129,39 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 				setListViewState(ListViewState.CONTENT);
 			}
 		} else if(result.equals(TaskResult.FAILED)) {
-			setListViewState(ListViewState.EMPTY);			
+			if(offerList == null || offerList.size() == 0) {
+				setListViewState(ListViewState.EMPTY);
+			} else {
+				setListViewState(ListViewState.CONTENT);
+			}
+			Exception exception = task.getException();
+			if(exception != null) {
+				int title;
+				int message;
+				if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
+					title = R.string.network_problems_title;
+					message = R.string.network_problems_message;
+				} else {
+					title = R.string.connection_error_title;
+					message = R.string.connection_error_message;
+				}
+				showAlertDialog(title, message, R.string.retry, task);
+			}
 		}
-		
+	}
+
+	@Override
+	public void doPositiveClick(Object relatedObject) {
+		System.out.println("doPositiveClick");
+		if(relatedObject != null && relatedObject instanceof DownloadOfferListTask) {
+			setListViewState(ListViewState.LOADING);
+			AbstractGroupBuyingTask<?> task = ((DownloadOfferListTask) relatedObject).getClone();
+			task.execute();
+		}
+	}
+
+	@Override
+	public void doNegativeClick(Object relatedObject) {
+		System.out.println("doNegativeClick");
 	}
 }

@@ -14,6 +14,7 @@ public abstract class AbstractGroupBuyingTask<Result> extends AsyncTask<Void, Vo
 	protected Exception exception;
 	protected boolean containsErrors;
 
+	public abstract AbstractGroupBuyingTask<?> getClone();
 	
 	@Override
 	protected final Result doInBackground(Void... params) {
