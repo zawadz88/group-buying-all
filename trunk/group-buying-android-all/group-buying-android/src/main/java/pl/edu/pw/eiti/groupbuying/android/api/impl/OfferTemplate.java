@@ -28,8 +28,7 @@ public class OfferTemplate extends AbstractGroupBuyingOperations implements
 
 	@Override
 	public Offer getOfferById(int id) {
-		return restTemplate.getForObject(buildUri("offers/offer/" + id),
-				Offer.class);
+		return restTemplate.getForObject(buildUri("offers/offer/" + id), Offer.class);
 	}
 
 	@Override

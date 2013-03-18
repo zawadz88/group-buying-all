@@ -20,7 +20,13 @@ public class DownloadOfferListTask extends AbstractGroupBuyingTask<Void> {
 		this.taskListener = listener;
 		this.application = application;
 	}
-
+	
+	@Override
+	public AbstractGroupBuyingTask<?> getClone() {
+		DownloadOfferListTask clone = new DownloadOfferListTask(category, pageNumber, taskListener, application);
+		return clone;
+	}
+	
 	@Override
 	protected void doInBackgroundSafe() throws Exception {
 		offerList = application.getUnauthorizedGroupBuyingApi().offerOperations().getOffers(category, pageNumber);

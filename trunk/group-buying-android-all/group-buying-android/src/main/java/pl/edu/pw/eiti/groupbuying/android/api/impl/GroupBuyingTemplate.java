@@ -40,7 +40,7 @@ public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements Gro
 		initSubApis();
 	}
 
-	//FIXME chamski hack, ale dopóki w spring social nic lepszego nie dadza to dupa...
+	//FIXME chamski hack, ale dopóki w spring social nic lepszego nie dadza to tak musi być...
 	private void initRequestFactory() {
 		if (Build.VERSION.SDK_INT >= 9) {
 			SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();

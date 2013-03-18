@@ -31,6 +31,12 @@ public class SignInTask extends AbstractGroupBuyingTask<Void> {
 		this.taskListener = listener;
 	}
 
+	@Override
+	public AbstractGroupBuyingTask<?> getClone() {
+		SignInTask task = new SignInTask(url, formData, taskListener);
+		return task;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void doInBackgroundSafe() throws Exception {
@@ -52,4 +58,5 @@ public class SignInTask extends AbstractGroupBuyingTask<Void> {
 	public Map<String, Object> getResponseBody() {
 		return responseBody;
 	}
+
 }

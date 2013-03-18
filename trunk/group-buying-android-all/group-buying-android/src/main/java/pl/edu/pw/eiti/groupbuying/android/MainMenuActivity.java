@@ -10,7 +10,7 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android;
 
-import pl.edu.pw.eiti.groupbuying.android.adapter.OffersFragmentAdapter;
+import pl.edu.pw.eiti.groupbuying.android.fragment.util.OffersFragmentAdapter;
 import pl.edu.pw.eiti.groupbuying.android.view.MapFragmentScrollOverrideViewPager;
 import android.content.Intent;
 import android.os.Bundle;

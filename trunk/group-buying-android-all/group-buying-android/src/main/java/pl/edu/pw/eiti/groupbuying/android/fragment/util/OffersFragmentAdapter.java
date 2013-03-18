@@ -8,7 +8,7 @@
  * Contributors:
  *     Piotr Zawadzki - initial API and implementation
  ******************************************************************************/
-package pl.edu.pw.eiti.groupbuying.android.adapter;
+package pl.edu.pw.eiti.groupbuying.android.fragment.util;
 
 import pl.edu.pw.eiti.groupbuying.android.fragment.CityOffersFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.NearbyOffersFragment;
