@@ -15,36 +15,49 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
 import pl.edu.pw.eiti.groupbuying.android.api.Offer;
+import pl.edu.pw.eiti.groupbuying.android.fragment.LoadingFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.NoInternetFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.OfferFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.util.NoInternetListener;
 import pl.edu.pw.eiti.groupbuying.android.task.AbstractGroupBuyingTask;
 import pl.edu.pw.eiti.groupbuying.android.task.DownloadOfferTask;
 import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
 import pl.edu.pw.eiti.groupbuying.android.task.util.TaskResult;
+import pl.edu.pw.eiti.groupbuying.android.util.NetUtils;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
 import com.androidquery.AQuery;
 
-public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncTaskListener {
+public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncTaskListener, NoInternetListener {
 
 	protected static final String TAG = OfferActivity.class.getSimpleName();
-
-	private Offer offer;
-
-	private AQuery aq;
-
+    private static final int LOADING = 0;
+    private static final int OFFER = 1;
+    private static final int NO_INTERNET = 2;
+    private static final int FRAGMENT_COUNT = NO_INTERNET + 1;
+    private static final String FRAGMENT_PREFIX = "fragment";
+    private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
+    
+    private boolean restoredFragment = false;
 	private ShareActionProvider actionProvider;
+	
+	private Offer offer;	
+	private int offerId;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_offer);
-		aq = new AQuery(this);
-		int offerId = -1;
+		offerId = -1;
 		if (getIntent().getSerializableExtra("offerId") != null) {
 			offerId = getIntent().getIntExtra("offerId", -1);
 			if(offerId == -1) {
@@ -52,35 +65,23 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 				return;
 			}
 		}
-		if (getIntent().getSerializableExtra("offer") != null) {
-			offer = (Offer) getIntent().getSerializableExtra("offer");
-			initOfferView();
-		} else {
-			new DownloadOfferTask(offerId, this, getApplicationContext()).execute();
-			//TODO jakis progressbar
+		if (savedInstanceState != null && savedInstanceState.getSerializable("offer") != null) {
+			offer = (Offer) savedInstanceState.getSerializable("offer");
 		}
 		
-	}
-
-	private void initOfferView() {
-		aq.id(R.id.offerImage).image(offer.getImageUrl());
-		aq.id(R.id.offerTitle).text(offer.getTitle());
-		aq.id(R.id.offerLead).text(offer.getLead());
-		aq.id(R.id.offerDescription).text(offer.getDescription());
-		aq.id(R.id.buyButton).clicked(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(OfferActivity.this, PaymentMethodActivity.class);
-				intent.putExtra("offer", offer);
-				startActivity(intent);				
-			}
-		});
+		for(int i = 0; i < fragments.length; i++) {
+            restoreFragment(savedInstanceState, i);
+        }
+		
+		if(offer == null) {
+			new DownloadOfferTask(offerId, this, getApplicationContext()).execute();
+		}
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
+		
 	}
 
 	@Override
@@ -118,6 +119,21 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 	}
 	
 	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("offerId", offerId);
+		outState.putSerializable("offer", offer);
+		FragmentManager manager = getSupportFragmentManager();
+		// Since we're only adding one Fragment at a time, we can only save one.
+		Fragment f = manager.findFragmentById(R.id.body_frame);
+		for (int i = 0; i < fragments.length; i++) {
+			if (fragments[i] == f) {
+				manager.putFragment(outState, getBundleKey(i), fragments[i]);
+			}
+		}
+	}
+	
+	@Override
 	public void onTaskFinished(AbstractGroupBuyingTask<?> task, TaskResult result) {
 		if(result.equals(TaskResult.SUCCESSFUL)) {
 			Offer downloadedOffer = ((DownloadOfferTask) task).getOffer();
@@ -133,24 +149,92 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 				//TODO zastapic jakims realnym linkiem
 				shareIntent.putExtra(Intent.EXTRA_TEXT, "http://www.google.com");			    
 			    actionProvider.setShareIntent(shareIntent);
-			    initOfferView();
+			    showFragment(OFFER);
 			}
 		} else if(result.equals(TaskResult.FAILED)) {
 			Exception exception = task.getException();
 			if(exception != null) {
-				int title;
-				int message;
 				if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
-					title = R.string.network_problems_title;
-					message = R.string.network_problems_message;
+					showFragment(NO_INTERNET);
 				} else {
-					title = R.string.connection_error_title;
-					message = R.string.connection_error_message;
+					//TODO rozroznic, zrobic rzucanie błędów po stronie serwera
+					showFragment(NO_INTERNET);
 				}
-				//TODO wyswietlic fragment braku netu tak jak w ladnej czesci wanny
 			}
 		}
 		
 	}
+	@Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if (restoredFragment) {
+            return;
+        }
+        if(offer != null) {
+        	showFragment(OFFER);	
+        } else {
+            if(NetUtils.isOnline(this)) {
+    			showFragment(LOADING);	
+            } else {
+    			showFragment(NO_INTERNET);	
+            }
+        }        
+    }
+	
+	private void restoreFragment(Bundle savedInstanceState, int fragmentIndex) {
+		Fragment fragment = null;
+        if (savedInstanceState != null) {
+            FragmentManager manager = getSupportFragmentManager();
+            fragment = manager.getFragment(savedInstanceState, getBundleKey(fragmentIndex));
+        }
+        if (fragment != null) {
+            fragments[fragmentIndex] = fragment;
+            if(fragmentIndex == NO_INTERNET) {
+            	((NoInternetFragment)fragment).setListener(this);
+            }
+            restoredFragment = true;
+        } else {
+            switch (fragmentIndex) {
+                case OFFER:
+                	if(offer != null) {
+                        fragments[OFFER] = OfferFragment.newInstance(offer);                		
+                	}
+                    break;
+                case NO_INTERNET:
+                    fragments[NO_INTERNET] = NoInternetFragment.newInstance(this);
+                    break;
+                case LOADING:
+                    fragments[LOADING] = LoadingFragment.newInstance(getString(R.string.loading_offer_message));
+                    break;
+                default:
+                    Log.w(TAG, "OfferActivity: invalid fragment index: " + fragmentIndex);
+                    break;
+            }
+        }
+	}
+	
+	public void showFragment(int fragmentNo) {
+		if(fragmentNo == OFFER && fragments[OFFER] == null) {
+			fragments[OFFER] = OfferFragment.newInstance(offer);
+		}
+		FragmentManager manager = getSupportFragmentManager();
+		FragmentTransaction transaction = manager.beginTransaction();
+		transaction.replace(R.id.body_frame, fragments[fragmentNo]).commit();
+	}
+	
+    private String getBundleKey(int index) {
+        return FRAGMENT_PREFIX + Integer.toString(index);
+    }
 
+	@Override
+	public void onDeviceOnline() {
+		showFragment(LOADING);
+		new DownloadOfferTask(offerId, this, getApplicationContext()).execute();		
+	}
+
+	@Override
+	public void onDeviceOffline() {
+		// TODO Auto-generated method stub
+		
+	}
 }
