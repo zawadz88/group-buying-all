@@ -1,5 +1,8 @@
 package pl.edu.pw.eiti.groupbuying.android.fragment;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import pl.edu.pw.eiti.groupbuying.android.fragment.util.AlertDialogListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,13 +13,11 @@ import android.view.KeyEvent;
 
 public class AlertDialogFragment extends DialogFragment {
 	
-	private AlertDialogListener listener;
-	private Object relatedObject;
+	private Set<AlertDialogListener> listeners = new HashSet<AlertDialogListener>();
 
-    public static AlertDialogFragment newInstance(int title, int message, int okText, AlertDialogListener listener, Object relatedObject) {
+    public static AlertDialogFragment newInstance(int title, int message, int okText, AlertDialogListener listener) {
     	AlertDialogFragment frag = new AlertDialogFragment();
-    	frag.listener = listener;
-    	frag.relatedObject = relatedObject;
+    	frag.listeners.add(listener);
         Bundle args = new Bundle();
         args.putInt("title", title);
         args.putInt("message", message);
@@ -25,6 +26,12 @@ public class AlertDialogFragment extends DialogFragment {
         return frag;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	setRetainInstance(true);
+    }
+    
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         int title = getArguments().getInt("title");
@@ -38,14 +45,23 @@ public class AlertDialogFragment extends DialogFragment {
                 .setPositiveButton(okText,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            listener.doPositiveClick(relatedObject);
+                        	System.out.println("listenrs: " + listeners.size());
+                            if(!listeners.isEmpty()) {
+                            	for(AlertDialogListener listener : listeners) {
+                            		listener.doPositiveClick();
+                            	}
+                            }
                         }
                     }
                 )
                 .setNegativeButton(android.R.string.cancel,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                        	listener.doNegativeClick(relatedObject);
+                        	if(!listeners.isEmpty()) {
+                            	for(AlertDialogListener listener : listeners) {
+                            		listener.doNegativeClick();
+                            	}
+                            }
                         }
                     }
                 )
@@ -56,11 +72,38 @@ public class AlertDialogFragment extends DialogFragment {
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
         					dialog.dismiss();
-                        	listener.doNegativeClick(relatedObject);
+        					if(!listeners.isEmpty()) {
+                            	for(AlertDialogListener listener : listeners) {
+                            		listener.doNegativeClick();
+                            	}
+                            }
         		        }
 						return false;
 					}
 				})
                 .create();
     }
+    
+    @Override
+    public void onDetach() {
+    	super.onDetach();
+    	listeners.clear();
+    }
+    
+    @Override
+    public void onDestroyView() {
+        if (getDialog() != null && getRetainInstance())
+            getDialog().setDismissMessage(null);
+            super.onDestroyView();
+    }
+    
+	public void addListener(AlertDialogListener listener) {
+		listeners.add(listener);
+	}
+
+	public void removeListener(AlertDialogListener listener) {
+		listeners.remove(listener);
+	}
+    
+    
 }

@@ -28,6 +28,7 @@ import pl.edu.pw.eiti.groupbuying.android.task.util.TaskResult;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ import com.androidquery.AQuery;
 
 public final class ShoppingOffersFragment extends AbstractListFragment implements AsyncTaskListener, AlertDialogListener {
 
+	private AlertDialogFragment dialogFragment;
+	
 	private List<OfferEssential> offerList;
 
 	public static ShoppingOffersFragment newInstance() {
@@ -106,14 +109,37 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 	}
 
 	@Override
+	public void onStop() {
+		System.out.println("onStop");
+		super.onStop();
+	}
+	
+	@Override
 	public void refreshList() {
 		// TODO Auto-generated method stub
 
 	}
 	
-	private void showAlertDialog(int title, int message, int okText, Object relatedObject) {
-	    DialogFragment newFragment = AlertDialogFragment.newInstance(title, message, okText, this, relatedObject);
-	    newFragment.show(getFragmentManager(), "dialog");
+	private void showAlertDialog(int title, int message, int okText) {
+		System.out.println("showAlertDialog");
+		Fragment fragment = getFragmentManager().findFragmentByTag("dialog");
+		if(fragment != null) {
+			System.out.println("fragment found");
+			dialogFragment = (AlertDialogFragment) fragment;
+		}
+		if(dialogFragment == null) {
+			System.out.println("fragment null");
+		    dialogFragment = AlertDialogFragment.newInstance(title, message, okText, this);
+		    dialogFragment.show(getFragmentManager(), "dialog");			
+		} else {
+			dialogFragment.addListener(this);
+			if(!dialogFragment.isVisible()) {
+				System.out.println("fragment inVisible");
+				if(!dialogFragment.isAdded()) {
+					dialogFragment.show(getFragmentManager(), "dialog");
+				}	
+			}
+		}
 	}
 	
 	@Override
@@ -145,23 +171,25 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 					title = R.string.connection_error_title;
 					message = R.string.connection_error_message;
 				}
-				showAlertDialog(title, message, R.string.retry, task);
+				showAlertDialog(title, message, R.string.retry);
 			}
 		}
 	}
 
 	@Override
-	public void doPositiveClick(Object relatedObject) {
+	public void doPositiveClick() {
 		System.out.println("doPositiveClick");
-		if(relatedObject != null && relatedObject instanceof DownloadOfferListTask) {
-			setListViewState(ListViewState.LOADING);
-			AbstractGroupBuyingTask<?> task = ((DownloadOfferListTask) relatedObject).getClone();
-			task.execute();
-		}
+		setListViewState(ListViewState.LOADING);
+		new DownloadOfferListTask("shopping", 0, this, application).execute();
 	}
 
 	@Override
-	public void doNegativeClick(Object relatedObject) {
+	public void doNegativeClick() {
 		System.out.println("doNegativeClick");
+		if(offerList == null || offerList.size() == 0) {
+			setListViewState(ListViewState.EMPTY);
+		} else {
+			setListViewState(ListViewState.CONTENT);
+		}
 	}
 }
