@@ -14,59 +14,119 @@ import pl.edu.pw.eiti.groupbuying.android.fragment.CityOffersFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.NearbyOffersFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.ShoppingOffersFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.TravelOffersFragment;
+import pl.edu.pw.eiti.groupbuying.android.view.MapFragmentScrollOverrideViewPager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.ActionBar.TabListener;
 
-public class OffersFragmentAdapter extends FragmentPagerAdapter {
+public class OffersFragmentAdapter extends FragmentPagerAdapter implements OnPageChangeListener, TabListener {
 
+	private static final String TAB_TAG_PREFIX = "tab";
 	public final static int OFFERS_NEARBY_FRAGMENT = 0;
 	public final static int OFFERS_FROM_THE_CITY_FRAGMENT = 1;
 	public final static int OFFERS_SHOPPING_FRAGMENT = 2;
 	public final static int OFFERS_TRAVEL_FRAGMENT = 3;
-	
-	private final static int FRAGMENT_COUNT = OFFERS_TRAVEL_FRAGMENT + 1;
-	
-    protected String[] fragmentTitles;
 
+	public final static int FRAGMENT_COUNT = OFFERS_TRAVEL_FRAGMENT + 1;
 
-    public OffersFragmentAdapter(FragmentManager fm, String[] titles) {
-        super(fm);
-        this.fragmentTitles = titles;
-    }
+	protected String[] fragmentTitles;
+	private ActionBar bar;
+	private MapFragmentScrollOverrideViewPager viewPager;
 
-    @Override
-    public Fragment getItem(int position) {
-    	Fragment fragment = null;
-    	switch(position) {
-    	case OFFERS_NEARBY_FRAGMENT:
-    		fragment = NearbyOffersFragment.newInstance(fragmentTitles[position]);
-    		break;
-    	case OFFERS_FROM_THE_CITY_FRAGMENT:
-    		fragment = CityOffersFragment.newInstance(fragmentTitles[position]);
-    		break;
-    	case OFFERS_SHOPPING_FRAGMENT:
-    		fragment = ShoppingOffersFragment.newInstance();
-    		break;
-    	case OFFERS_TRAVEL_FRAGMENT:
-    		fragment = TravelOffersFragment.newInstance(fragmentTitles[position]);
-    		break;
-    	default:
-    		throw new IllegalArgumentException("Unsupported position: " + position);
-    	}
-    	
-    	
-        return fragment;
-    }
+	public OffersFragmentAdapter(FragmentManager fm, String[] titles, ActionBar bar, MapFragmentScrollOverrideViewPager pager) {
+		super(fm);
+		this.fragmentTitles = titles;
+		this.bar = bar;
+		viewPager = pager;
+		viewPager.setAdapter(this);
+		viewPager.setOnPageChangeListener(this);
+		for (int i = 0; i < titles.length; i++) {
+			Tab tab = bar.newTab();
+			tab.setText(titles[i]);
+			tab.setTag(TAB_TAG_PREFIX + i);
+			tab.setTabListener(this);
+			bar.addTab(tab);
+		}
+	}
 
-    @Override
-    public int getCount() {
-        return FRAGMENT_COUNT;
-    }
+	@Override
+	public Fragment getItem(int position) {
+		Fragment fragment = null;
+		switch (position) {
+		case OFFERS_NEARBY_FRAGMENT:
+			fragment = NearbyOffersFragment.newInstance(fragmentTitles[position]);
+			break;
+		case OFFERS_FROM_THE_CITY_FRAGMENT:
+			fragment = CityOffersFragment.newInstance(fragmentTitles[position]);
+			break;
+		case OFFERS_SHOPPING_FRAGMENT:
+			fragment = ShoppingOffersFragment.newInstance();
+			break;
+		case OFFERS_TRAVEL_FRAGMENT:
+			fragment = TravelOffersFragment.newInstance(fragmentTitles[position]);
+			break;
+		default:
+			throw new IllegalArgumentException("Unsupported position: " + position);
+		}
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-      return fragmentTitles[position];
-    }
+		return fragment;
+	}
+
+	@Override
+	public int getCount() {
+		return FRAGMENT_COUNT;
+	}
+
+	@Override
+	public CharSequence getPageTitle(int position) {
+		return fragmentTitles[position];
+	}
+
+	@Override
+	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		System.out.println("onTabSelected");
+		Object tag = tab.getTag();
+		for (int i = 0; i < fragmentTitles.length; i++) {
+			if ((TAB_TAG_PREFIX + i).equals(tag)) {
+				viewPager.setCurrentItem(i);
+			}
+		}
+
+	}
+
+	@Override
+	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onPageSelected(int position) {
+		System.out.println("onPageSelected " + position);
+		bar.setSelectedNavigationItem(position);
+	}
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
+		// TODO Auto-generated method stub
+
+	}
 }

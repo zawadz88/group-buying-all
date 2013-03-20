@@ -27,7 +27,6 @@ import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
 import pl.edu.pw.eiti.groupbuying.android.task.util.TaskResult;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,24 +121,26 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 	
 	private void showAlertDialog(int title, int message, int okText) {
 		System.out.println("showAlertDialog");
-		Fragment fragment = getFragmentManager().findFragmentByTag("dialog");
-		if(fragment != null) {
-			System.out.println("fragment found");
-			dialogFragment = (AlertDialogFragment) fragment;
-		}
-		if(dialogFragment == null) {
-			System.out.println("fragment null");
-		    dialogFragment = AlertDialogFragment.newInstance(title, message, okText, this);
-		    dialogFragment.show(getFragmentManager(), "dialog");			
-		} else {
-			dialogFragment.addListener(this);
-			if(!dialogFragment.isVisible()) {
-				System.out.println("fragment inVisible");
-				if(!dialogFragment.isAdded()) {
-					dialogFragment.show(getFragmentManager(), "dialog");
-				}	
+		if(getFragmentManager() != null) {
+			Fragment fragment = getFragmentManager().findFragmentByTag("dialog");
+			if(fragment != null) {
+				System.out.println("fragment found");
+				dialogFragment = (AlertDialogFragment) fragment;
 			}
-		}
+			if(dialogFragment == null) {
+				System.out.println("fragment null");
+			    dialogFragment = AlertDialogFragment.newInstance(title, message, okText, this);
+			    dialogFragment.show(getFragmentManager(), "dialog");			
+			} else {
+				dialogFragment.addListener(this);
+				if(!dialogFragment.isVisible()) {
+					System.out.println("fragment inVisible");
+					if(!dialogFragment.isAdded()) {
+						dialogFragment.show(getFragmentManager(), "dialog");
+					}	
+				}
+			}
+		}		
 	}
 	
 	@Override

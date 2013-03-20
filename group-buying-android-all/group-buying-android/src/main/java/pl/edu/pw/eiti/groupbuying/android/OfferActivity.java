@@ -34,7 +34,6 @@ import android.util.Log;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
-import com.androidquery.AQuery;
 
 public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncTaskListener, NoInternetListener {
 
