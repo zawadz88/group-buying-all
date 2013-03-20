@@ -15,26 +15,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.viewpagerindicator.TitlePageIndicator
-        android:id="@+id/indicator"
-        android:padding="10dip"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_alignParentTop="true"
-        android:background="#FFFFFFFF"
-        android:textColor="#AA000000"
-        app:footerColor="@color/com_facebook_blue"
-        app:footerLineHeight="1dp"
-        app:footerIndicatorHeight="3dp"
-        app:footerIndicatorStyle="none"
-        app:selectedColor="#FF000000"
-        app:selectedBold="true"
-        />
     <pl.edu.pw.eiti.groupbuying.android.view.MapFragmentScrollOverrideViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/indicator"
         />
 
     <FrameLayout 

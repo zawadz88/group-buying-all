@@ -185,7 +185,6 @@
 	</build>
 	<modules>
 		<module>facebook-android-sdk</module>
-		<module>viewpagerindicator-library</module>
 		<module>group-buying-android</module>
 		<module>actionbarsherlock</module>
 		<module>google-play-services-library</module>

@@ -13,32 +13,45 @@ package pl.edu.pw.eiti.groupbuying.android;
 import pl.edu.pw.eiti.groupbuying.android.fragment.util.OffersFragmentAdapter;
 import pl.edu.pw.eiti.groupbuying.android.view.MapFragmentScrollOverrideViewPager;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.viewpagerindicator.PageIndicator;
-import com.viewpagerindicator.TitlePageIndicator;
 
 public class MainMenuActivity extends AbstractGroupBuyingActivity {
     protected OffersFragmentAdapter mAdapter;
     protected MapFragmentScrollOverrideViewPager mPager;
-    protected PageIndicator mIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        
+        ActionBar bar = getSupportActionBar();
+        setTitle(getString(R.string.app_name));
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            bar.setDisplayShowTitleEnabled(true);        	
+        } else {
+            bar.setDisplayShowTitleEnabled(false);        	
+        }
 
-        mAdapter = new OffersFragmentAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.offers_fragment_titles));
-
+        
         mPager = (MapFragmentScrollOverrideViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(mAdapter);
-        mPager.setCurrentItem(OffersFragmentAdapter.OFFERS_FROM_THE_CITY_FRAGMENT, false);
+        mAdapter = new OffersFragmentAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.offers_fragment_titles), bar, mPager);
 
-        mIndicator = (TitlePageIndicator)findViewById(R.id.indicator);
-        mIndicator.setViewPager(mPager);
+        bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        if (savedInstanceState != null) {
+            bar.setSelectedNavigationItem(savedInstanceState.getInt("tab"));
+        }
+        mPager.setCurrentItem(OffersFragmentAdapter.OFFERS_FROM_THE_CITY_FRAGMENT, false);
     }
-	
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("tab", getSupportActionBar().getSelectedNavigationIndex());
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
