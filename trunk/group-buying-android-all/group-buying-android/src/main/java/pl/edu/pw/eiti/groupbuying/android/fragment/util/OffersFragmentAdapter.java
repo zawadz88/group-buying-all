@@ -10,10 +10,9 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android.fragment.util;
 
+import pl.edu.pw.eiti.groupbuying.android.fragment.BasicOffersFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.CityOffersFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.NearbyOffersFragment;
-import pl.edu.pw.eiti.groupbuying.android.fragment.ShoppingOffersFragment;
-import pl.edu.pw.eiti.groupbuying.android.fragment.TravelOffersFragment;
 import pl.edu.pw.eiti.groupbuying.android.view.MapFragmentScrollOverrideViewPager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -63,13 +62,13 @@ public class OffersFragmentAdapter extends FragmentPagerAdapter implements OnPag
 			fragment = NearbyOffersFragment.newInstance(fragmentTitles[position]);
 			break;
 		case OFFERS_FROM_THE_CITY_FRAGMENT:
-			fragment = CityOffersFragment.newInstance(fragmentTitles[position]);
+			fragment = CityOffersFragment.newInstance();
 			break;
 		case OFFERS_SHOPPING_FRAGMENT:
-			fragment = ShoppingOffersFragment.newInstance();
+			fragment = BasicOffersFragment.newInstance("shopping");
 			break;
 		case OFFERS_TRAVEL_FRAGMENT:
-			fragment = TravelOffersFragment.newInstance(fragmentTitles[position]);
+			fragment = BasicOffersFragment.newInstance("travel");
 			break;
 		default:
 			throw new IllegalArgumentException("Unsupported position: " + position);
@@ -90,17 +89,18 @@ public class OffersFragmentAdapter extends FragmentPagerAdapter implements OnPag
 
 	@Override
 	public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		System.out.println("onTabSelected");
 		Object tag = tab.getTag();
 		for (int i = 0; i < fragmentTitles.length; i++) {
 			if ((TAB_TAG_PREFIX + i).equals(tag)) {
-				viewPager.setCurrentItem(i);
+				if(viewPager.getCurrentItem() != i) {
+					viewPager.setCurrentItem(i);
+				}
+				break;
 			}
 		}
 
@@ -108,25 +108,21 @@ public class OffersFragmentAdapter extends FragmentPagerAdapter implements OnPag
 
 	@Override
 	public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onPageSelected(int position) {
-		System.out.println("onPageSelected " + position);
 		bar.setSelectedNavigationItem(position);
 	}
 
 	@Override
 	public void onPageScrollStateChanged(int state) {
-		// TODO Auto-generated method stub
 
 	}
 }

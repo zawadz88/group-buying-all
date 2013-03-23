@@ -20,36 +20,43 @@ import pl.edu.pw.eiti.groupbuying.android.OfferActivity;
 import pl.edu.pw.eiti.groupbuying.android.R;
 import pl.edu.pw.eiti.groupbuying.android.adapter.OfferEssentialListAdapter;
 import pl.edu.pw.eiti.groupbuying.android.api.OfferEssential;
-import pl.edu.pw.eiti.groupbuying.android.fragment.util.AlertDialogListener;
+import pl.edu.pw.eiti.groupbuying.android.fragment.util.NoInternetListener;
 import pl.edu.pw.eiti.groupbuying.android.task.AbstractGroupBuyingTask;
 import pl.edu.pw.eiti.groupbuying.android.task.DownloadOfferListTask;
 import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
 import pl.edu.pw.eiti.groupbuying.android.task.util.TaskResult;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 
 import com.androidquery.AQuery;
 
-public final class ShoppingOffersFragment extends AbstractListFragment implements AsyncTaskListener, AlertDialogListener {
-
-	private AlertDialogFragment dialogFragment;
+public final class BasicOffersFragment extends AbstractListFragment implements AsyncTaskListener, NoInternetListener {
 	
+	private static final String CATEGORY_TAG = "category";
 	private List<OfferEssential> offerList;
+	private String category;
 
-	public static ShoppingOffersFragment newInstance() {
-		ShoppingOffersFragment fragment = new ShoppingOffersFragment();
+	public static BasicOffersFragment newInstance(String category) {
+		BasicOffersFragment fragment = new BasicOffersFragment();
+		Bundle bundle = new Bundle();
+		bundle.putString(CATEGORY_TAG, category);
+		fragment.setArguments(bundle);
 		return fragment;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Bundle args = getArguments();
+		if(args == null || args.getString(CATEGORY_TAG) == null) {
+			throw new IllegalStateException("BasicOffersFragment must have a non-null category argument!");
+		}
+		this.category = args.getString(CATEGORY_TAG);
 		// if ((savedInstanceState != null) &&
 		// savedInstanceState.containsKey(KEY_CONTENT)) { }
 	}
@@ -63,10 +70,8 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 		listView = aq.id(android.R.id.list).getListView();
 		loadingView = aq.id(R.id.list_loading).getProgressBar();
 		emptyView = aq.id(R.id.list_empty).getTextView();
-
-		listView.setBackgroundResource(android.R.color.white);
-		//listView.setDivider(getResources().getDrawable(android.R.color.white));
-		//listView.setDividerHeight(1 * (int) (getResources().getDisplayMetrics().density + 0.5f));
+		noInternetLayout = (LinearLayout) aq.id(R.id.noInternetLayout).getView();
+		setUpNoInternetButton(noInternetLayout, this);
 
 		listView.setOnItemClickListener(this);
 
@@ -83,7 +88,8 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 		} else if(offerList != null && offerList.size() == 0) {
 			setListViewState(ListViewState.EMPTY);			
 		} else {
-			new DownloadOfferListTask("shopping", 0, this, application).execute();
+			setListViewState(ListViewState.LOADING);			
+			new DownloadOfferListTask(category, 0, this, application).execute();
 		}
 	}
 
@@ -109,38 +115,11 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 
 	@Override
 	public void onStop() {
-		System.out.println("onStop");
 		super.onStop();
 	}
 	
 	@Override
 	public void refreshList() {
-		// TODO Auto-generated method stub
-
-	}
-	
-	private void showAlertDialog(int title, int message, int okText) {
-		System.out.println("showAlertDialog");
-		if(getFragmentManager() != null) {
-			Fragment fragment = getFragmentManager().findFragmentByTag("dialog");
-			if(fragment != null) {
-				System.out.println("fragment found");
-				dialogFragment = (AlertDialogFragment) fragment;
-			}
-			if(dialogFragment == null) {
-				System.out.println("fragment null");
-			    dialogFragment = AlertDialogFragment.newInstance(title, message, okText, this);
-			    dialogFragment.show(getFragmentManager(), "dialog");			
-			} else {
-				dialogFragment.addListener(this);
-				if(!dialogFragment.isVisible()) {
-					System.out.println("fragment inVisible");
-					if(!dialogFragment.isAdded()) {
-						dialogFragment.show(getFragmentManager(), "dialog");
-					}	
-				}
-			}
-		}		
 	}
 	
 	@Override
@@ -163,34 +142,28 @@ public final class ShoppingOffersFragment extends AbstractListFragment implement
 			}
 			Exception exception = task.getException();
 			if(exception != null) {
-				int title;
-				int message;
+				final String title;
+				final String message;
 				if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
-					title = R.string.network_problems_title;
-					message = R.string.network_problems_message;
+					title = getString(R.string.network_problems_title);
+					message = getString(R.string.network_problems_message);
 				} else {
-					title = R.string.connection_error_title;
-					message = R.string.connection_error_message;
+					title = getString(R.string.connection_error_title);
+					message = getString(R.string.connection_error_message);
 				}
-				showAlertDialog(title, message, R.string.retry);
+				
+				setListViewState(ListViewState.NO_INTERNET, title, message);
 			}
 		}
 	}
 
 	@Override
-	public void doPositiveClick() {
-		System.out.println("doPositiveClick");
+	public void onDeviceOnline() {
 		setListViewState(ListViewState.LOADING);
-		new DownloadOfferListTask("shopping", 0, this, application).execute();
+		new DownloadOfferListTask(category, 0, this, application).execute();
 	}
 
 	@Override
-	public void doNegativeClick() {
-		System.out.println("doNegativeClick");
-		if(offerList == null || offerList.size() == 0) {
-			setListViewState(ListViewState.EMPTY);
-		} else {
-			setListViewState(ListViewState.CONTENT);
-		}
+	public void onDeviceOffline() {		
 	}
 }

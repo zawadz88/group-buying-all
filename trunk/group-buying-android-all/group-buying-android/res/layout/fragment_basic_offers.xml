@@ -14,24 +14,23 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF" >
 
-	<ListView
+    <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:divider="@null"
         android:dividerHeight="10dp" />
-    
-    <ProgressBar 
+
+    <ProgressBar
         android:id="@+id/list_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:indeterminate="true"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/list_empty"
@@ -39,9 +38,13 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_margin="20dp"
-        android:textSize="14sp"
-        android:textColor="@android:color/black"
         android:text="@string/empty_list_text"
-        android:visibility="gone"
-        />
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <include
+        layout="@layout/fragment_no_internet"
+        android:visibility="gone" />
+
 </RelativeLayout>
