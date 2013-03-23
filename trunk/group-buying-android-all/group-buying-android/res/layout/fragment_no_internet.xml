@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="10dp"
-        android:text="@string/network_problems_title"
+        android:text="@string/network_error_title"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="10dp"
-        android:text="@string/network_problems_message"
+        android:text="@string/network_error_message"
         android:textColor="@android:color/secondary_text_light"
         android:textSize="12sp" />
 

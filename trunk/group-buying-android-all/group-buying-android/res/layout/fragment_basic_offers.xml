@@ -22,7 +22,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:divider="@null"
-        android:dividerHeight="10dp" />
+        android:dividerHeight="0dp" />
 
     <ProgressBar
         android:id="@+id/list_loading"

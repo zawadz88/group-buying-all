@@ -58,11 +58,14 @@
     <string name="empty_list_text">No offers available</string>
     
     <string name="retry">Retry</string>
-    <string name="network_problems_title">Network problem</string>
-    <string name="network_problems_message">A network problem occurred. Please check your connection and click to retry.</string>
+    <string name="network_error_title">Network error</string>
+    <string name="network_error_message">Network error occurred. Please check your connection and click to retry.</string>
     <string name="connection_error_title">Connection error</string>
     <string name="connection_error_message">Connection error occurred. Please try again later.</string>
     
     <string name="loading_offer_message">Loading offer...</string>
+    
+    <string name="loading_more_offers_text">Loading more offers...</string>
+    
     
 </resources>

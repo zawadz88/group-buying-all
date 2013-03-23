@@ -14,59 +14,86 @@ import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.android.R;
 import pl.edu.pw.eiti.groupbuying.android.api.OfferEssential;
-import android.app.Activity;
+import pl.edu.pw.eiti.groupbuying.android.fragment.AbstractListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import com.androidquery.AQuery;
 
 public class OfferEssentialListAdapter extends ArrayAdapter<OfferEssential> {
 
+	private static final int LOADING_VIEW = 0;
+	private static final int OFFER_VIEW = 1;
+	private static final int NO_INTERNET_VIEW = 2;
+
 	private LayoutInflater inflater;
 	
 	private List<OfferEssential> offerList;
-	Activity activity;
+	AbstractListFragment fragment;
 
-	public OfferEssentialListAdapter(Activity activity, int textViewResourceId, List<OfferEssential> objects) {
-		super(activity, textViewResourceId, objects);
-		this.activity = activity;
+	public OfferEssentialListAdapter(AbstractListFragment fragment, int textViewResourceId, List<OfferEssential> objects) {
+		super(fragment.getActivity(), textViewResourceId, objects);
+		this.fragment = fragment;
 		inflater = LayoutInflater.from(getContext());
 		this.offerList = objects;
 	}
 
 	@Override
 	public int getCount() {
-		return offerList.size();
+		return offerList.size() + (fragment.isLoading() ? 1 : 0) + (fragment.isConnectionAvailable() ? 0 : 1);
 	}
 
 	@Override
 	public int getViewTypeCount() {
-		return 1;
+		return 3;
 	}
 
 	@Override
 	public int getItemViewType(int position) {
-		return 0;
+		int count = getCount();
+		int type;
+		if(fragment.isLoading() && position == count - 1) {
+			type = LOADING_VIEW;
+		} else if(!fragment.isConnectionAvailable() && position == count - 1) {
+			type = NO_INTERNET_VIEW;
+		} else {
+			type = OFFER_VIEW;
+		}
+		return type;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		if (fragment.isLoading() && position == getCount() - 1) {
+			View loadingView = LayoutInflater.from(getContext()).inflate(R.layout.loading_more_offers_row, null);
+			loadingView.setTag(R.id.tag_view_type, LOADING_VIEW);
+			return loadingView;
+		}
+		
+		if (!fragment.isConnectionAvailable() && position == getCount() - 1) {
+			View noInternetView = LayoutInflater.from(getContext()).inflate(R.layout.no_internet_row, null);
+			noInternetView.setTag(R.id.tag_view_type, NO_INTERNET_VIEW);
+			Button retryButton = (Button) noInternetView.findViewById(R.id.noInternetRetryButton);
+			fragment.setUpNoInternetButton(retryButton, fragment);
+			return noInternetView;
+		}		
 
 		final OfferEssential offer = offerList.get(position);
 		View hView = convertView;
-		if (convertView == null) {
+		if (convertView == null || (Integer) convertView.getTag(R.id.tag_view_type) != OFFER_VIEW) {
 			hView = inflater.inflate(R.layout.offer_row, null);
-
+			hView.setTag(R.id.tag_view_type, OFFER_VIEW);
 		}
-		AQuery aq = new AQuery(activity, hView);
-
+		
+		AQuery aq = new AQuery(hView);
 		aq.id(R.id.offerImage).image(offer.getImageUrl()).getImageView();
 		aq.id(R.id.offerTitle).text(offer.getTitle()).getTextView();
 		aq.id(R.id.offerPrice).text(String.valueOf(offer.getPrice())).getTextView();
 		aq.id(R.id.offersSold).text(String.valueOf(24) + " sold").getTextView();
-
+		
 		return hView;
 	}
 
