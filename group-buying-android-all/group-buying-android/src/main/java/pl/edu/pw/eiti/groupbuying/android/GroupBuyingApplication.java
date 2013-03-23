@@ -32,7 +32,7 @@ public class GroupBuyingApplication extends Application {
 
 	private ConnectionRepository connectionRepository;
 
-	
+	private GroupBuyingApi unauthorizedGroupBuyingApi;
 
 	//***************************************
 	// Application methods
@@ -93,8 +93,11 @@ public class GroupBuyingApplication extends Application {
 		return null;
 	}
 	
-	public GroupBuyingApi getUnauthorizedGroupBuyingApi() {
-		return new GroupBuyingTemplate(getApiUrlBase());
+	public synchronized GroupBuyingApi getUnauthorizedGroupBuyingApi() {
+		if(unauthorizedGroupBuyingApi == null) {
+			unauthorizedGroupBuyingApi = new GroupBuyingTemplate(getApiUrlBase());
+		}
+		return unauthorizedGroupBuyingApi;
 	}
 
 }
