@@ -38,7 +38,6 @@ public class GroupBuyingApiAdapter implements ApiAdapter<GroupBuyingApi> {
 	}
 
 	public void setConnectionValues(GroupBuyingApi api, ConnectionValues values) {
-		System.out.println("setConnectionValues");
 		//TODO
 		/*GreenhouseProfile profile = api.userOperations().getUserProfile();
 		values.setProviderUserId(Long.toString(profile.getAccountId()));

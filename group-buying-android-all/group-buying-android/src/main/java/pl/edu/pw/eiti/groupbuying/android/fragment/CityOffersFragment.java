@@ -73,7 +73,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 		super.onStart();
 		if (offerList != null && offerList.size() > 0) {
 			// Set new adapter
-			setListAdapter(new OfferEssentialListAdapter(getActivity(), 0, offerList));
+			setListAdapter(new OfferEssentialListAdapter(this, 0, offerList));
 			setListViewState(ListViewState.CONTENT);
 		} else if (offerList != null && offerList.size() == 0) {
 			setListViewState(ListViewState.EMPTY);
@@ -122,7 +122,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 				setListViewState(ListViewState.EMPTY);
 			} else {
 				offerList = downloadedOffers;
-				setListAdapter(new OfferEssentialListAdapter(getActivity(), 0, offerList));
+				setListAdapter(new OfferEssentialListAdapter(this, 0, offerList));
 				setListViewState(ListViewState.CONTENT);
 			}
 		} else if (result.equals(TaskResult.FAILED)) {
@@ -136,8 +136,8 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 				final String title;
 				final String message;
 				if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
-					title = getString(R.string.network_problems_title);
-					message = getString(R.string.network_problems_message);
+					title = getString(R.string.network_error_title);
+					message = getString(R.string.network_error_message);
 				} else {
 					title = getString(R.string.connection_error_title);
 					message = getString(R.string.connection_error_message);

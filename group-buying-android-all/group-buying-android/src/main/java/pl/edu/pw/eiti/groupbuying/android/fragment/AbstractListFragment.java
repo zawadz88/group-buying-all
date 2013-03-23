@@ -25,15 +25,22 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public abstract class AbstractListFragment extends Fragment implements OnItemClickListener {
+public abstract class AbstractListFragment extends Fragment implements OnItemClickListener, NoInternetListener {
 
+	protected static final int VISIBLE_ITEM_THRESHOLD = 3;
+	
 	protected ListView listView;
 	protected View loadingView;
 	protected View emptyView;
 	protected LinearLayout noInternetLayout;
 	protected GroupBuyingApplication application;
-	protected MainMenuActivity mainActivity;	
-	
+	protected MainMenuActivity mainActivity;
+	protected boolean endOfItemsReached = false;
+
+    protected int currentPage = -1;
+    protected boolean loading = false;
+    protected boolean connectionAvailable = true;
+    
 	public enum ListViewState {
 		LOADING, CONTENT, EMPTY, NO_INTERNET
 	}
@@ -101,7 +108,7 @@ public abstract class AbstractListFragment extends Fragment implements OnItemCli
 		}
 	}
 	
-	protected void setUpNoInternetButton(final View noInternetView, final NoInternetListener listener) {
+	public void setUpNoInternetButton(final View noInternetView, final NoInternetListener listener) {
 		noInternetView.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -120,4 +127,11 @@ public abstract class AbstractListFragment extends Fragment implements OnItemCli
 
 	public abstract void refreshList();
 
+	public boolean isLoading() {
+		return loading;
+	}
+	
+	public boolean isConnectionAvailable() {
+		return connectionAvailable;
+	}
 }

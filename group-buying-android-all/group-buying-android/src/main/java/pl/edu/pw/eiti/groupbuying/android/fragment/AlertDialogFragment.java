@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.KeyEvent;
 
+//TODO remove if still unused
 public class AlertDialogFragment extends DialogFragment {
 	
 	private Set<AlertDialogListener> listeners = new HashSet<AlertDialogListener>();
@@ -45,7 +46,6 @@ public class AlertDialogFragment extends DialogFragment {
                 .setPositiveButton(okText,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                        	System.out.println("listenrs: " + listeners.size());
                             if(!listeners.isEmpty()) {
                             	for(AlertDialogListener listener : listeners) {
                             		listener.doPositiveClick();
