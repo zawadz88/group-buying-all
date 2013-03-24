@@ -34,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.androidquery.AQuery;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public final class CityOffersFragment extends AbstractListFragment implements AsyncTaskListener, NoInternetListener {
 
@@ -57,7 +58,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_basic_offers, container, false);
 		AQuery aq = new AQuery(getActivity(), rootView);
-		listView = aq.id(android.R.id.list).getListView();
+		listView = (PullToRefreshListView) aq.id(R.id.offerList).getView();
 		loadingView = aq.id(R.id.list_loading).getProgressBar();
 		emptyView = aq.id(R.id.list_empty).getTextView();
 		noInternetLayout = (LinearLayout) aq.id(R.id.noInternetLayout).getView();

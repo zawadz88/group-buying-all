@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Copyright (c) 2013 Piotr Zawadzki.
-  All rights reserved. This program and the accompanying materials
-  are made available under the terms of the GNU Public License v3.0
-  which accompanies this distribution, and is available at
-  http://www.gnu.org/licenses/gpl.html
-  
-  Contributors:
-      Piotr Zawadzki - initial API and implementation
--->
+<!-- Copyright (c) 2013 Piotr Zawadzki. All rights reserved. This program 
+	and the accompanying materials are made available under the terms of the 
+	GNU Public License v3.0 which accompanies this distribution, and is available 
+	at http://www.gnu.org/licenses/gpl.html Contributors: Piotr Zawadzki - initial 
+	API and implementation -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -35,11 +30,14 @@
 		<build.helper.maven.plugin.version>1.5</build.helper.maven.plugin.version>
 		<lifecycle.mapping.plugin.version>1.0.0</lifecycle.mapping.plugin.version>
 		<google.analytics.android.version>2.0b4</google.analytics.android.version>
-		<com.facebook.sdk.version>3.0.0-SNAPSHOT</com.facebook.sdk.version>
+		<com.facebook.sdk.version>3.0.0</com.facebook.sdk.version>
 		<android.query.version>0.24.3</android.query.version>
 		<google.cloud.messaging.client.version>3</google.cloud.messaging.client.version>
 		<google.play.services.version>4</google.play.services.version>
+		<pull.to.refresh.library.version>2.1.2</pull.to.refresh.library.version>
 		<paypal.mecl.version>1.0</paypal.mecl.version>
+		<actionbar.sherlock.version>4.2.0</actionbar.sherlock.version>
+		<com.google.zxing.version>2.1-SNAPSHOT</com.google.zxing.version>
 	</properties>
 
 	<dependencyManagement>
@@ -65,6 +63,7 @@
 				<artifactId>gcm-client</artifactId>
 				<version>${google.cloud.messaging.client.version}</version>
 			</dependency>
+
 			<dependency>
 				<groupId>com.google.android.gms</groupId>
 				<artifactId>google-play-services</artifactId>
@@ -72,16 +71,17 @@
 				<type>jar</type>
 			</dependency>
 			<dependency>
-				<groupId>com.google.android.maps</groupId>
-				<artifactId>maps</artifactId>
-				<version>16_r3</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
 				<groupId>com.androidquery</groupId>
 				<artifactId>android-query-full</artifactId>
 				<version>${android.query.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>com.google.zxing</groupId>
+				<artifactId>core</artifactId>
+				<version>${com.google.zxing.version}</version>
+			</dependency>
+
 
 			<dependency>
 				<groupId>org.springframework.android</groupId>
@@ -112,6 +112,7 @@
 					</exclusion>
 				</exclusions>
 			</dependency>
+
 			<dependency>
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
@@ -122,6 +123,31 @@
 				<artifactId>MECL</artifactId>
 				<version>${paypal.mecl.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.actionbarsherlock</groupId>
+				<artifactId>actionbarsherlock</artifactId>
+				<version>${actionbar.sherlock.version}</version>
+				<type>apklib</type>
+			</dependency>
+			<dependency>
+				<groupId>com.github.chrisbanes.pulltorefresh</groupId>
+				<artifactId>pull-to-refresh-library</artifactId>
+				<version>${pull.to.refresh.library.version}</version>
+				<type>apklib</type>
+			</dependency>
+			<dependency>
+				<groupId>com.google.android.gms</groupId>
+				<artifactId>google-play-services-library</artifactId>
+				<version>${google.play.services.version}</version>
+				<type>apklib</type>
+			</dependency>
+			<dependency>
+				<groupId>com.facebook</groupId>
+				<artifactId>facebook-android-sdk</artifactId>
+				<version>${com.facebook.sdk.version}</version>
+				<type>apklib</type>
+			</dependency>		
+			
 		</dependencies>
 	</dependencyManagement>
 
@@ -188,6 +214,7 @@
 		<module>group-buying-android</module>
 		<module>actionbarsherlock</module>
 		<module>google-play-services-library</module>
+		<module>pull-to-refresh-library</module>
 	</modules>
 
 	<repositories>

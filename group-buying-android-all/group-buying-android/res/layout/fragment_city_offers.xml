@@ -33,7 +33,7 @@
         android:textColor="@android:color/black" />
     
 	<ListView
-        android:id="@android:id/list"
+        android:id="@+id/offerList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/citySelection"

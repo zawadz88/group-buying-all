@@ -35,9 +35,14 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.androidquery.AQuery;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public final class BasicOffersFragment extends AbstractListFragment implements AsyncTaskListener, OnScrollListener {
 	
@@ -73,17 +78,17 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 		final View rootView = inflater.inflate(R.layout.fragment_basic_offers,
 				container, false);
 		AQuery aq = new AQuery(getActivity(), rootView);
-		listView = aq.id(android.R.id.list).getListView();
+		listView = (PullToRefreshListView) aq.id(R.id.offerList).getView();
 		loadingView = aq.id(R.id.list_loading).getProgressBar();
 		emptyView = aq.id(R.id.list_empty).getTextView();
 		noInternetLayout = (LinearLayout) aq.id(R.id.noInternetLayout).getView();
 		setUpNoInternetButton(noInternetLayout, this);
-
+		setUpRefreshListener();
 		listView.setOnItemClickListener(this);
 
 		return rootView;
 	}
-
+	
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -126,12 +131,13 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 	
 	@Override
 	public void refreshList() {
-		((BaseAdapter) getListAdapter()).notifyDataSetChanged();
+		((BaseAdapter)((HeaderViewListAdapter) getListAdapter()).getWrappedAdapter()).notifyDataSetChanged();
 	}
 	
 	@Override
 	public void onTaskFinished(AbstractGroupBuyingTask<?> task,	TaskResult result) {
 		loading = false;
+		listView.onRefreshComplete();
 		if(result.equals(TaskResult.SUCCESSFUL)) {
 			connectionAvailable = true;
 			List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
@@ -212,4 +218,25 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
+
+	private void setUpRefreshListener() {
+		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+			
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				clearOffers();
+				refreshList();
+				currentPage = -1;
+				endOfItemsReached = false;
+				//setListViewState(ListViewState.LOADING);
+				new DownloadOfferListTask(category, currentPage + 1, BasicOffersFragment.this, application).execute();
+			}
+		});
+		
+	}
+	
+	private void clearOffers() {
+		offerList.clear();
+	}
+	    
 }

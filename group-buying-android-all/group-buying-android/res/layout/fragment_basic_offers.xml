@@ -14,8 +14,9 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF" >
 
-    <ListView
-        android:id="@android:id/list"
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/offerList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
@@ -26,10 +27,13 @@
 
     <ProgressBar
         android:id="@+id/list_loading"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/header_footer_top_bottom_padding"
+        android:layout_gravity="center"
         android:indeterminate="true"
+        android:layout_centerHorizontal="true"
         android:visibility="gone" />
 
     <TextView
