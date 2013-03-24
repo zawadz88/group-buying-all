@@ -49,20 +49,6 @@ CREATE TABLE `admins` (
 
 insert  into `admins`(`username`,`password`,`enabled`,`salt`,`email`,`phone_number`) values ('aaa','b1545258a36b0ff3476d16ac256c17d185306407',1,'7.538346486422531E7','admin@admin.pl','+48666666666'),('bbb','b1545258a36b0ff3476d16ac256c17d185306407',1,'7.538346486422531E7','bbb@admin.pl','+48666666666');
 
-/*Table structure for table `categories` */
-
-DROP TABLE IF EXISTS `categories`;
-
-CREATE TABLE `categories` (
-  `category_id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) NOT NULL,
-  PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
-/*Data for the table `categories` */
-
-insert  into `categories`(`category_id`,`name`) values (1,'Gastronomia'),(2,'Turystyka'),(3,'Zdrowie');
-
 /*Table structure for table `client_authorities` */
 
 DROP TABLE IF EXISTS `client_authorities`;
