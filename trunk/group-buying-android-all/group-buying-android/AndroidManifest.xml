@@ -87,6 +87,10 @@
             android:label=""
             android:theme="@style/Theme.groupbuying" />
         <activity
+            android:name=".PaymentConfirmedActivity"
+            android:label=""
+            android:theme="@style/Theme.groupbuying" />
+        <activity
             android:name=".CouponPreviewActivity"
             android:label=""
             android:theme="@style/Theme.groupbuying" />
