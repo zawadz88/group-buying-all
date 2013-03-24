@@ -22,14 +22,15 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public abstract class AbstractListFragment extends Fragment implements OnItemClickListener, NoInternetListener {
 
 	protected static final int VISIBLE_ITEM_THRESHOLD = 3;
 	
-	protected ListView listView;
+	protected PullToRefreshListView listView;
 	protected View loadingView;
 	protected View emptyView;
 	protected LinearLayout noInternetLayout;
@@ -52,19 +53,19 @@ public abstract class AbstractListFragment extends Fragment implements OnItemCli
 		mainActivity = (MainMenuActivity) activity;
 	}
 	
-	public ListView getListView() {
+	public PullToRefreshListView getListView() {
 		return listView;
 	}
 
 	public void setListAdapter(ListAdapter adapter) {
-		listView.setAdapter(adapter);
+		listView.getRefreshableView().setAdapter(adapter);
 	}
 
 	protected ListAdapter getListAdapter() {
 		if (listView == null) {
 			return null;
 		}
-		return listView.getAdapter();
+		return listView.getRefreshableView().getAdapter();
 	}
 
 	protected void setListViewState(final ListViewState newState) {

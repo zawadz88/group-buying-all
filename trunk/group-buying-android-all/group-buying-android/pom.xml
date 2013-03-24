@@ -36,12 +36,6 @@
 			<artifactId>compatibility-v4</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.google.android.gms</groupId>
-			<artifactId>google-play-services-library</artifactId>
-			<version>4</version>
-			<type>apklib</type>
-		</dependency>
-		<dependency>
 			<groupId>com.google.android.analytics</groupId>
 			<artifactId>google-analytics-android</artifactId>
 		</dependency>
@@ -53,26 +47,7 @@
 			<groupId>com.androidquery</groupId>
 			<artifactId>android-query-full</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>com.actionbarsherlock</groupId>
-			<artifactId>actionbarsherlock</artifactId>
-			<version>4.2.0</version>
-			<type>apklib</type>
-		</dependency>
-		<dependency>
-			<groupId>com.google.android.gms</groupId>
-			<artifactId>google-play-services-library</artifactId>
-			<version>4</version>
-			<type>apklib</type>
-		</dependency>
-		<dependency>
-			<groupId>pl.edu.pw.eiti.groupbuying.android</groupId>
-			<artifactId>facebook-android-sdk</artifactId>
-			<type>apklib</type>
-			<version>${project.version}</version>
-		</dependency>
-
+		
 		<dependency>
 			<groupId>org.springframework.android</groupId>
 			<artifactId>spring-android-auth</artifactId>
@@ -85,19 +60,43 @@
 			<groupId>org.springframework.social</groupId>
 			<artifactId>spring-social-core</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.paypal.android</groupId>
 			<artifactId>MECL</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.google.zxing</groupId>
   			<artifactId>core</artifactId>
-			<version>2.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.actionbarsherlock</groupId>
+			<artifactId>actionbarsherlock</artifactId>
+			<type>apklib</type>
+		</dependency>
+		<dependency>
+			<groupId>com.google.android.gms</groupId>
+			<artifactId>google-play-services-library</artifactId>
+			<type>apklib</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.facebook</groupId>
+			<artifactId>facebook-android-sdk</artifactId>
+			<type>apklib</type>
+		</dependency>
+		<dependency>
+			<groupId>com.github.chrisbanes.pulltorefresh</groupId>
+			<artifactId>pull-to-refresh-library</artifactId>
+			<type>apklib</type>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<finalName>${project.artifactId}</finalName>
