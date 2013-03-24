@@ -1,11 +1,16 @@
 package pl.edu.pw.eiti.groupbuying.android;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.android.adapter.OffersExpandableListAdapter;
 import pl.edu.pw.eiti.groupbuying.android.adapter.OffersExpandableListAdapter.OfferExpandListGroup;
+import pl.edu.pw.eiti.groupbuying.android.api.Address;
+import pl.edu.pw.eiti.groupbuying.android.api.Category;
 import pl.edu.pw.eiti.groupbuying.android.api.Offer;
+import pl.edu.pw.eiti.groupbuying.android.api.OfferState;
+import pl.edu.pw.eiti.groupbuying.android.api.Seller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,7 +26,13 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity implements On
 	private ExpandableListView offerExpandableListView;
 	
 	private List<Offer> offers = Arrays
-			.asList(new Offer[] {});
+			.asList(new Offer[] { 
+					new Offer(1, "XXX1", "lead", "desc", "cond", new Address(), "http://img.gawkerassets.com/img/187xvczebdtjtjpg/original.jpg", 24.0, 48, new Date(), new Date(), new Date(), OfferState.ACTIVE, Category.SHOPPING, new Seller()),
+					new Offer(2, "XXX2", "lead", "desc", "cond", new Address(), "http://img.gawkerassets.com/img/187xvczebdtjtjpg/original.jpg", 24.0, 48, new Date(), new Date(), new Date(), OfferState.ACTIVE, Category.SHOPPING, new Seller()),
+					new Offer(3, "XXX3", "lead", "desc", "cond", new Address(), "http://img.gawkerassets.com/img/187xvczebdtjtjpg/original.jpg", 24.0, 48, new Date(), new Date(), new Date(), OfferState.ACTIVE, Category.SHOPPING, new Seller()),
+					new Offer(4, "XXX4", "lead", "desc", "cond", new Address(), "http://img.gawkerassets.com/img/187xvczebdtjtjpg/original.jpg", 24.0, 48, new Date(), new Date(), new Date(), OfferState.ACTIVE, Category.SHOPPING, new Seller()),
+					new Offer(5, "XXX5", "lead", "desc", "cond", new Address(), "http://img.gawkerassets.com/img/187xvczebdtjtjpg/original.jpg", 24.0, 48, new Date(), new Date(), new Date(), OfferState.ACTIVE, Category.SHOPPING, new Seller())
+					});
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
