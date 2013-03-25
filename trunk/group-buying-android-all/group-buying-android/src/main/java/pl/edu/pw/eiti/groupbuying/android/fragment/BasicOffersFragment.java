@@ -49,6 +49,11 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 	private static final String CATEGORY_TAG = "category";
 	private List<OfferEssential> offerList = new ArrayList<OfferEssential>();
 	private String category;
+	private String networkErrorTitle;
+	private String networkErrorMessage;
+	private String connectionErrorTitle;
+	private String connectionErrorMessage;
+	
 
 	
 	public static BasicOffersFragment newInstance(String category) {
@@ -87,6 +92,15 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 		listView.setOnItemClickListener(this);
 
 		return rootView;
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		networkErrorTitle = getString(R.string.network_error_title);
+		networkErrorMessage = getString(R.string.network_error_message);
+		connectionErrorTitle = getString(R.string.connection_error_title);
+		connectionErrorMessage = getString(R.string.connection_error_message);
 	}
 	
 	@Override
@@ -174,17 +188,12 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 			
 			Exception exception = task.getException();
 			if(exception != null) {
-				final String title;
-				final String message;
-				if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
-					title = getString(R.string.network_error_title);
-					message = getString(R.string.network_error_message);
-				} else {
-					title = getString(R.string.connection_error_title);
-					message = getString(R.string.connection_error_message);
-				}
 				if(offerList.isEmpty()) {
-					setListViewState(ListViewState.NO_INTERNET, title, message);
+					if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
+						setListViewState(ListViewState.NO_INTERNET, networkErrorTitle, networkErrorMessage);
+					} else {
+						setListViewState(ListViewState.NO_INTERNET, connectionErrorTitle, connectionErrorMessage);
+					}
 				} else {
 					setListViewState(ListViewState.CONTENT);
 					connectionAvailable = false;
