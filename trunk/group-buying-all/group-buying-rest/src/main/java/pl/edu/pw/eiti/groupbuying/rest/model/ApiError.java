@@ -1,5 +1,8 @@
 package pl.edu.pw.eiti.groupbuying.rest.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
@@ -40,26 +43,33 @@ public class ApiError {
 		return "Error [responseCode=" + responseCode + ", errorCode=" + errorCode + ", errorMessage=" + errorMessage + "]";
 	}
 	
+	public Map<String, Object> getErrorAsMap() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("errorMessage", errorMessage);
+		map.put("errorCode", errorCode);
+		map.put("responseCode", responseCode);
+		return map;
+	}
+	
 	@JsonSerialize(using = ErrorCodeSerializer.class)
 	@JsonDeserialize(using = ErrorCodeDeserializer.class)
 	public static enum ErrorCode {
-		UNKNOWN_ERROR(0),
+		PARAMETER_MISSING(4001),
+		MISSING_REQUIREMENTS(4002),
+		TYPE_MISMATCH(4003),
+		MESSAGE_NOT_READABLE(4004),
+		INVALID_METHOD_ARGUMENT(4005),
+		MISSING_SERVLET_REQUEST_PART(4006),
+		INVALID_BINDING(4007),
 		MISSING_AUTHORIZATION(401),
-		APPLICATION_NOT_FOUND(402),
-		MISSING_REGISTRATION_ID_PARAM(403),
-		MISSING_DEVICE_NAME_PARAM(404),
-		MISSING_SYSTEM_INFO_PARAM(405),
-		MISSING_STATUS_PARAM(406),
-		MISSING_DEVICE_TOKEN_PARAM(407),
-		MISSING_ANONYMOUS_USER_ID_PARAM(408),
-		MISSING_CHANNEL_URI_PARAM(409),
-		INVALID_STATUS_VALUE(451),
-		INVALID_DEVICE_TOKEN_VALUE(452),
-		INVALID_PAYLOAD_SIZE(453),
-		MISSING_SELECTED_PLATFORMS_PARAM(480),
-		MISSING_MESSAGE_PARAM(481),
-		DATABASE_ERROR(501),
-		PUSH_ERROR(502);
+		PAGE_NOT_FOUND(404),
+		METHOD_NOT_ALLOWED(405),
+		NOT_ACCEPTABLE(406),
+		UNSUPPORTED_MEDIA_TYPE(415),
+		UNKNOWN_ERROR(5000),
+		DATABASE_ERROR(5001),
+		CONVERSION_NOT_SUPPORTED(5002),
+		MESSAGE_NOT_WRITABLE(5003);
 
 		private final int value;
 
