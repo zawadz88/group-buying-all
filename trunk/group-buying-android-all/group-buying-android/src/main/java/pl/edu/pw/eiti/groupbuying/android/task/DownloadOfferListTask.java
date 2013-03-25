@@ -29,7 +29,8 @@ public class DownloadOfferListTask extends AbstractGroupBuyingTask<Void> {
 	
 	@Override
 	protected void doInBackgroundSafe() throws Exception {
-		Thread.sleep(1500);
+		System.out.println("getting new stuff:" + pageNumber);
+		Thread.sleep(5000);
 		offerList = application.getUnauthorizedGroupBuyingApi().offerOperations().getOffers(category, pageNumber);
 	}
 	

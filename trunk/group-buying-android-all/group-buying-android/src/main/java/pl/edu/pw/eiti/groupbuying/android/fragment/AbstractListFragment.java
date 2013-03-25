@@ -39,7 +39,9 @@ public abstract class AbstractListFragment extends Fragment implements OnItemCli
 	protected boolean endOfItemsReached = false;
 
     protected int currentPage = -1;
+    protected boolean loadingMoreItems = false;
     protected boolean loading = false;
+    
     protected boolean connectionAvailable = true;
     
 	public enum ListViewState {
@@ -129,7 +131,7 @@ public abstract class AbstractListFragment extends Fragment implements OnItemCli
 	public abstract void refreshList();
 
 	public boolean isLoading() {
-		return loading;
+		return loadingMoreItems;
 	}
 	
 	public boolean isConnectionAvailable() {

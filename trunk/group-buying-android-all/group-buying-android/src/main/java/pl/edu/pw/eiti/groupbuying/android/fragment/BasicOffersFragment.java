@@ -99,8 +99,11 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 		} else if(offerList.isEmpty() && endOfItemsReached) {
 			setListViewState(ListViewState.EMPTY);			
 		} else {
-			setListViewState(ListViewState.LOADING);			
-			new DownloadOfferListTask(category, currentPage + 1, this, application).execute();
+			setListViewState(ListViewState.LOADING);
+			if(!loading) {
+				loading = true;
+				new DownloadOfferListTask(category, currentPage + 1, this, application).execute();	
+			}
 		}
 	}
 
@@ -136,6 +139,7 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 	
 	@Override
 	public void onTaskFinished(AbstractGroupBuyingTask<?> task,	TaskResult result) {
+		loadingMoreItems = false;
 		loading = false;
 		listView.onRefreshComplete();
 		if(result.equals(TaskResult.SUCCESSFUL)) {
@@ -195,6 +199,7 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 		if(offerList.isEmpty()) {
 			setListViewState(ListViewState.LOADING);			
 		} else {
+			loadingMoreItems = true;
 			loading = true;
 			connectionAvailable = true;
 			refreshList(); //needed to show loading view
@@ -208,8 +213,9 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 	
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if(!loading && visibleItemCount != totalItemCount && (totalItemCount - visibleItemCount) <= (firstVisibleItem + VISIBLE_ITEM_THRESHOLD) && !endOfItemsReached && connectionAvailable) { //visibleItemCount != totalItemCount is needed for when new items are added this is false
-        	loading = true;
+        if(!loadingMoreItems && visibleItemCount != totalItemCount && (totalItemCount - visibleItemCount) <= (firstVisibleItem + VISIBLE_ITEM_THRESHOLD) && !endOfItemsReached && connectionAvailable) { //visibleItemCount != totalItemCount is needed for when new items are added this is false
+        	loadingMoreItems = true;
+			loading = true;
 			refreshList(); //needed to show loading view
      		new DownloadOfferListTask(category, currentPage + 1, this, application).execute();
         }
@@ -225,10 +231,10 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 				clearOffers();
-				refreshList();
 				currentPage = -1;
 				endOfItemsReached = false;
-				//setListViewState(ListViewState.LOADING);
+				loading = true;
+				refreshList();
 				new DownloadOfferListTask(category, currentPage + 1, BasicOffersFragment.this, application).execute();
 			}
 		});

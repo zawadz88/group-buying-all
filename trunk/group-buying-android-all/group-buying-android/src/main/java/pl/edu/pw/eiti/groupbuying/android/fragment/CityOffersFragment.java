@@ -49,7 +49,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		setRetainInstance(true);
 		// if ((savedInstanceState != null) &&
 		// savedInstanceState.containsKey(KEY_CONTENT)) { }
 	}
@@ -123,7 +123,9 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 				setListViewState(ListViewState.EMPTY);
 			} else {
 				offerList = downloadedOffers;
-				setListAdapter(new OfferEssentialListAdapter(this, 0, offerList));
+				if(getActivity() != null) {
+					setListAdapter(new OfferEssentialListAdapter(this, 0, offerList));
+				}
 				setListViewState(ListViewState.CONTENT);
 			}
 		} else if (result.equals(TaskResult.FAILED)) {
