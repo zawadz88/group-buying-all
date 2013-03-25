@@ -33,7 +33,6 @@ public class EditOfferController extends BaseController {
 	private OfferDAO offerDAO;
 	
 	public void updateOffer(Offer offer) {
-		System.out.println("updating offer: " + offer.toString());
 		offerDAO.updateOffer(offer);
 	}
 
@@ -51,7 +50,6 @@ public class EditOfferController extends BaseController {
 	
 	public Offer populateOffer(int offerId) {
 		Offer offer = offerDAO.getOffer(offerId);
-		System.out.println("Offer found: " + offer);
 		return offer;
 	}
 

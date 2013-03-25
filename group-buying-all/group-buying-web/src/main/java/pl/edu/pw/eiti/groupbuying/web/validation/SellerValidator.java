@@ -19,7 +19,6 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Seller;
 @Component
 public class SellerValidator {
 	public void validateAddSellerGeneralForm(Seller seller, Errors errors) {
-		System.out.println("Walidacja general form");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "seller.name.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "seller.password.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "seller.email.required");
@@ -30,7 +29,6 @@ public class SellerValidator {
 	}
 	
 	public void validateAddSellerAddressForm(Seller seller, Errors errors) {
-		System.out.println("Walidacja address form");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.street", "seller.address.street.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.city", "seller.address.city.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.postalCode", "seller.address.postalCode.required");
