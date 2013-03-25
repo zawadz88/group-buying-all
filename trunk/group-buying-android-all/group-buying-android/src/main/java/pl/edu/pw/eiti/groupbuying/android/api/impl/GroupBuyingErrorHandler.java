@@ -15,11 +15,33 @@
  */
 package pl.edu.pw.eiti.groupbuying.android.api.impl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 
-/**
- * @author Roy Clarkson
- */
+import pl.edu.pw.eiti.groupbuying.android.util.Constants;
+
+import android.util.Log;
+
 public class GroupBuyingErrorHandler extends DefaultResponseErrorHandler {
 
+	@Override
+	public void handleError(ClientHttpResponse response) throws IOException {
+		try {
+			BufferedReader r = new BufferedReader(new InputStreamReader(response.getBody()));
+			StringBuilder total = new StringBuilder();
+			String line;
+			while ((line = r.readLine()) != null) {
+			    total.append(line);
+			}
+			Log.e(Constants.TAG, "Status code: " + response.getRawStatusCode() + ", response body: " + total.toString());
+		} catch (Exception e) {
+		} finally {
+			super.handleError(response);
+		}
+	}
+	
 }
