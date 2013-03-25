@@ -26,8 +26,6 @@ public class AddClientController extends BaseController {
 	private ClientService clientService;
 	
 	public void submitClient(Client client) {
-		System.out.println("Saving client: " + client.toString());
 		clientService.saveClient(client);
-		System.out.println("CLient saved");
 	}
 }

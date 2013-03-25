@@ -30,10 +30,8 @@ public class SellerServiceImpl implements SellerService{
 	private PasswordEncoder passwordEncoder;
 	
 	public boolean saveSeller(Seller seller) {
-		System.out.println("Saving seller: " + seller.toString());
 		encodeSeller(seller);
 		sellerDAO.saveSeller(seller);
-		System.out.println("Seller saved");
 		return true;
 	}
 

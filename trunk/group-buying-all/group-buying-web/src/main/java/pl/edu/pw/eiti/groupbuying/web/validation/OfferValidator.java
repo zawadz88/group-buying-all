@@ -21,7 +21,6 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 @Component
 public class OfferValidator {
 	public void validateAddOfferGeneralForm(Offer offer, Errors errors) {
-		System.out.println("Walidacja general form");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "title", "offer.title.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lead", "offer.lead.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "offer.description.required");
@@ -44,7 +43,6 @@ public class OfferValidator {
 	}
 
 	public void validateAddOfferAddressForm(Offer offer, Errors errors) {
-		System.out.println("Walidacja address form");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.street", "offer.address.street.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.city", "offer.address.city.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.postalCode", "offer.address.postalCode.required");

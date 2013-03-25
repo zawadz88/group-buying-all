@@ -35,7 +35,6 @@ public class AddOfferController extends BaseController {
 	private OfferDAO offerDAO;
 	
 	public void submitOffer(final Offer offer) {
-		System.out.println("Saving offer: " + offer.toString());
 		SecurityContext context = SecurityContextHolder.getContext();
 		SaltedUser saltedUser = (SaltedUser) context.getAuthentication().getPrincipal();
 		Seller seller = new Seller();
