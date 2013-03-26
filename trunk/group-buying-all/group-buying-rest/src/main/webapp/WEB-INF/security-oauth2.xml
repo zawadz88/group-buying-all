@@ -14,9 +14,12 @@
         http://www.springframework.org/schema/security/spring-security-oauth2.xsd
         ">
 	<!-- For S2OAuth endpoints -->
-	<http pattern="/oauth/token" create-session="stateless"
+	<http 
+	    pattern="/oauth/token" 
+	    create-session="stateless"
 		authentication-manager-ref="clientAuthenticationManager"
-		entry-point-ref="oauthAuthenticationEntryPoint" xmlns="http://www.springframework.org/schema/security">
+		entry-point-ref="oauthAuthenticationEntryPoint" >
+		
 		<intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
 		<anonymous enabled="false" />
 		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
@@ -26,21 +29,31 @@
 			before="BASIC_AUTH_FILTER" />
 	</http>
 
-	<http pattern="/offers/**" create-session="stateless" security="none">
+	<http 
+	    pattern="/offers/**"
+	    create-session="stateless" 
+	    security="none">
+	</http>
+	
+	<http 
+	    pattern="/account/**" 
+	    create-session="stateless" 
+		use-expressions="true"
+	    entry-point-ref="oauthAuthenticationEntryPoint">	  
+	      
+		<intercept-url pattern="/**" access="isAuthenticated()" />
+		<custom-filter ref="resourceServerFilter" before="EXCEPTION_TRANSLATION_FILTER" />
 	</http>
 
 	<!-- TODO uporządkować to -->
 	<http use-expressions="true">
 		<!-- Authentication policy -->
 		<intercept-url pattern="/login.do" access="permitAll" />
-		<!-- <intercept-url pattern="/offers/*" access="isAuthenticated()" /> -->
 		<intercept-url pattern="/**" access="permitAll" />
 
 		<form-login login-page="/login.do"
 			authentication-failure-url="/login.do?error=1" />
 		<logout logout-url="/logout" delete-cookies="JSESSIONID" />
-
-		<custom-filter ref="resourceServerFilter" before="EXCEPTION_TRANSLATION_FILTER" />
 	</http>
 
 	<authentication-manager alias="authenticationManager">
@@ -100,9 +113,22 @@
 	</beans:bean>
 
 	<beans:bean id="oauthAuthenticationEntryPoint"
-		class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+		class="pl.edu.pw.eiti.groupbuying.rest.error.ApiOAuth2AuthenticationEntryPoint">
 		<beans:property name="realmName" value="greenhouseApi" />
+		<beans:property name="customHandlerExceptionRenderer" ref="oauthExceptionRenderer" />
+		<beans:property name="customHandlerExceptionResolver" ref="exceptionResolver" />
 	</beans:bean>
+	
+	<beans:bean id="oauthExceptionRenderer"
+		class="org.springframework.security.oauth2.provider.error.DefaultOAuth2ExceptionRenderer">
+		<beans:property name="messageConverters">
+		    <beans:list>
+                <beans:bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+            </beans:list>
+		</beans:property>
+	</beans:bean>
+	
+	
 
 	<!-- ============================== -->
 	<!-- OAUTH 2 : AUTHORIZATION SERVER -->
@@ -152,7 +178,7 @@
 	<!-- ========================= -->
 	<!-- OAUTH 2 : RESOURCE SERVER -->
 	<!-- ========================= -->
-	<oauth:resource-server id="resourceServerFilter"
+	<oauth:resource-server id="resourceServerFilter" entry-point-ref="oauthAuthenticationEntryPoint"
 		resource-id="greenhouseApi" token-services-ref="tokenServices" />
 
 

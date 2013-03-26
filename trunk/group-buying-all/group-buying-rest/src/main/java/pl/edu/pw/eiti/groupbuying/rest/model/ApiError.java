@@ -6,6 +6,8 @@ import java.util.Map;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import pl.edu.pw.eiti.groupbuying.rest.util.ErrorCodeDeserializer;
 import pl.edu.pw.eiti.groupbuying.rest.util.ErrorCodeSerializer;
 
@@ -43,6 +45,7 @@ public class ApiError {
 		return "Error [responseCode=" + responseCode + ", errorCode=" + errorCode + ", errorMessage=" + errorMessage + "]";
 	}
 	
+	@JsonIgnore
 	public Map<String, Object> getErrorAsMap() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("errorMessage", errorMessage);
@@ -61,7 +64,9 @@ public class ApiError {
 		INVALID_METHOD_ARGUMENT(4005),
 		MISSING_SERVLET_REQUEST_PART(4006),
 		INVALID_BINDING(4007),
-		MISSING_AUTHORIZATION(401),
+		UNAUTHORIZED(401),
+		OAUTH2_ERROR(4010),
+		FORBIDDEN(403),
 		PAGE_NOT_FOUND(404),
 		METHOD_NOT_ALLOWED(405),
 		NOT_ACCEPTABLE(406),
