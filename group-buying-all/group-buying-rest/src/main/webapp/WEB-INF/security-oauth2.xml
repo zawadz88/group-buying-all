@@ -117,8 +117,6 @@
 		</beans:property>
 	</beans:bean>
 	
-	
-
 	<!-- ============================== -->
 	<!-- OAUTH 2 : AUTHORIZATION SERVER -->
 	<!-- ============================== -->
@@ -131,9 +129,6 @@
 		<oauth:password />
 	</oauth:authorization-server>
 
-	<!-- WILL NEED TO REPLACE THIS WITH JDBC OR GH-SPECIFIC IMPL -->
-	<!-- <beans:bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore" 
-		/> -->
 	<beans:bean id="tokenStore"
 		class="org.springframework.security.oauth2.provider.token.JdbcTokenStore">
 		<beans:constructor-arg ref="dataSource" />
@@ -155,7 +150,6 @@
 		<authentication-provider user-service-ref="clientDetailsUserService" />
 	</authentication-manager>
 
-
 	<!-- End of configuration to support parameter-based client authentication -->
 
 	<oauth:client-details-service id="clientDetails">
@@ -169,7 +163,6 @@
 	<!-- ========================= -->
 	<oauth:resource-server id="resourceServerFilter" entry-point-ref="oauthAuthenticationEntryPoint"
 		resource-id="greenhouseApi" token-services-ref="tokenServices" />
-
 
 	<!-- ====================== -->
 	<!-- OAUTH 2 : SHARED BEANS -->

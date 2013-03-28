@@ -10,8 +10,6 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -20,7 +18,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="clients")
-public class Client implements Serializable {
+public class Client {
 	
 	@Id
 	@Column(name = "email")
