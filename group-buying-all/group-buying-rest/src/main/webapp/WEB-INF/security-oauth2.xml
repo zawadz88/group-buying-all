@@ -28,12 +28,6 @@
 		<custom-filter ref="clientCredentialsTokenEndpointFilter"
 			before="BASIC_AUTH_FILTER" />
 	</http>
-
-	<http 
-	    pattern="/offers/**"
-	    create-session="stateless" 
-	    security="none">
-	</http>
 	
 	<http 
 	    pattern="/account/**" 
@@ -45,17 +39,12 @@
 		<custom-filter ref="resourceServerFilter" before="EXCEPTION_TRANSLATION_FILTER" />
 	</http>
 
-	<!-- TODO uporządkować to -->
-	<http use-expressions="true">
-		<!-- Authentication policy -->
-		<intercept-url pattern="/login.do" access="permitAll" />
-		<intercept-url pattern="/**" access="permitAll" />
-
-		<form-login login-page="/login.do"
-			authentication-failure-url="/login.do?error=1" />
-		<logout logout-url="/logout" delete-cookies="JSESSIONID" />
+	<http 
+	    pattern="/**"
+	    create-session="stateless" 
+	    security="none">
 	</http>
-
+	
 	<authentication-manager alias="authenticationManager">
 		<authentication-provider user-service-ref="jdbcClientUserService">
 			<password-encoder ref="passwordEncoder">

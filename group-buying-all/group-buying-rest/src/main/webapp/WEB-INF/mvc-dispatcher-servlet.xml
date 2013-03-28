@@ -37,7 +37,7 @@
         <beans:property name="defaultViews">
             <beans:list>
                 <!-- JSON View -->
-                <beans:bean name="MappingJacksonJsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />                
+                <beans:bean name="MappingJacksonJsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />                
             </beans:list>
         </beans:property>
           		
@@ -46,12 +46,5 @@
 	<beans:bean id="exceptionResolver" class="pl.edu.pw.eiti.groupbuying.rest.resolver.ApiHandlerExceptionResolver">
         <beans:property name="order" value="0" />
 	</beans:bean>
-
-    <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <beans:property name="order" value="2" />
-        <beans:property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-        <beans:property name="prefix" value="/WEB-INF/views/" />
-        <beans:property name="suffix" value=".jsp" />
-    </beans:bean>
 	
 </beans:beans>

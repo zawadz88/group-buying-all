@@ -29,7 +29,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
-import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError;
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
@@ -355,7 +355,7 @@ public class ApiHandlerExceptionResolver extends DefaultHandlerExceptionResolver
 
 	private ModelAndView getErrorModelAndView(Exception ex, HttpServletResponse response, ErrorCode errorCode, int statusCode) {
 		ModelAndView mav = new ModelAndView();
-		mav.setView(new MappingJacksonJsonView());
+		mav.setView(new MappingJackson2JsonView());
 		ApiError error = new ApiError();
 		error.setResponseCode(statusCode);
 		error.setErrorMessage(ex.getMessage());
