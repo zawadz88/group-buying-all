@@ -3,13 +3,12 @@ package pl.edu.pw.eiti.groupbuying.rest.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import pl.edu.pw.eiti.groupbuying.rest.util.ErrorCodeDeserializer;
 import pl.edu.pw.eiti.groupbuying.rest.util.ErrorCodeSerializer;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class ApiError {
 	private int responseCode;

@@ -2,12 +2,12 @@ package pl.edu.pw.eiti.groupbuying.rest.util;
 
 import java.io.IOException;
 
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.SerializerProvider;
-
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 
 public class ErrorCodeSerializer extends JsonSerializer<ErrorCode> {
 	@Override
