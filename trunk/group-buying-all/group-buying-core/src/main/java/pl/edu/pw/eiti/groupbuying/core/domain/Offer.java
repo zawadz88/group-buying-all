@@ -10,7 +10,6 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -32,7 +31,7 @@ import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
 @Entity
 @Table(name = "offers")
-public class Offer implements Serializable {
+public class Offer {
 
 	@Id
 	@Column(name="offer_id")

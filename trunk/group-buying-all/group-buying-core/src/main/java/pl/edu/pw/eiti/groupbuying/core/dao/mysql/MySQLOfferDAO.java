@@ -10,7 +10,6 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.dao.mysql;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;

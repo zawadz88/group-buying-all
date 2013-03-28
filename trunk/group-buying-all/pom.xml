@@ -271,7 +271,22 @@
 				<version>4.1.9.Final</version>
 				<!-- will come with Hibernate core -->
 			</dependency>
-
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-search</artifactId>
+				<version>4.2.0.Final</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.codehaus.jackson</groupId>
+						<artifactId>jackson-mapper-asl</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.codehaus.jackson</groupId>
+						<artifactId>jackson-core-asl</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+            
 			<dependency>
 				<groupId>javax.transaction</groupId>
 				<artifactId>jta</artifactId>
