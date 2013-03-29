@@ -37,15 +37,13 @@ import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 @Repository("cityDAO")
 public class MySQLCityDAO implements CityDAO {
 
-	@PersistenceContext
+	@PersistenceContext//(type=PersistenceContextType.EXTENDED)
 	private EntityManager entityManager;
-
-	public FullTextEntityManager getFullTextEntityManager() {
-		FullTextEntityManager fullTextEntityManager;
-		fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-		return fullTextEntityManager;
+	
+	public FullTextEntityManager getFullTextEntityManager(){
+		return Search.getFullTextEntityManager(entityManager);
 	}
-
+	
 	@Override
 	@Transactional
 	public List<CityDTO> getCities() {
@@ -60,7 +58,7 @@ public class MySQLCityDAO implements CityDAO {
 
 	@Override
 	@Transactional
-	public CityDTO getClosestCity(double latitude, double longitude) {		
+	public CityDTO getClosestCity(double latitude, double longitude) {
 		QueryBuilder builder = getFullTextEntityManager().getSearchFactory().buildQueryBuilder().forEntity(City.class).get();
 		Query luceneQuery = builder.spatial().onCoordinates("loc").within(500, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery();
 
@@ -80,11 +78,10 @@ public class MySQLCityDAO implements CityDAO {
 	@Override
 	@Transactional
 	public void indexCities() {
-
 		TypedQuery<City> query = entityManager.createQuery("from City", City.class);
 		List<City> cities = query.getResultList();
 
-		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+		FullTextEntityManager fullTextEntityManager = getFullTextEntityManager();
 		for (City city : cities) {
 			fullTextEntityManager.index(city);
 		}
