@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import pl.edu.pw.eiti.groupbuying.core.dao.CityDAO;
 import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.rest.service.CityService;
 
@@ -29,11 +30,22 @@ public class CityController {
 	
 	@Autowired
 	CityService cityService;
+	
+	@Autowired
+	CityDAO cityDAO;
 
 	@RequestMapping(value = "city", method = RequestMethod.GET)
 	public @ResponseBody CityDTO getCity(@RequestParam(value="latitude") final double latitude, @RequestParam(value="longitude") final double longitude) {
 		CityDTO city = cityService.getClosetCity(latitude, longitude);
 		return city;
 	}
+
+	@RequestMapping(value = "index", method = RequestMethod.GET)
+	public @ResponseBody boolean index() {
+		cityDAO.indexCities();
+		return true;
+	}
+	
+	
 	
 }
