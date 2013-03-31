@@ -10,16 +10,20 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.rest.controller;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import pl.edu.pw.eiti.groupbuying.core.dao.CityDAO;
 import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
+import pl.edu.pw.eiti.groupbuying.rest.exception.InternalServerErrorException;
+import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 import pl.edu.pw.eiti.groupbuying.rest.service.CityService;
 
 @Controller
@@ -29,23 +33,24 @@ public class CityController {
 	private static final Logger LOG = Logger.getLogger(CityController.class);
 	
 	@Autowired
-	CityService cityService;
+	private CityService cityService;
 	
-	@Autowired
-	CityDAO cityDAO;
-
 	@RequestMapping(value = "city", method = RequestMethod.GET)
 	public @ResponseBody CityDTO getCity(@RequestParam(value="latitude") final double latitude, @RequestParam(value="longitude") final double longitude) {
-		CityDTO city = cityService.getClosetCity(latitude, longitude);
+		CityDTO city;
+		try {
+			city = cityService.getClosestCity(latitude, longitude);
+		} catch (DataAccessException e) {
+			LOG.error("DB error occured in getCity, latitude: " + latitude + ", longitude: " + longitude, e);
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (PersistenceException e) {
+			LOG.error("DB error occured in getCity, latitude: " + latitude + ", longitude: " + longitude, e);
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (Exception e) {
+			LOG.error("Internal server occured in getCity, latitude: " + latitude + ", longitude: " + longitude, e);
+			throw new InternalServerErrorException("Unknown error", ErrorCode.UNKNOWN_ERROR);
+		}
 		return city;
 	}
-
-	@RequestMapping(value = "index", method = RequestMethod.GET)
-	public @ResponseBody boolean index() {
-		cityDAO.indexCities();
-		return true;
-	}
-	
-	
 	
 }

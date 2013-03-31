@@ -1,7 +1,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jee="http://www.springframework.org/schema/jee" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans     
@@ -12,11 +15,17 @@
         http://www.springframework.org/schema/jee/spring-jee.xsd
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
     ">
 
 	<context:component-scan base-package="pl.edu.pw.eiti.groupbuying.core" />
 	<context:annotation-config />
-
+	
+	<context:property-placeholder location="classpath:props.properties" file-encoding="UTF-8" />
+	
+	<util:properties id="constants" location="classpath:constants.properties" />
+		
 	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/groupDB" expected-type="javax.sql.DataSource" />
 
 	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
@@ -65,7 +74,7 @@
 		            <key>
 		                <value>hibernate.search.default.indexBase</value>
 		            </key>
-		            <value>C:\groupbuying\index</value>
+		            <value>${hibernate.search.index.base}</value>
 		        </entry>
 		        <entry>
 		            <key>
