@@ -1,8 +1,8 @@
 package pl.edu.pw.eiti.groupbuying.rest.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.CityDAO;
 import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
@@ -14,9 +14,40 @@ public class CityServiceImpl implements CityService {
 	@Autowired
 	private CityDAO cityDAO;
 
+	@Value("#{constants['city.latitude.max']}")
+	private double maxLatitude;
+	
+	@Value("#{constants['city.latitude.min']}")
+	private double minLatitude;
+	
+	@Value("#{constants['city.longitude.max']}")
+	private double maxLongitude;
+	
+	@Value("#{constants['city.longitude.min']}")
+	private double minLongitude;
+
+
 	@Override
-	@Transactional
-	public CityDTO getClosetCity(double latitude, double longitude) {
-		return cityDAO.getClosestCity(latitude, longitude);
+	public CityDTO getClosestCity(double latitude, double longitude) {		
+		CityDTO city = null;
+		if(inSearchBounds(latitude, longitude)) {
+			city = cityDAO.getClosestCity(latitude, longitude);
+		}	
+		if(city == null) {
+			city = cityDAO.getDefaultCity();
+		}
+		return city;
+	}
+
+	private boolean inSearchBounds(double latitude, double longitude) {
+		if(latitude < maxLatitude && latitude > minLatitude && longitude < maxLongitude && longitude > minLongitude) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public CityDTO getDefaultCity() {
+		return cityDAO.getDefaultCity();
 	}
 }

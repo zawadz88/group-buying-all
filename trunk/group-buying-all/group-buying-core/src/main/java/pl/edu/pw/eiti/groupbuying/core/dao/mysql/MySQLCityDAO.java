@@ -27,6 +27,7 @@ import org.hibernate.search.jpa.Search;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.Unit;
 import org.hibernate.search.spatial.impl.DistanceSortField;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,11 +38,27 @@ import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 @Repository("cityDAO")
 public class MySQLCityDAO implements CityDAO {
 
-	@PersistenceContext//(type=PersistenceContextType.EXTENDED)
+	@Value("#{constants['default.city.id']}")
+	private String defaultCityId;
+	
+	@Value("#{constants['city.search.radius']}")
+	private double citySearchRadius;
+	
+	@PersistenceContext
 	private EntityManager entityManager;
 	
 	public FullTextEntityManager getFullTextEntityManager(){
 		return Search.getFullTextEntityManager(entityManager);
+	}
+	
+	@Override
+	@Transactional
+	public CityDTO getDefaultCity() {
+		City city = entityManager.find(City.class, defaultCityId);
+		if(city == null) {
+			throw new IllegalStateException("Default city not found: " + defaultCityId);
+		}
+		return city.getCityDTO();
 	}
 	
 	@Override
@@ -60,7 +77,7 @@ public class MySQLCityDAO implements CityDAO {
 	@Transactional
 	public CityDTO getClosestCity(double latitude, double longitude) {
 		QueryBuilder builder = getFullTextEntityManager().getSearchFactory().buildQueryBuilder().forEntity(City.class).get();
-		Query luceneQuery = builder.spatial().onCoordinates("loc").within(500, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery();
+		Query luceneQuery = builder.spatial().onCoordinates("loc").within(citySearchRadius, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery();
 
 		FullTextQuery hibQuery = getFullTextEntityManager().createFullTextQuery(luceneQuery, City.class);
 		Sort distanceSort = new Sort(new DistanceSortField(latitude, longitude, "loc"));

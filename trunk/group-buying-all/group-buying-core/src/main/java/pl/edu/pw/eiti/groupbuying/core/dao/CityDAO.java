@@ -22,4 +22,6 @@ public interface CityDAO {
 	
 	void indexCities();
 
+	CityDTO getDefaultCity();
+
 }
