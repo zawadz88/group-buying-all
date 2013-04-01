@@ -10,7 +10,7 @@
 		</layout>
 	</appender>
 	
-	<logger name="pl.edu.pw.eiti.groupbuying.rest">
+	<logger name="pl.edu.pw.eiti.groupbuying">
 		<level value="debug" />
 	</logger>
 	
@@ -23,23 +23,23 @@
 	</logger>
 
 	<logger name="org.springframework.beans">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 	
 	<logger name="org.springframework.context">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 
 	<logger name="org.springframework.http">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 
 	<logger name="org.springframework.web">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 
 	<logger name="org.springframework.security">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 	
 	<root>
