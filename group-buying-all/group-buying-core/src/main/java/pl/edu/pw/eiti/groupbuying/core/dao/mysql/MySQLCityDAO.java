@@ -19,6 +19,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.apache.log4j.Logger;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -28,6 +29,7 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.Unit;
 import org.hibernate.search.spatial.impl.DistanceSortField;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +38,10 @@ import pl.edu.pw.eiti.groupbuying.core.domain.City;
 import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 
 @Repository("cityDAO")
+@DependsOn(value = "transactionManager")
 public class MySQLCityDAO implements CityDAO {
+	
+	private static final Logger LOG = Logger.getLogger(MySQLCityDAO.class);
 
 	@Value("#{constants['default.city.id']}")
 	private String defaultCityId;
@@ -50,7 +55,7 @@ public class MySQLCityDAO implements CityDAO {
 	public FullTextEntityManager getFullTextEntityManager(){
 		return Search.getFullTextEntityManager(entityManager);
 	}
-	
+		
 	@Override
 	@Transactional
 	public CityDTO getDefaultCity() {
@@ -97,12 +102,12 @@ public class MySQLCityDAO implements CityDAO {
 	public void indexCities() {
 		TypedQuery<City> query = entityManager.createQuery("from City", City.class);
 		List<City> cities = query.getResultList();
-
 		FullTextEntityManager fullTextEntityManager = getFullTextEntityManager();
 		for (City city : cities) {
 			fullTextEntityManager.index(city);
 		}
 		fullTextEntityManager.getSearchFactory().optimize(City.class);
+		fullTextEntityManager.flushToIndexes();
 	}
 
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import pl.edu.pw.eiti.groupbuying.core.dao.CityDAO;
 import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.rest.exception.InternalServerErrorException;
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
@@ -34,6 +35,9 @@ public class CityController {
 	
 	@Autowired
 	private CityService cityService;
+	
+	@Autowired
+	private CityDAO cityDAO;
 	
 	@RequestMapping(value = "city", method = RequestMethod.GET)
 	public @ResponseBody CityDTO getCity(@RequestParam(value="latitude") final double latitude, @RequestParam(value="longitude") final double longitude) {
@@ -52,5 +56,20 @@ public class CityController {
 		}
 		return city;
 	}
-	
+
+	//TODO przeniesc do panelu admina
+	@RequestMapping(value = "index", method = RequestMethod.GET)
+	public @ResponseBody CityDTO index() {
+		CityDTO city = null;
+		try {
+			cityDAO.indexCities();
+		} catch (DataAccessException e) {
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (PersistenceException e) {
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (Exception e) {
+			throw new InternalServerErrorException("Unknown error", ErrorCode.UNKNOWN_ERROR);
+		}
+		return city;
+	}
 }
