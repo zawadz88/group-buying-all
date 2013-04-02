@@ -23,7 +23,8 @@ import com.actionbarsherlock.view.MenuItem;
 public class MainMenuActivity extends AbstractGroupBuyingActivity {
     protected OffersFragmentAdapter mAdapter;
     protected MapFragmentScrollOverrideViewPager mPager;
-    @Override
+    
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
@@ -35,7 +36,6 @@ public class MainMenuActivity extends AbstractGroupBuyingActivity {
         } else {
             bar.setDisplayShowTitleEnabled(false);        	
         }
-
         
         mPager = (MapFragmentScrollOverrideViewPager) findViewById(R.id.pager);
         mAdapter = new OffersFragmentAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.offers_fragment_titles), bar, mPager);

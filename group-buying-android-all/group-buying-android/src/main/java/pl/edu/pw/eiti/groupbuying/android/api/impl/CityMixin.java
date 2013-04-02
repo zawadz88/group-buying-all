@@ -13,22 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.edu.pw.eiti.groupbuying.android.api;
+package pl.edu.pw.eiti.groupbuying.android.api.impl;
 
-import org.springframework.social.ApiBinding;
-
-import pl.edu.pw.eiti.groupbuying.android.api.impl.GroupBuyingTemplate;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * Interface specifying a basic set of operations for interacting with Group API.
- * Implemented by {@link GroupBuyingTemplate}. Not often used directly, but a
- * useful option to enhance testability, as it can easily be mocked or stubbed.
+ * Mixin class for adding Jackson annotations to Offer.
  * 
  */
-public interface GroupBuyingApi extends ApiBinding {
-		
-	OfferOperations offerOperations();
-	
-	CityOperations cityOperations();
-	
+@JsonIgnoreProperties(ignoreUnknown=true)
+abstract class CityMixin {	
+
+	@JsonCreator
+	CityMixin(
+			@JsonProperty("cityId") String cityID, 
+			@JsonProperty("name") String name, 
+			@JsonProperty("latitude") double latitude, 
+			@JsonProperty("longitude") double longitude
+			) {}
 }

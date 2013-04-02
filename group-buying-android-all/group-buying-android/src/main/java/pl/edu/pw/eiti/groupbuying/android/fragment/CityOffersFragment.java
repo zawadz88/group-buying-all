@@ -10,6 +10,7 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android.fragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.social.connect.DuplicateConnectionException;
@@ -19,28 +20,43 @@ import org.springframework.web.client.ResourceAccessException;
 import pl.edu.pw.eiti.groupbuying.android.OfferActivity;
 import pl.edu.pw.eiti.groupbuying.android.R;
 import pl.edu.pw.eiti.groupbuying.android.adapter.OfferEssentialListAdapter;
+import pl.edu.pw.eiti.groupbuying.android.api.City;
 import pl.edu.pw.eiti.groupbuying.android.api.OfferEssential;
-import pl.edu.pw.eiti.groupbuying.android.fragment.util.NoInternetListener;
 import pl.edu.pw.eiti.groupbuying.android.task.AbstractGroupBuyingTask;
 import pl.edu.pw.eiti.groupbuying.android.task.DownloadOfferListTask;
 import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
 import pl.edu.pw.eiti.groupbuying.android.task.util.TaskResult;
+import pl.edu.pw.eiti.groupbuying.android.util.Constants;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.androidquery.AQuery;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
-public final class CityOffersFragment extends AbstractListFragment implements AsyncTaskListener, NoInternetListener {
+public final class CityOffersFragment extends AbstractListFragment implements AsyncTaskListener, OnScrollListener {
 
-
-	private List<OfferEssential> offerList;
-
+	private List<OfferEssential> offerList = new ArrayList<OfferEssential>();
+    private String cityId;
+    private ArrayList<City> cities;
+	private String networkErrorTitle;
+	private String networkErrorMessage;
+	private String connectionErrorTitle;
+	private String connectionErrorMessage;
+	
+	
 	public static CityOffersFragment newInstance() {
 		CityOffersFragment fragment = new CityOffersFragment();
 		return fragment;
@@ -50,12 +66,11 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
-		// if ((savedInstanceState != null) &&
-		// savedInstanceState.containsKey(KEY_CONTENT)) { }
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_basic_offers, container, false);
 		AQuery aq = new AQuery(getActivity(), rootView);
 		listView = (PullToRefreshListView) aq.id(R.id.offerList).getView();
@@ -63,24 +78,49 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 		emptyView = aq.id(R.id.list_empty).getTextView();
 		noInternetLayout = (LinearLayout) aq.id(R.id.noInternetLayout).getView();
 		setUpNoInternetButton(noInternetLayout, this);
-
+		setUpRefreshListener();
 		listView.setOnItemClickListener(this);
 
 		return rootView;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 
+        cityId = activity.getIntent().getStringExtra("cityId");
+        cities = (ArrayList<City>) activity.getIntent().getExtras().getSerializable("cities");
+        System.out.println("cities: " + cities);
+        if(cityId == null || cities == null) {
+        	throw new IllegalStateException("Intent missing values, cityId " + cityId + ", cities: " + cities);
+        }
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		networkErrorTitle = getString(R.string.network_error_title);
+		networkErrorMessage = getString(R.string.network_error_message);
+		connectionErrorTitle = getString(R.string.connection_error_title);
+		connectionErrorMessage = getString(R.string.connection_error_message);
+	}
+	
 	@Override
 	public void onStart() {
 		super.onStart();
-		if (offerList != null && offerList.size() > 0) {
-			// Set new adapter
+		if (!offerList.isEmpty()) {
 			setListAdapter(new OfferEssentialListAdapter(this, 0, offerList));
+			listView.setOnScrollListener(this);
 			setListViewState(ListViewState.CONTENT);
-		} else if (offerList != null && offerList.size() == 0) {
-			setListViewState(ListViewState.EMPTY);
+		} else if(offerList.isEmpty() && endOfItemsReached) {
+			setListViewState(ListViewState.EMPTY);			
 		} else {
-			setListViewState(ListViewState.LOADING);	
-			new DownloadOfferListTask("travel", 0, this, application).execute();
+			setListViewState(ListViewState.LOADING);
+			if(!loading) {
+				loading = true;
+				new DownloadOfferListTask("city/" + cityId, currentPage + 1, this, application).execute();	
+			}
 		}
 	}
 
@@ -108,56 +148,112 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 	public void onStop() {
 		super.onStop();
 	}
-
+	
 	@Override
 	public void refreshList() {
+		((BaseAdapter)((HeaderViewListAdapter) getListAdapter()).getWrappedAdapter()).notifyDataSetChanged();
 	}
-
-
+	
 	@Override
-	public void onTaskFinished(AbstractGroupBuyingTask<?> task, TaskResult result) {
-		// TODO obsluzyc doczytywanie ofert
-		if (result.equals(TaskResult.SUCCESSFUL)) {
+	public void onTaskFinished(AbstractGroupBuyingTask<?> task,	TaskResult result) {
+		loadingMoreItems = false;
+		loading = false;
+		listView.onRefreshComplete();
+		if(result.equals(TaskResult.SUCCESSFUL)) {
+			connectionAvailable = true;
 			List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
-			if (downloadedOffers == null || downloadedOffers.isEmpty()) {
-				setListViewState(ListViewState.EMPTY);
+			if(downloadedOffers == null || downloadedOffers.isEmpty()) {
+				endOfItemsReached = true;
+				if(offerList.isEmpty()) {
+					setListViewState(ListViewState.EMPTY);					
+				} else {
+					setListViewState(ListViewState.CONTENT);
+					refreshList();
+				}
 			} else {
-				offerList = downloadedOffers;
-				if(getActivity() != null) {
-					setListAdapter(new OfferEssentialListAdapter(this, 0, offerList));
+		        currentPage++;
+				if(downloadedOffers.size() < Constants.OFFERS_PAGE_SIZE) { //do not download more offers, none will be available anyways
+					endOfItemsReached = true;
+				}
+				if(offerList.isEmpty()) {
+					offerList.addAll(downloadedOffers);
+					if(getActivity() != null) {
+						setListAdapter(new OfferEssentialListAdapter(this, 0, offerList));
+					}			
+					listView.setOnScrollListener(this);	
+				} else {
+					offerList.addAll(downloadedOffers);
+					refreshList();
 				}
 				setListViewState(ListViewState.CONTENT);
 			}
-		} else if (result.equals(TaskResult.FAILED)) {
-			if (offerList == null || offerList.size() == 0) {
-				setListViewState(ListViewState.EMPTY);
-			} else {
-				setListViewState(ListViewState.CONTENT);
-			}
+		} else if(result.equals(TaskResult.FAILED)) {
+			
 			Exception exception = task.getException();
 			if(exception != null) {
-				final String title;
-				final String message;
-				if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
-					title = getString(R.string.network_error_title);
-					message = getString(R.string.network_error_message);
+				if(offerList.isEmpty()) {
+					if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
+						setListViewState(ListViewState.NO_INTERNET, networkErrorTitle, networkErrorMessage);
+					} else {
+						setListViewState(ListViewState.NO_INTERNET, connectionErrorTitle, connectionErrorMessage);
+					}
 				} else {
-					title = getString(R.string.connection_error_title);
-					message = getString(R.string.connection_error_message);
+					setListViewState(ListViewState.CONTENT);
+					connectionAvailable = false;
+					refreshList();
 				}
-				
-				setListViewState(ListViewState.NO_INTERNET, title, message);
 			}
 		}
 	}
 
 	@Override
 	public void onDeviceOnline() {
-		setListViewState(ListViewState.LOADING);
-		new DownloadOfferListTask("travel", 0, this, application).execute();
+		if(offerList.isEmpty()) {
+			setListViewState(ListViewState.LOADING);			
+		} else {
+			loadingMoreItems = true;
+			loading = true;
+			connectionAvailable = true;
+			refreshList(); //needed to show loading view
+		}
+		new DownloadOfferListTask("city/" + cityId, currentPage + 1, this, application).execute();
 	}
 
 	@Override
 	public void onDeviceOffline() {		
+	}
+	
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if(!loadingMoreItems && visibleItemCount != totalItemCount && (totalItemCount - visibleItemCount) <= (firstVisibleItem + VISIBLE_ITEM_THRESHOLD) && !endOfItemsReached && connectionAvailable) { //visibleItemCount != totalItemCount is needed for when new items are added this is false
+        	loadingMoreItems = true;
+			loading = true;
+			refreshList(); //needed to show loading view
+     		new DownloadOfferListTask("city/" + cityId, currentPage + 1, this, application).execute();
+        }
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+
+	private void setUpRefreshListener() {
+		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+			
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				clearOffers();
+				currentPage = -1;
+				endOfItemsReached = false;
+				loading = true;
+				refreshList();
+				new DownloadOfferListTask("city/" + cityId, currentPage + 1, CityOffersFragment.this, application).execute();
+			}
+		});
+		
+	}
+	
+	private void clearOffers() {
+		offerList.clear();
 	}
 }
