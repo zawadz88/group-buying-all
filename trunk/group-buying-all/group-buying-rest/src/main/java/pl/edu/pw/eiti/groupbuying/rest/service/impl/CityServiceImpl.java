@@ -1,5 +1,7 @@
 package pl.edu.pw.eiti.groupbuying.rest.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -39,15 +41,20 @@ public class CityServiceImpl implements CityService {
 		return city;
 	}
 
+	@Override
+	public CityDTO getDefaultCity() {
+		return cityDAO.getDefaultCity();
+	}
+	
+	@Override
+	public List<CityDTO> getCities(){
+		return cityDAO.getCities();
+	}
+	
 	private boolean inSearchBounds(double latitude, double longitude) {
 		if(latitude < maxLatitude && latitude > minLatitude && longitude < maxLongitude && longitude > minLongitude) {
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public CityDTO getDefaultCity() {
-		return cityDAO.getDefaultCity();
 	}
 }
