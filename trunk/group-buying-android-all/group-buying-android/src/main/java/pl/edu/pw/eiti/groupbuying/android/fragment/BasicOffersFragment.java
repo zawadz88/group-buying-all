@@ -54,8 +54,6 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 	private String connectionErrorTitle;
 	private String connectionErrorMessage;
 	
-
-	
 	public static BasicOffersFragment newInstance(String category) {
 		BasicOffersFragment fragment = new BasicOffersFragment();
 		Bundle bundle = new Bundle();
