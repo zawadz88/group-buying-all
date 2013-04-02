@@ -10,6 +10,8 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.rest.controller;
 
+import java.util.List;
+
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
@@ -36,27 +38,64 @@ public class CityController {
 	@Autowired
 	private CityService cityService;
 	
+	//TODO usunac
 	@Autowired
 	private CityDAO cityDAO;
 	
-	@RequestMapping(value = "city", method = RequestMethod.GET)
-	public @ResponseBody CityDTO getCity(@RequestParam(value="latitude") final double latitude, @RequestParam(value="longitude") final double longitude) {
+	@RequestMapping(value = "nearest-city", method = RequestMethod.GET)
+	public @ResponseBody CityDTO getNearestCity(@RequestParam(value="latitude") final double latitude, @RequestParam(value="longitude") final double longitude) {
 		CityDTO city;
 		try {
 			city = cityService.getClosestCity(latitude, longitude);
 		} catch (DataAccessException e) {
-			LOG.error("DB error occured in getCity, latitude: " + latitude + ", longitude: " + longitude, e);
+			LOG.error("DB error occured in getClosestCity, latitude: " + latitude + ", longitude: " + longitude, e);
 			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
 		} catch (PersistenceException e) {
-			LOG.error("DB error occured in getCity, latitude: " + latitude + ", longitude: " + longitude, e);
+			LOG.error("DB error occured in getClosestCity, latitude: " + latitude + ", longitude: " + longitude, e);
 			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
 		} catch (Exception e) {
-			LOG.error("Internal server occured in getCity, latitude: " + latitude + ", longitude: " + longitude, e);
+			LOG.error("Internal server occured in getClosestCity, latitude: " + latitude + ", longitude: " + longitude, e);
 			throw new InternalServerErrorException("Unknown error", ErrorCode.UNKNOWN_ERROR);
 		}
 		return city;
 	}
-
+	
+	@RequestMapping(value = "list", method = RequestMethod.GET)
+	public @ResponseBody List<CityDTO> getCities() {
+		List<CityDTO> cities = null;
+		try {
+			cities = cityService.getCities();
+		} catch (DataAccessException e) {
+			LOG.error("DB error occured in getCities", e);
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (PersistenceException e) {
+			LOG.error("DB error occured in getCities, latitude", e);
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (Exception e) {
+			LOG.error("Internal server occured in getCities", e);
+			throw new InternalServerErrorException("Unknown error", ErrorCode.UNKNOWN_ERROR);
+		}
+		return cities;
+	}
+	
+	@RequestMapping(value = "default-city", method = RequestMethod.GET)
+	public @ResponseBody CityDTO getDefaultCity() {
+		CityDTO city;
+		try {
+			city = cityService.getDefaultCity();
+		} catch (DataAccessException e) {
+			LOG.error("DB error occured in getDefaultCity", e);
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (PersistenceException e) {
+			LOG.error("DB error occured in getDefaultCity, latitude", e);
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (Exception e) {
+			LOG.error("Internal server occured in getDefaultCity", e);
+			throw new InternalServerErrorException("Unknown error", ErrorCode.UNKNOWN_ERROR);
+		}
+		return city;
+	}
+	
 	//TODO przeniesc do panelu admina
 	@RequestMapping(value = "index", method = RequestMethod.GET)
 	public @ResponseBody CityDTO index() {

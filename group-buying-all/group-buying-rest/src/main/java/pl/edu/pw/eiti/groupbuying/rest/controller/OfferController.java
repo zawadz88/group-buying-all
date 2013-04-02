@@ -101,9 +101,10 @@ public class OfferController {
 		return selectedOffers;
 	}
 
-	@RequestMapping(value = "city", method = RequestMethod.GET)
-	public @ResponseBody List<OfferEssentialDTO> getCityOffers(@RequestParam(value = "page", defaultValue = "0") final int pageNumber, @RequestParam(value = "cityId") final int cityId) {
-		List<OfferEssentialDTO> selectedOffers = offerService.getOfferEssentials(Category.CITY, pageNumber);
+	@RequestMapping(value = "city/{cityId}", method = RequestMethod.GET)
+	public @ResponseBody List<OfferEssentialDTO> getCityOffers(@RequestParam(value = "page", defaultValue = "0") final int pageNumber, @PathVariable(value = "cityId") final String cityId) {
+		LOG.info("incoming!: " + cityId);
+		List<OfferEssentialDTO> selectedOffers = offerService.getOfferEssentials(Category.SHOPPING, pageNumber);
 		//TODO po id miasta
 		return selectedOffers;
 	}
