@@ -16,7 +16,7 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.groupbuying" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarItemBackground">@drawable/selectable_background_groupbuying</item>
@@ -39,7 +39,7 @@
         <item name="android:actionBarWidgetTheme">@style/Theme.groupbuying.widget</item>
 
     </style>
-
+    
     <style name="groupbuying_solid_ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/ab_solid_groupbuying</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_groupbuying</item>

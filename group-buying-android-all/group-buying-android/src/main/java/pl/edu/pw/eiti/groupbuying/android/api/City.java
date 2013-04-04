@@ -23,6 +23,8 @@ public class City implements Serializable {
 	private double latitude;
 
 	private double longitude;
+	
+	private boolean enabled;
 
 	public String getCityId() {
 		return cityId;
@@ -56,20 +58,54 @@ public class City implements Serializable {
 		this.longitude = longitude;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	@Override
 	public String toString() {
-		return "City [cityId=" + cityId + ", name=" + name + ", latitude=" + latitude + ", longitude=" + longitude + "]";
+		return name;
 	}
 
 	public City() {
 	}
 
-	public City(String cityId, String name, double latitude, double longitude) {
+	public City(String cityId, String name, double latitude, double longitude, boolean enabled) {
 		super();
 		this.cityId = cityId;
 		this.name = name;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.enabled = enabled;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((cityId == null) ? 0 : cityId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		City other = (City) obj;
+		if (cityId == null) {
+			if (other.cityId != null)
+				return false;
+		} else if (!cityId.equals(other.cityId))
+			return false;
+		return true;
 	}
 
 }

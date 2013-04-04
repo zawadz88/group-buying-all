@@ -127,7 +127,7 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 
 	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-		OfferEssential selectedOffer = offerList.get(position);
+		OfferEssential selectedOffer = offerList.get(position - 1);
 		Intent intent = new Intent(getActivity(), OfferActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra("offerId", selectedOffer.getOfferId());
@@ -146,7 +146,9 @@ public final class BasicOffersFragment extends AbstractListFragment implements A
 	
 	@Override
 	public void refreshList() {
-		((BaseAdapter)((HeaderViewListAdapter) getListAdapter()).getWrappedAdapter()).notifyDataSetChanged();
+		if(getListAdapter() != null) {
+			((BaseAdapter)((HeaderViewListAdapter) getListAdapter()).getWrappedAdapter()).notifyDataSetChanged();			
+		}
 	}
 	
 	@Override
