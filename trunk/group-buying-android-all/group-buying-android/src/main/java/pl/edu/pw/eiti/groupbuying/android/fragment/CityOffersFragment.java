@@ -36,10 +36,13 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.HeaderViewListAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.androidquery.AQuery;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -49,7 +52,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 public final class CityOffersFragment extends AbstractListFragment implements AsyncTaskListener, OnScrollListener {
 
 	private List<OfferEssential> offerList = new ArrayList<OfferEssential>();
-    private String cityId;
+    private City city;
     private ArrayList<City> cities;
 	private String networkErrorTitle;
 	private String networkErrorMessage;
@@ -71,17 +74,48 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View rootView = inflater.inflate(R.layout.fragment_basic_offers, container, false);
+		final View rootView = inflater.inflate(R.layout.fragment_city_offers, container, false);
 		AQuery aq = new AQuery(getActivity(), rootView);
 		listView = (PullToRefreshListView) aq.id(R.id.offerList).getView();
 		loadingView = aq.id(R.id.list_loading).getProgressBar();
 		emptyView = aq.id(R.id.list_empty).getTextView();
 		noInternetLayout = (LinearLayout) aq.id(R.id.noInternetLayout).getView();
+		
+		setUpSpinner(aq);
 		setUpNoInternetButton(noInternetLayout, this);
 		setUpRefreshListener();
 		listView.setOnItemClickListener(this);
 
 		return rootView;
+	}
+
+	private void setUpSpinner(AQuery aq) {
+		Spinner spinner = aq.id(R.id.citySelection).getSpinner();
+		ArrayAdapter<City> dataAdapter = new ArrayAdapter<City>(getActivity(), R.layout.spinner_item, cities);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(dataAdapter);
+		int selectedCity = cities.indexOf(city);
+		if(selectedCity == -1) {
+			selectedCity = 0;
+			city = cities.get(0);
+		}
+		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if(!cities.get(position).equals(city)) {
+					city = cities.get(position);
+					getActivity().getIntent().putExtra("city", city);
+					refetchOffers();
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+			
+		});
+		spinner.setSelection(selectedCity);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -89,11 +123,10 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-        cityId = activity.getIntent().getStringExtra("cityId");
+        city = (City) activity.getIntent().getExtras().getSerializable("city");
         cities = (ArrayList<City>) activity.getIntent().getExtras().getSerializable("cities");
-        System.out.println("cities: " + cities);
-        if(cityId == null || cities == null) {
-        	throw new IllegalStateException("Intent missing values, cityId " + cityId + ", cities: " + cities);
+        if(city == null || cities == null) {
+        	throw new IllegalStateException("Intent missing values, city " + city + ", cities: " + cities);
         }
 	}
 	
@@ -119,7 +152,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 			setListViewState(ListViewState.LOADING);
 			if(!loading) {
 				loading = true;
-				new DownloadOfferListTask("city/" + cityId, currentPage + 1, this, application).execute();	
+				new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, this, application).execute();	
 			}
 		}
 	}
@@ -132,7 +165,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 
 	@Override
 	public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-		OfferEssential selectedOffer = offerList.get(position);
+		OfferEssential selectedOffer = offerList.get(position - 1);
 		Intent intent = new Intent(getActivity(), OfferActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra("offerId", selectedOffer.getOfferId());
@@ -151,7 +184,9 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 	
 	@Override
 	public void refreshList() {
-		((BaseAdapter)((HeaderViewListAdapter) getListAdapter()).getWrappedAdapter()).notifyDataSetChanged();
+		if(getListAdapter() != null) {
+			((BaseAdapter)((HeaderViewListAdapter) getListAdapter()).getWrappedAdapter()).notifyDataSetChanged();			
+		}
 	}
 	
 	@Override
@@ -216,7 +251,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 			connectionAvailable = true;
 			refreshList(); //needed to show loading view
 		}
-		new DownloadOfferListTask("city/" + cityId, currentPage + 1, this, application).execute();
+		new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, this, application).execute();
 	}
 
 	@Override
@@ -229,7 +264,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
         	loadingMoreItems = true;
 			loading = true;
 			refreshList(); //needed to show loading view
-     		new DownloadOfferListTask("city/" + cityId, currentPage + 1, this, application).execute();
+     		new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, this, application).execute();
         }
     }
 
@@ -242,18 +277,18 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 			
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				clearOffers();
-				currentPage = -1;
-				endOfItemsReached = false;
-				loading = true;
-				refreshList();
-				new DownloadOfferListTask("city/" + cityId, currentPage + 1, CityOffersFragment.this, application).execute();
+				refetchOffers();
 			}
 		});
 		
 	}
-	
-	private void clearOffers() {
+
+	private void refetchOffers() {
 		offerList.clear();
+		currentPage = -1;
+		endOfItemsReached = false;
+		loading = true;
+		refreshList();
+		new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, CityOffersFragment.this, application).execute();
 	}
 }

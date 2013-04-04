@@ -14,23 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.android.api.City;
+import pl.edu.pw.eiti.groupbuying.android.api.CityConfig;
 import pl.edu.pw.eiti.groupbuying.android.task.AbstractGroupBuyingTask;
-import pl.edu.pw.eiti.groupbuying.android.task.DownloadCitiesTask;
-import pl.edu.pw.eiti.groupbuying.android.task.DownloadDefaultCityTask;
-import pl.edu.pw.eiti.groupbuying.android.task.DownloadNearestCityTask;
+import pl.edu.pw.eiti.groupbuying.android.task.DownloadCityConfigTask;
 import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
 import pl.edu.pw.eiti.groupbuying.android.task.util.TaskResult;
 import pl.edu.pw.eiti.groupbuying.android.util.Constants;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
@@ -38,7 +36,7 @@ import com.google.analytics.tracking.android.EasyTracker;
 public class SplashScreenActivity extends Activity implements AsyncTaskListener {
 
 	private SplashThread splashTread = null;
-	private String cityId;
+	private City city;
 	private ArrayList<City> cities;
 	
 	private boolean shouldStartNextActivity = false;
@@ -48,28 +46,22 @@ public class SplashScreenActivity extends Activity implements AsyncTaskListener 
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash_screen);
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.PREFERENCES_KEY, Context.MODE_PRIVATE);
-		cityId = sharedPreferences.getString(Constants.CITY_ID_KEY, null);
-
-		if(cityId == null) {
-			// Get the location manager
-			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-			Criteria criteria = new Criteria();
-			String bestProvider = locationManager.getBestProvider(criteria, true);
-			if(bestProvider != null) {
-				Location location = locationManager.getLastKnownLocation(bestProvider);
-				if(location != null) {
-					final double longitude = location.getLongitude();
-					final double latidude = location.getLatitude();
-					new DownloadNearestCityTask(latidude, longitude, this, (GroupBuyingApplication) getApplicationContext()).execute();
-				}
-			} else {
-				new DownloadDefaultCityTask(this, (GroupBuyingApplication) getApplicationContext()).execute();
-			}
-		} 
 		
-		new DownloadCitiesTask(this, (GroupBuyingApplication) getApplicationContext()).execute();
+		Double longitude = null;
+		Double latidude = null;
+		LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+		Criteria criteria = new Criteria();
+		String bestProvider = locationManager.getBestProvider(criteria, true);
+		if(bestProvider != null) {
+			Location location = locationManager.getLastKnownLocation(bestProvider);
+			if(location != null) {
+				longitude = location.getLongitude();
+				latidude = location.getLatitude();
+			}
+		}
+		
+		new DownloadCityConfigTask(latidude, longitude, this, (GroupBuyingApplication) getApplicationContext()).execute();
 		
 		splashTread = (SplashThread) getLastNonConfigurationInstance();
         
@@ -110,38 +102,24 @@ public class SplashScreenActivity extends Activity implements AsyncTaskListener 
 				finish();
 			}
 		} else if(result.equals(TaskResult.SUCCESSFUL)) {
-			if(task instanceof DownloadCitiesTask) {
-				cities = ((DownloadCitiesTask) task).getCities();
-				if(cityId != null && shouldStartNextActivity) {
+			if(task instanceof DownloadCityConfigTask) {
+				CityConfig cityConfig = ((DownloadCityConfigTask) task).getCityConfig();
+				city = cityConfig.getMyCity();
+				cities = cityConfig.getCities();
+				if(city == null || cities == null || cities.isEmpty()) {
+					Log.e(Constants.TAG, "Invalid cityConfig: " + cityConfig);
+					finish();
+				}
+				if(shouldStartNextActivity) {
 					startNextActivity();
 				}
-			} else if(task instanceof DownloadDefaultCityTask) {
-				City city =  ((DownloadDefaultCityTask) task).getCity();	
-				cityId = city.getCityId();
-		        saveCityId();
-				if(cities != null && shouldStartNextActivity) {
-					startNextActivity();
-				}
-			} else if(task instanceof DownloadNearestCityTask) {
-				City city =  ((DownloadNearestCityTask) task).getCity();	
-				cityId = city.getCityId();
-		        saveCityId();
-				if(cities != null && shouldStartNextActivity) {
-					startNextActivity();
-				}
-			}			
+			}		
 		}
 	}
 
-	private void saveCityId() {
-		SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.PREFERENCES_KEY, Context.MODE_PRIVATE);
-		SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-		prefsEditor.putString("cityId", cityId);
-		prefsEditor.commit();
-	}
 	
-	public String getCityId() {
-		return cityId;
+	public City getCity() {
+		return city;
 	}
 	
 	public List<City> getCities() {
@@ -156,7 +134,7 @@ public class SplashScreenActivity extends Activity implements AsyncTaskListener 
 		Intent intent = new Intent(this, MainMenuActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra("cities", cities);
-		intent.putExtra("cityId", cityId);
+		intent.putExtra("city", city);
 		this.startActivity(intent);
 		finish();
 	}
@@ -187,7 +165,7 @@ public class SplashScreenActivity extends Activity implements AsyncTaskListener 
 		@Override
 		protected void onPostExecute(Void nthg) {
 			if (activity != null) {
-				if(activity.getCities() != null && activity.getCityId() != null) {
+				if(activity.getCities() != null && activity.getCity() != null) {
 					activity.startNextActivity();	
 				} else {
 					activity.setShouldStartNextActivity(true);
