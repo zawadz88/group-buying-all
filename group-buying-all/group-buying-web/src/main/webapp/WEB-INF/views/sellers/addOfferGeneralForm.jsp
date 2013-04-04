@@ -65,6 +65,15 @@
 				</td>
 			</tr>
 			<tr>
+				<td><spring:message code="offer.city.label" /></td>
+				<td>
+					<form:select path="city.cityId">
+						<form:options items="${cities}" itemLabel="name" itemValue="cityId"/>
+					</form:select>
+					<form:errors path="city.cityId" />
+				</td>
+			</tr>
+			<tr>
 				<td><spring:message code="offer.startDate.label" /></td>
 				<td>
 					<form:input path="startDate" />

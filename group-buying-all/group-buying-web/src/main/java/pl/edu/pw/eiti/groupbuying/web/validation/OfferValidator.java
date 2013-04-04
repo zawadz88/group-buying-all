@@ -11,8 +11,6 @@
 package pl.edu.pw.eiti.groupbuying.web.validation;
 
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
@@ -28,19 +26,11 @@ public class OfferValidator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "imageUrl", "offer.imageUrl.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "price", "offer.price.required");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "priceBeforeDiscount", "offer.priceBeforeDiscount.required");
-		validateCategory(errors);
-		//validatePrice(errors);
+
 	}
 
 
-	private void validateCategory(Errors errors) {
-		String field = "category.categoryId";
-	    Assert.notNull(errors, "Errors object must not be null");
-	    Object value = errors.getFieldValue(field);
-	    if ((value == null) || (!(StringUtils.hasText(value.toString()))) || "0".equals(value.toString())) {
-	    	errors.rejectValue(field, "offer.category.required", null, null);
-	    }
-	}
+
 
 	public void validateAddOfferAddressForm(Offer offer, Errors errors) {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "address.street", "offer.address.street.required");

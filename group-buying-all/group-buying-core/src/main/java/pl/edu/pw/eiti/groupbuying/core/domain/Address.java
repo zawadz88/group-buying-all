@@ -10,13 +10,15 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import pl.edu.pw.eiti.groupbuying.core.dto.AddressDTO;
 
 @Embeddable
-public class Address {
+public class Address implements Serializable {
 
 	@Column(name = "city")
 	private String city;

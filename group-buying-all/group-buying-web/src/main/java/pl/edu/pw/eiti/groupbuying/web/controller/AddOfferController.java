@@ -21,10 +21,12 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
+import pl.edu.pw.eiti.groupbuying.core.dao.CityDAO;
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 import pl.edu.pw.eiti.groupbuying.core.domain.Seller;
 import pl.edu.pw.eiti.groupbuying.core.dto.Category;
+import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 import pl.edu.pw.eiti.groupbuying.security.core.SaltedUser;
 
@@ -33,6 +35,9 @@ public class AddOfferController extends BaseController {
 
 	@Autowired
 	private OfferDAO offerDAO;
+	
+	@Autowired
+	private CityDAO cityDAO;
 	
 	public void submitOffer(final Offer offer) {
 		SecurityContext context = SecurityContextHolder.getContext();
@@ -43,9 +48,13 @@ public class AddOfferController extends BaseController {
 		offer.setState(OfferState.WAITING);
 		offerDAO.saveOffer(offer);
 	}
-	
+
 	public List<Category> prepareCategories() {
 		return Arrays.asList(Category.values());
+	}
+	
+	public List<CityDTO> prepareCities() {
+		return cityDAO.getCities();
 	}
 
 }

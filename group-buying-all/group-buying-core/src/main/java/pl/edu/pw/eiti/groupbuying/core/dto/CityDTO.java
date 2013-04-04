@@ -10,8 +10,10 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.dto;
 
+import java.io.Serializable;
 
-public class CityDTO {
+
+public class CityDTO implements Serializable {
 
 	private String cityId;
 

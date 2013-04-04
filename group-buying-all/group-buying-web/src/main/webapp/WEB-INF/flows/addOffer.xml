@@ -9,6 +9,7 @@
     <view-state id="addOfferGeneralForm" model="offer" view="sellers/addOfferGeneralForm">
 		<on-render>
 			<evaluate expression="addOfferController.prepareCategories()" result="viewScope.categories" result-type="java.util.List"></evaluate>
+			<evaluate expression="addOfferController.prepareCities()" result="viewScope.cities" result-type="java.util.List"></evaluate>
 		</on-render>
     	<transition on="submit" to="addOfferAddressForm">
     	</transition>

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -26,7 +28,7 @@ import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 @Indexed
 @Spatial(name="loc")
 @Table(name = "cities")
-public class City {
+public class City implements Serializable {
 
 	@Id
 	@Column(name = "city_id")
@@ -42,6 +44,9 @@ public class City {
 	@Longitude(of="loc")
 	@Column(name = "longitude")
 	private double longitude;
+
+	@Column(name = "state")
+	private boolean state;	
 	
 	public String getCityId() {
 		return cityId;
@@ -77,9 +82,17 @@ public class City {
 
 	@Override
 	public String toString() {
-		return "City [cityId=" + cityId + ", name=" + name + "]";
+		return "City [cityId=" + cityId + ", name=" + name + ", latitude=" + latitude + ", longitude=" + longitude + ", state=" + state + "]";
 	}
 	
+	public boolean isState() {
+		return state;
+	}
+
+	public void setState(boolean state) {
+		this.state = state;
+	}
+
 	public CityDTO getCityDTO() {
 		CityDTO dto = new CityDTO(cityId, name, latitude, longitude);
 		return dto;

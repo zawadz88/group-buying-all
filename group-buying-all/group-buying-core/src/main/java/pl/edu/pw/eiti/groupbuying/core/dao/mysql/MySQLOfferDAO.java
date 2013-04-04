@@ -123,8 +123,7 @@ public class MySQLOfferDAO implements OfferDAO {
 
 	@Override
 	public List<OfferEssentialDTO> getOfferEssentialsByCategoryAndPageNumber(final Category category, final OfferState state, final int pageNumber, final int pageSize) {
-		CriteriaBuilder qb = entityManager.getCriteriaBuilder();
-		
+		CriteriaBuilder qb = entityManager.getCriteriaBuilder();		
 	
 		CriteriaQuery<OfferEssentialDTO> c = qb.createQuery(OfferEssentialDTO.class);
 		Root<Offer> p = c.from(Offer.class);
@@ -135,6 +134,27 @@ public class MySQLOfferDAO implements OfferDAO {
 		} else {
 			c.where(stateCondition);		
 		}
+
+		c.multiselect(p.get("offerId"), p.get("title"), p.get("imageUrl"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"));
+		TypedQuery<OfferEssentialDTO> query = entityManager.createQuery(c); 
+		query.setFirstResult(pageNumber * pageSize);
+		query.setMaxResults(pageSize);
+		List<OfferEssentialDTO> result = query.getResultList();
+		
+		return result;
+	}
+	
+	@Override
+	public List<OfferEssentialDTO> getOfferEssentialsByCityAndPageNumber(final String cityId, final OfferState state, final int pageNumber, final int pageSize) {
+		CriteriaBuilder qb = entityManager.getCriteriaBuilder();		
+	
+		CriteriaQuery<OfferEssentialDTO> c = qb.createQuery(OfferEssentialDTO.class);
+		Root<Offer> p = c.from(Offer.class);
+		Predicate stateCondition = qb.equal(p.get("state"), state);
+		
+		Predicate cityCondition = qb.equal(p.get("city").get("cityId"), cityId);
+		Predicate categoryCondition = qb.equal(p.get("category"), Category.CITY);
+		c.where(qb.and(categoryCondition, qb.and(stateCondition, cityCondition)));			
 
 		c.multiselect(p.get("offerId"), p.get("title"), p.get("imageUrl"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"));
 		TypedQuery<OfferEssentialDTO> query = entityManager.createQuery(c); 
