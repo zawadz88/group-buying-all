@@ -10,6 +10,7 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "coupons")
-public class Coupon {
+public class Coupon implements Serializable {
 
 	@Id
 	@Column(name = "id")

@@ -21,9 +21,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import pl.edu.pw.eiti.groupbuying.core.dao.CityDAO;
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
+import pl.edu.pw.eiti.groupbuying.core.domain.City;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 import pl.edu.pw.eiti.groupbuying.core.dto.Category;
+import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
 @Controller("editOfferController")
@@ -31,6 +34,9 @@ public class EditOfferController extends BaseController {
 
 	@Autowired
 	private OfferDAO offerDAO;
+
+	@Autowired
+	private CityDAO cityDAO;
 	
 	public void updateOffer(Offer offer) {
 		offerDAO.updateOffer(offer);
@@ -38,6 +44,10 @@ public class EditOfferController extends BaseController {
 
 	public List<Category> prepareCategories() {
 		return Arrays.asList(Category.values());
+	}
+
+	public List<CityDTO> prepareCities() {
+		return cityDAO.getCities();
 	}
 	
 	public Map<OfferState, String> prepareStates() {
@@ -50,6 +60,9 @@ public class EditOfferController extends BaseController {
 	
 	public Offer populateOffer(int offerId) {
 		Offer offer = offerDAO.getOffer(offerId);
+		if(offer != null && offer.getCity() == null) {
+			offer.setCity(new City());
+		}
 		return offer;
 	}
 

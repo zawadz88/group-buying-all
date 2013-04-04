@@ -10,6 +10,7 @@
     <view-state id="editOfferGeneralForm" model="offer" view="admin/editOfferGeneralForm">
 		<on-render>
 			<evaluate expression="editOfferController.prepareCategories()" result="viewScope.categories" result-type="java.util.List"></evaluate>
+			<evaluate expression="editOfferController.prepareCities()" result="viewScope.cities" result-type="java.util.List"></evaluate>
 			<evaluate expression="editOfferController.prepareStates()" result="viewScope.stateList" result-type="java.util.Map"></evaluate>
 		</on-render>
     	<transition on="submit" to="editOfferAddressForm">

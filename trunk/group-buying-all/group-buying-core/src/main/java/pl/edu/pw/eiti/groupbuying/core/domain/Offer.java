@@ -10,6 +10,7 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -31,7 +32,7 @@ import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
 @Entity
 @Table(name = "offers")
-public class Offer {
+public class Offer implements Serializable {
 
 	@Id
 	@Column(name="offer_id")
@@ -84,6 +85,10 @@ public class Offer {
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="username")
 	private Seller seller;
+
+	@OneToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="city_id")
+	private City city = new City();
 
 	public int getOfferId() {
 		return offerId;
@@ -205,16 +210,18 @@ public class Offer {
 		this.seller = seller;
 	}
 
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
 	@Override
 	public String toString() {
-		return "Offer [offerId=" + offerId + ", title=" + title + ", lead="
-				+ lead + ", description=" + description + ", conditions="
-				+ conditions + ", address=" + address + ", imageUrl="
-				+ imageUrl + ", price=" + price + ", priceBeforeDiscount="
-				+ priceBeforeDiscount + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate
-				+ ", state=" + state + ", category=" + category + ", seller="
-				+ seller + "]";
+		return "Offer [offerId=" + offerId + ", title=" + title + ", lead=" + lead + ", description=" + description + ", conditions=" + conditions + ", address=" + address + ", imageUrl=" + imageUrl + ", price=" + price + ", priceBeforeDiscount=" + priceBeforeDiscount + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate + ", state=" + state + ", category=" + category + ", seller=" + seller + ", city=" + city + "]";
 	}
 	
 	public OfferDTO getOfferDTO() {

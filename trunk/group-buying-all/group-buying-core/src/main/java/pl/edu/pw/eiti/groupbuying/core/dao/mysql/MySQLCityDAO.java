@@ -17,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.log4j.Logger;
@@ -72,6 +73,10 @@ public class MySQLCityDAO implements CityDAO {
 		CriteriaBuilder qb = entityManager.getCriteriaBuilder();
 		CriteriaQuery<CityDTO> c = qb.createQuery(CityDTO.class);
 		Root<City> p = c.from(City.class);
+
+		Predicate enabledCondition = qb.equal(p.get("state"), true);		
+		c.where(enabledCondition);		
+		
 		c.multiselect(p.get("cityId"), p.get("name"), p.get("latitude"), p.get("longitude"));
 		TypedQuery<CityDTO> query = entityManager.createQuery(c);
 		List<CityDTO> result = query.getResultList();

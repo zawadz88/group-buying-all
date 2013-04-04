@@ -42,4 +42,6 @@ public interface OfferDAO {
 	
 	public String getUsernameForOffer(int offerId);
 
+	List<OfferEssentialDTO> getOfferEssentialsByCityAndPageNumber(String cityId, OfferState state, int pageNumber, int pageSize);
+
 }
