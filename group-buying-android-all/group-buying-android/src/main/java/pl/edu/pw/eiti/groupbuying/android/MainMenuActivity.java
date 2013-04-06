@@ -38,7 +38,7 @@ public class MainMenuActivity extends AbstractGroupBuyingActivity {
         }
         
         mPager = (MapFragmentScrollOverrideViewPager) findViewById(R.id.pager);
-        mAdapter = new OffersFragmentAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.offers_fragment_titles), bar, mPager);
+        mAdapter = new OffersFragmentAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.offers_fragment_titles), bar, mPager, getApplicationContext().getSelectedCity(), getApplicationContext().getCities());
 
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         if (savedInstanceState != null) {
