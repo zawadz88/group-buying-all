@@ -66,6 +66,7 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 		}
 		if (savedInstanceState != null && savedInstanceState.getSerializable("offer") != null) {
 			offer = (Offer) savedInstanceState.getSerializable("offer");
+	        setTitle(offer.getTitle());
 		}
 		
 		for(int i = 0; i < fragments.length; i++) {
@@ -140,7 +141,8 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 				//TODO show error stub?
 			} else {
 				offer = downloadedOffer;
-				actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
+		        setTitle(offer.getTitle());
+		        actionProvider.setShareHistoryFileName(ShareActionProvider.DEFAULT_SHARE_HISTORY_FILE_NAME);
 			    
 			    Intent shareIntent = new Intent(Intent.ACTION_SEND);
 				shareIntent.setType("text/plain");

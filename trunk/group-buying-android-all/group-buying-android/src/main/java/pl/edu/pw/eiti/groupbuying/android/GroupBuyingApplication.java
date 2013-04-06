@@ -10,6 +10,8 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android;
 
+import java.util.ArrayList;
+
 import org.springframework.security.crypto.encrypt.AndroidEncryptors;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
@@ -17,6 +19,7 @@ import org.springframework.social.connect.sqlite.SQLiteConnectionRepository;
 import org.springframework.social.connect.sqlite.support.SQLiteConnectionRepositoryHelper;
 import org.springframework.social.connect.support.ConnectionFactoryRegistry;
 
+import pl.edu.pw.eiti.groupbuying.android.api.City;
 import pl.edu.pw.eiti.groupbuying.android.api.GroupBuyingApi;
 import pl.edu.pw.eiti.groupbuying.android.api.impl.GroupBuyingTemplate;
 import pl.edu.pw.eiti.groupbuying.android.connect.GroupBuyingConnectionFactory;
@@ -33,6 +36,10 @@ public class GroupBuyingApplication extends Application {
 	private ConnectionRepository connectionRepository;
 
 	private GroupBuyingApi unauthorizedGroupBuyingApi;
+	
+	private City selectedCity;
+	
+	private ArrayList<City> cities;
 
 	//***************************************
 	// Application methods
@@ -46,7 +53,7 @@ public class GroupBuyingApplication extends Application {
 		connectionRepository = new SQLiteConnectionRepository(new SQLiteConnectionRepositoryHelper(this), registry,
 				AndroidEncryptors.text(getEncryptionPassword(), getEncryptionSalt()));
 	}
-
+	
 	//***************************************
 	// Private methods
 	//***************************************
@@ -98,6 +105,22 @@ public class GroupBuyingApplication extends Application {
 			unauthorizedGroupBuyingApi = new GroupBuyingTemplate(getApiUrlBase());
 		}
 		return unauthorizedGroupBuyingApi;
+	}
+
+	public City getSelectedCity() {
+		return selectedCity;
+	}
+
+	public void setSelectedCity(City selectedCity) {
+		this.selectedCity = selectedCity;
+	}
+
+	public ArrayList<City> getCities() {
+		return cities;
+	}
+
+	public void setCities(ArrayList<City> cities) {
+		this.cities = cities;
 	}
 
 }

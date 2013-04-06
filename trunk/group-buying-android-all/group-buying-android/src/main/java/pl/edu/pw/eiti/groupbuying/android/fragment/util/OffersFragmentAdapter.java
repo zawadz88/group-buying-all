@@ -10,6 +10,9 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android.fragment.util;
 
+import java.util.ArrayList;
+
+import pl.edu.pw.eiti.groupbuying.android.api.City;
 import pl.edu.pw.eiti.groupbuying.android.fragment.BasicOffersFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.CityOffersFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.NearbyOffersFragment;
@@ -37,11 +40,15 @@ public class OffersFragmentAdapter extends FragmentPagerAdapter implements OnPag
 	protected String[] fragmentTitles;
 	private ActionBar bar;
 	private MapFragmentScrollOverrideViewPager viewPager;
+	private City city;
+	private ArrayList<City> cities;
 
-	public OffersFragmentAdapter(FragmentManager fm, String[] titles, ActionBar bar, MapFragmentScrollOverrideViewPager pager) {
+	public OffersFragmentAdapter(FragmentManager fm, String[] titles, ActionBar bar, MapFragmentScrollOverrideViewPager pager, City city, ArrayList<City> cities) {
 		super(fm);
 		this.fragmentTitles = titles;
 		this.bar = bar;
+		this.city = city;
+		this.cities = cities;
 		viewPager = pager;
 		viewPager.setAdapter(this);
 		viewPager.setOnPageChangeListener(this);
@@ -62,7 +69,7 @@ public class OffersFragmentAdapter extends FragmentPagerAdapter implements OnPag
 			fragment = NearbyOffersFragment.newInstance(fragmentTitles[position]);
 			break;
 		case OFFERS_FROM_THE_CITY_FRAGMENT:
-			fragment = CityOffersFragment.newInstance();
+			fragment = CityOffersFragment.newInstance(city, cities);
 			break;
 		case OFFERS_SHOPPING_FRAGMENT:
 			fragment = BasicOffersFragment.newInstance("shopping");

@@ -133,8 +133,8 @@ public class SplashScreenActivity extends Activity implements AsyncTaskListener 
 	public void startNextActivity() {
 		Intent intent = new Intent(this, MainMenuActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra("cities", cities);
-		intent.putExtra("city", city);
+		((GroupBuyingApplication) getApplicationContext()).setCities(cities);
+		((GroupBuyingApplication) getApplicationContext()).setSelectedCity(city);
 		this.startActivity(intent);
 		finish();
 	}
