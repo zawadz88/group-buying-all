@@ -35,7 +35,7 @@
 		<google.cloud.messaging.client.version>3</google.cloud.messaging.client.version>
 		<google.play.services.version>4</google.play.services.version>
 		<pull.to.refresh.library.version>2.1.2</pull.to.refresh.library.version>
-		<paypal.mecl.version>1.0</paypal.mecl.version>
+		<paypal.mpl.version>1.5.5</paypal.mpl.version>
 		<actionbar.sherlock.version>4.2.0</actionbar.sherlock.version>
 		<com.google.zxing.version>2.1-SNAPSHOT</com.google.zxing.version>
 	</properties>
@@ -120,8 +120,8 @@
 			</dependency>
 			<dependency>
 				<groupId>com.paypal.android</groupId>
-				<artifactId>MECL</artifactId>
-				<version>${paypal.mecl.version}</version>
+				<artifactId>MPL</artifactId>
+				<version>${paypal.mpl.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.actionbarsherlock</groupId>
