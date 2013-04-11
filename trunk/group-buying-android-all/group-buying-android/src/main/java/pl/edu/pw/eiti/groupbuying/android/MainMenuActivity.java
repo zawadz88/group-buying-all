@@ -41,10 +41,12 @@ public class MainMenuActivity extends AbstractGroupBuyingActivity {
         mAdapter = new OffersFragmentAdapter(getSupportFragmentManager(), getResources().getStringArray(R.array.offers_fragment_titles), bar, mPager, getApplicationContext().getSelectedCity(), getApplicationContext().getCities());
 
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        int selectedPage = OffersFragmentAdapter.OFFERS_FROM_THE_CITY_FRAGMENT;
         if (savedInstanceState != null) {
-            bar.setSelectedNavigationItem(savedInstanceState.getInt("tab"));
+        	selectedPage = savedInstanceState.getInt("tab", OffersFragmentAdapter.OFFERS_FROM_THE_CITY_FRAGMENT);
         }
-        mPager.setCurrentItem(OffersFragmentAdapter.OFFERS_FROM_THE_CITY_FRAGMENT, false);
+        bar.setSelectedNavigationItem(selectedPage);
+        mPager.setCurrentItem(selectedPage, false);
     }
     
     @Override

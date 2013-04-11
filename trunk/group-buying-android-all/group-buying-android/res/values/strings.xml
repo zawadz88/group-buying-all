@@ -27,7 +27,7 @@
 	<string name="connection_repository_encryption_salt">${connection.repository.encryption.salt}</string>
     <string name="base_url">${base.url}</string> -->
     <!-- <string name="base_url">http://192.168.0.197:8080/group-buying-rest/</string> -->
-    <string name="base_url">http://87.207.209.32:20000/group-buying-rest/</string>
+    <string name="base_url">http://87.207.209.32/group-buying-rest/</string>
     <string name="client_id">tonr</string>
 	<string name="client_secret">secret</string>
 	<string name="connection_repository_encryption_password">password</string>
@@ -64,15 +64,15 @@
     <string name="connection_error_title">Connection error</string>
     <string name="connection_error_message">Connection error occurred. Please try again later.</string>
     
-    <string name="loading_offer_message">Loading offer...</string>
+    <string name="loading_offer_message">Loading offer…</string>
     
-    <string name="loading_more_offers_text">Loading more offers...</string>
+    <string name="loading_more_offers_text">Loading more offers…</string>
     
     <string name="paypal_seller_email_id">seller@eiti.pl</string>
     
     <string name="currency">GBP</string>
     
-    <string name="paypal_ipn_url">http://192.168.0.197:9091/merchantsample/IPNListener</string>
+    <string name="paypal_ipn_url">http://87.207.209.32/group-buying-rest/paypal/ipn-endpoint</string>
     
     <string name="paypal_application_id">APP-80W284485P519543T</string>
     
