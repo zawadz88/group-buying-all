@@ -107,6 +107,11 @@
 			<artifactId>spring-orm</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.paypal.sdk</groupId>
+			<artifactId>merchantsdk</artifactId>
+		</dependency>
+		
 		<!-- Jackson JSON Mapper -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
