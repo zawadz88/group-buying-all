@@ -50,8 +50,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public final class CityOffersFragment extends AbstractListFragment implements AsyncTaskListener, OnScrollListener {
 
-	private static final String CITY_TAG = "city";
-	private static final String CITIES_TAG = "cities";
+	public static final String CITY_TAG = "city";
+	public static final String CITIES_TAG = "cities";
 	private List<OfferEssential> offerList = new ArrayList<OfferEssential>();
     private City city;
     private ArrayList<City> cities;
