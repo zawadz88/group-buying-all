@@ -30,12 +30,21 @@ public class IPNController {
 	
 	@RequestMapping(value = "/ipn-endpoint", method = RequestMethod.POST)
 	public @ResponseBody boolean processNotification(HttpServletRequest request) {
-		IPNMessage ipnlistener = new IPNMessage(request);
-		boolean isIpnVerified = ipnlistener.validate();
+		IPNMessage ipnMessage = new IPNMessage(request);
+		boolean isIpnVerified = ipnMessage.validate();
 		if(isIpnVerified) {
-			String transactionType = ipnlistener.getTransactionType();
-			Map<String,String> map = ipnlistener.getIpnMap();
-			
+			String transactionType = ipnMessage.getTransactionType();
+			Map<String,String> map = ipnMessage.getIpnMap();
+			String itemName = request.getParameter("item_name");
+			String itemNumber = request.getParameter("item_number");
+			String paymentStatus = request.getParameter("payment_status");
+			String paymentAmount = request.getParameter("mc_gross");
+			String paymentCurrency = request.getParameter("mc_currency");
+			String txnId = request.getParameter("txn_id");
+			String receiverEmail = request.getParameter("receiver_email");
+			String payerEmail = request.getParameter("payer_email");
+			String custom = request.getParameter("custom");
+		 
 			LOG.info("******* IPN (name:value) pair : " + map + "  " + "######### TransactionType : " + transactionType + "  ======== IPN verified : " + isIpnVerified);
 			return true;
 		} else {
