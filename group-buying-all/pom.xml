@@ -10,12 +10,30 @@
 
 	<properties>
 		<java-version>1.6</java-version>
-		<org.springframework-version>3.2.0.RELEASE</org.springframework-version>
-		<spring.security-version>3.1.3.RELEASE</spring.security-version>
-		<spring.security.oauth-version>1.0.1.RELEASE</spring.security.oauth-version>
-		<spring.webflow-version>2.3.1.RELEASE</spring.webflow-version>
-		<org.aspectj-version>1.6.10</org.aspectj-version>
-		<org.slf4j-version>1.6.1</org.slf4j-version>
+		<org.springframework.version>3.2.0.RELEASE</org.springframework.version>
+		<spring.security.version>3.1.3.RELEASE</spring.security.version>
+		<spring.security.oauth.version>1.0.1.RELEASE</spring.security.oauth.version>
+		<spring.webflow.version>2.3.1.RELEASE</spring.webflow.version>
+		<org.aspectj.version>1.6.10</org.aspectj.version>
+		<org.slf4j.version>1.6.1</org.slf4j.version>
+		<log4j.version>1.2.16</log4j.version>
+		<tomcat.servlet.api.version>7.0.35</tomcat.servlet.api.version>
+		<jsp.api.version>2.1</jsp.api.version>
+		<jstl.api.version>1.2</jstl.api.version>
+		<jstl.impl.version>1.2</jstl.impl.version>
+		<paypal.merchantsdk.version>2.2.98</paypal.merchantsdk.version>
+		<jackson.version>2.1.1</jackson.version>
+		<joda.time.version>1.6.2</joda.time.version>
+		<mysql.connector.version>5.1.17</mysql.connector.version>
+		<commons.dbcp.version>1.4</commons.dbcp.version>
+		<hibernate.entitymanager.version>4.1.9.Final</hibernate.entitymanager.version>
+		<hibernate.search.version>4.2.0.Final</hibernate.search.version>
+		<jta.version>1.1</jta.version>
+		<cglib.version>2.2.2</cglib.version>
+		<junit.version>4.8.2</junit.version>
+		<json.path.version>0.8.1</json.path.version>
+		<hamcrest.library.version>1.3</hamcrest.library.version>
+		<maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencyManagement>
@@ -24,13 +42,13 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-core</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 				<exclusions>
 					<!-- Exclude Commons Logging in favor of SLF4j -->
 					<exclusion>
@@ -43,93 +61,93 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-beans</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-web</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-aop</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-asm</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-expression</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-tx</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-webmvc</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-jdbc</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-orm</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 			</dependency>
 
 			<!-- Spring Security -->
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-core</artifactId>
-				<version>${spring.security-version}</version>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-config</artifactId>
-				<version>${spring.security-version}</version>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-acl</artifactId>
-				<version>${spring.security-version}</version>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
-				<version>${spring.security-version}</version>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
-				<version>${spring.security-version}</version>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
-				<version>${spring.security-version}</version>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-taglibs</artifactId>
-				<version>${spring.security-version}</version>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security.oauth</groupId>
 				<artifactId>spring-security-oauth2</artifactId>
-				<version>${spring.security.oauth-version}</version>
+				<version>${spring.security.oauth.version}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>org.codehaus.jackson</groupId>
@@ -143,65 +161,60 @@
 			<dependency>
 				<groupId>org.springframework.webflow</groupId>
 				<artifactId>spring-webflow</artifactId>
-				<version>${spring.webflow-version}</version>
+				<version>${spring.webflow.version}</version>
 			</dependency>
 
 			<!-- AspectJ -->
 			<dependency>
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjrt</artifactId>
-				<version>${org.aspectj-version}</version>
+				<version>${org.aspectj.version}</version>
 			</dependency>
 
 			<!-- Logging -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>${org.slf4j-version}</version>
+				<version>${org.slf4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>jcl-over-slf4j</artifactId>
-				<version>${org.slf4j-version}</version>
+				<version>${org.slf4j.version}</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
-				<version>${org.slf4j-version}</version>
+				<version>${org.slf4j.version}</version>
 				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
-				<version>1.2.16</version>
+				<version>${log4j.version}</version>
 				<scope>runtime</scope>
 			</dependency>
 
 			<!-- @Inject -->
-			<dependency>
-				<groupId>javax.inject</groupId>
-				<artifactId>javax.inject</artifactId>
-				<version>1</version>
-			</dependency>
 
 			<!-- Servlet -->
 			<dependency>
 				<groupId>org.apache.tomcat</groupId>
 				<artifactId>tomcat-servlet-api</artifactId>
-				<version>7.0.35</version>
+				<version>${tomcat.servlet.api.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet.jsp</groupId>
 				<artifactId>jsp-api</artifactId>
-				<version>2.1</version>
+				<version>${jsp.api.version}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet.jsp.jstl</groupId>
 				<artifactId>jstl-api</artifactId>
-				<version>1.2</version>
+				<version>${jstl.api.version}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>javax.servlet</groupId>
@@ -212,7 +225,7 @@
 			<dependency>
 				<groupId>org.glassfish.web</groupId>
 				<artifactId>jstl-impl</artifactId>
-				<version>1.2</version>
+				<version>${jstl.impl.version}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>javax.servlet</groupId>
@@ -224,63 +237,50 @@
 			<dependency>
 				<groupId>com.paypal.sdk</groupId>
 				<artifactId>merchantsdk</artifactId>
-				<version>2.2.98</version>
+				<version>${paypal.merchantsdk.version}</version>
 			</dependency>
 			
 			<!-- Jackson JSON Processor -->
 			<dependency>
 			    <groupId>com.fasterxml.jackson.core</groupId>
 			    <artifactId>jackson-core</artifactId>
-			    <version>2.1.1</version>
+			    <version>${jackson.version}</version>
 			</dependency>
 			<!-- For the aforementioned data-binding annotations -->
 			<dependency>
 			    <groupId>com.fasterxml.jackson.core</groupId>
 			    <artifactId>jackson-databind</artifactId>
-			    <version>2.1.1</version>
-			</dependency>
-
-			<!-- JSR 303 with Hibernate Validator -->
-			<dependency>
-				<groupId>javax.validation</groupId>
-				<artifactId>validation-api</artifactId>
-				<version>1.0.0.GA</version>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-validator</artifactId>
-				<version>4.1.0.Final</version>
+			    <version>${jackson.version}</version>
 			</dependency>
 
 			<!-- Joda Time Library -->
 			<dependency>
 				<groupId>joda-time</groupId>
 				<artifactId>joda-time</artifactId>
-				<version>1.6.2</version>
+				<version>${joda.time.version}</version>
 			</dependency>
 
 			<!-- Database -->
-
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
-				<version>5.1.17</version>
+				<version>${mysql.connector.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-dbcp</groupId>
 				<artifactId>commons-dbcp</artifactId>
-				<version>1.4</version>
+				<version>${commons.dbcp.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
-				<version>4.1.9.Final</version>
+				<version>${hibernate.entitymanager.version}</version>
 				<!-- will come with Hibernate core -->
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-search</artifactId>
-				<version>4.2.0.Final</version>
+				<version>${hibernate.search.version}</version>
 				<exclusions>
 					<exclusion>
 						<groupId>org.codehaus.jackson</groupId>
@@ -296,13 +296,13 @@
 			<dependency>
 				<groupId>javax.transaction</groupId>
 				<artifactId>jta</artifactId>
-				<version>1.1</version>
+				<version>${jta.version}</version>
 			</dependency>
 			
 			<dependency>
 				<groupId>cglib</groupId>
 				<artifactId>cglib</artifactId>
-				<version>2.2.2</version>
+				<version>${cglib.version}</version>
 			</dependency>
 			
 			<!-- File Upload -->
@@ -313,31 +313,25 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-test</artifactId>
-				<version>${org.springframework-version}</version>
+				<version>${org.springframework.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.8.2</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>xmlunit</groupId>
-				<artifactId>xmlunit</artifactId>
-				<version>1.2</version>
+				<version>${junit.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.jayway.jsonpath</groupId>
 				<artifactId>json-path</artifactId>
-				<version>0.8.1</version>
+				<version>${json.path.version}</version>
 				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.hamcrest</groupId>
 				<artifactId>hamcrest-library</artifactId>
-				<version>1.3</version>
+				<version>${hamcrest.library.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -350,7 +344,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.0</version>
+					<version>${maven.compiler.plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -1,6 +1,5 @@
 package pl.edu.pw.eiti.groupbuying.rest.controller;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
@@ -13,6 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import pl.edu.pw.eiti.groupbuying.rest.exception.BadRequestException;
+import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 
 import com.paypal.core.ConfigManager;
 import com.paypal.ipn.IPNMessage;
@@ -27,15 +29,19 @@ public class IPNController {
 	private static final Logger LOG = Logger.getLogger(IPNController.class);
 	
 	@RequestMapping(value = "/ipn-endpoint", method = RequestMethod.POST)
-	public @ResponseBody boolean processNotification(HttpServletRequest request) throws IOException {
+	public @ResponseBody boolean processNotification(HttpServletRequest request) {
 		IPNMessage ipnlistener = new IPNMessage(request);
 		boolean isIpnVerified = ipnlistener.validate();
-		String transactionType = ipnlistener.getTransactionType();
-		Map<String,String> map = ipnlistener.getIpnMap();
+		if(isIpnVerified) {
+			String transactionType = ipnlistener.getTransactionType();
+			Map<String,String> map = ipnlistener.getIpnMap();
+			
+			LOG.info("******* IPN (name:value) pair : " + map + "  " + "######### TransactionType : " + transactionType + "  ======== IPN verified : " + isIpnVerified);
+			return true;
+		} else {
+			throw new BadRequestException("Notification request not valid.", ErrorCode.INVALID_NOTIFICATION);
+		}
 		
-		LOG.info("******* IPN (name:value) pair : "+ map + "  " + "######### TransactionType : " + transactionType+"  ======== IPN verified : " + isIpnVerified);
-		
-		return true;
 	}
 	
 	@PostConstruct
