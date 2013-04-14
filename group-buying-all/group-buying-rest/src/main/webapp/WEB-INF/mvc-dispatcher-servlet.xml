@@ -20,7 +20,7 @@
 	
 	<beans:bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 	
-	<util:properties id="ipnProperties" location="classpath:ipn.properties" />
+	<util:properties id="paypalProperties" location="classpath:paypal.properties" />
 	
     <beans:bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <beans:property name="order" value="1" />
@@ -46,8 +46,15 @@
             </beans:list>
         </beans:property>
           		
-    </beans:bean>    
-    
+    </beans:bean>
+	
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      	<beans:property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+      	<beans:property name="prefix" value="/WEB-INF/views/" />
+      	<beans:property name="suffix" value=".jsp"/>
+      	<beans:property name="order" value="2"/>
+  	</beans:bean>
+  	
 	<beans:bean id="exceptionResolver" class="pl.edu.pw.eiti.groupbuying.rest.resolver.ApiHandlerExceptionResolver">
         <beans:property name="order" value="0" />
 	</beans:bean>

@@ -1,103 +1,272 @@
 package pl.edu.pw.eiti.groupbuying.rest.service.impl;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
+import pl.edu.pw.eiti.groupbuying.core.dto.OfferDTO;
 import pl.edu.pw.eiti.groupbuying.rest.service.PayPalService;
+import urn.ebay.api.PayPalAPI.DoExpressCheckoutPaymentReq;
+import urn.ebay.api.PayPalAPI.DoExpressCheckoutPaymentRequestType;
+import urn.ebay.api.PayPalAPI.DoExpressCheckoutPaymentResponseType;
+import urn.ebay.api.PayPalAPI.GetExpressCheckoutDetailsReq;
+import urn.ebay.api.PayPalAPI.GetExpressCheckoutDetailsRequestType;
+import urn.ebay.api.PayPalAPI.GetExpressCheckoutDetailsResponseType;
+import urn.ebay.api.PayPalAPI.PayPalAPIInterfaceServiceService;
+import urn.ebay.api.PayPalAPI.SetExpressCheckoutReq;
+import urn.ebay.api.PayPalAPI.SetExpressCheckoutRequestType;
+import urn.ebay.api.PayPalAPI.SetExpressCheckoutResponseType;
+import urn.ebay.apis.CoreComponentTypes.BasicAmountType;
+import urn.ebay.apis.eBLBaseComponents.CurrencyCodeType;
+import urn.ebay.apis.eBLBaseComponents.DoExpressCheckoutPaymentRequestDetailsType;
+import urn.ebay.apis.eBLBaseComponents.ItemCategoryType;
+import urn.ebay.apis.eBLBaseComponents.PaymentActionCodeType;
+import urn.ebay.apis.eBLBaseComponents.PaymentDetailsItemType;
+import urn.ebay.apis.eBLBaseComponents.PaymentDetailsType;
+import urn.ebay.apis.eBLBaseComponents.SetExpressCheckoutRequestDetailsType;
 
-import com.paypal.core.ConfigManager;
+import com.paypal.core.APIService;
 import com.paypal.exception.ClientActionRequiredException;
 import com.paypal.exception.HttpErrorException;
 import com.paypal.exception.InvalidCredentialException;
 import com.paypal.exception.InvalidResponseDataException;
 import com.paypal.exception.MissingCredentialException;
 import com.paypal.exception.SSLConfigurationException;
-import com.paypal.ipn.IPNMessage;
 import com.paypal.sdk.exceptions.OAuthException;
-import com.paypal.svcs.services.AdaptivePaymentsService;
-import com.paypal.svcs.types.ap.PaymentDetailsRequest;
-import com.paypal.svcs.types.ap.PaymentDetailsResponse;
-import com.paypal.svcs.types.common.RequestEnvelope;
 
 @Service("payPalService")
 public class PayPalServiceImpl implements PayPalService {
 
-	private static final String ADAPTIVE_PAYMENT_PAY_TRANSACTION_TYPE = "Adaptive Payment PAY";
-
-	private static final String PAY_KEY = "pay_key";
-	private static final String TRANSACTION_ID_KEY = "transaction[0].id";
 
 	private static final Logger LOG = Logger.getLogger(PayPalServiceImpl.class);
 	
-	@Resource(name = "ipnProperties")
-	private Properties ipnProperties;
-	
-	@Override
-	public void processTransaction(IPNMessage ipnMessage) {
-		String transactionType = ipnMessage.getTransactionType();
-		if(ADAPTIVE_PAYMENT_PAY_TRANSACTION_TYPE.equals(transactionType)) {
-			Map<String,String> map = ipnMessage.getIpnMap();
-			if(map != null && map.containsKey(TRANSACTION_ID_KEY)) {
-				PaymentDetailsResponse transactionDetails = getTransactionDetails(map.get(TRANSACTION_ID_KEY));
-				boolean transactionValid = validateTransaction(transactionDetails);
-				if(transactionValid) {
-					
-				} else {
-					
-				}
-			}
-		} else {
-			LOG.warn("Transaction type not suppported: " + transactionType);
-		}
+	private static final String OFFER_CURRENCY = "offer.currency";
+
+	@Resource(name = "paypalProperties")
+	private Properties paypalProperties;
+
+	private PayPalAPIInterfaceServiceService service;
+
+	@PostConstruct
+	public void initConfig() {
+		service = new PayPalAPIInterfaceServiceService(paypalProperties);
+		//disable default logging
+		java.util.logging.Logger.getLogger(APIService.class.toString()).setLevel(java.util.logging.Level.OFF);
 	}
 
-	private PaymentDetailsResponse getTransactionDetails(String transactionId) {
-		PaymentDetailsResponse resp = null;
-		RequestEnvelope requestEnvelope = new RequestEnvelope("en_GB");
-		PaymentDetailsRequest req = new PaymentDetailsRequest(requestEnvelope);
-		//req.setPayKey(payKey);
-		req.setTransactionId(transactionId);
-		AdaptivePaymentsService service = new AdaptivePaymentsService(ipnProperties);
+	@Override
+	public String getExpressCheckoutToken(HttpServletRequest request, OfferDTO offer) {
+
+		String returnURL = paypalProperties.getProperty("groupbuying.returnURL");
+		String cancelURL = paypalProperties.getProperty("groupbuying.cancelURL");
+
+		SetExpressCheckoutRequestType setExpressCheckoutReq = new SetExpressCheckoutRequestType();
+		SetExpressCheckoutRequestDetailsType details = new SetExpressCheckoutRequestDetailsType();
+
+		details.setReturnURL(String.format(returnURL, offer.getOfferId()));
+
+		details.setCancelURL(cancelURL);
+
+		// populate line item details
+		String amountItems = Double.toString(offer.getPrice());
+		String names = offer.getTitle();
+
+		List<PaymentDetailsItemType> lineItems = new ArrayList<PaymentDetailsItemType>();
+
+		PaymentDetailsItemType item = new PaymentDetailsItemType();
+		BasicAmountType amt = new BasicAmountType();
+		amt.setCurrencyID(CurrencyCodeType.fromValue(paypalProperties.getProperty(OFFER_CURRENCY)));
+		amt.setValue(amountItems);
+		item.setQuantity(1);
+		item.setName(names);
+		item.setAmount(amt);
+		item.setItemCategory(ItemCategoryType.PHYSICAL);
+		lineItems.add(item);
+
+		double itemTotal = Double.parseDouble(amountItems);
+		double orderTotal = itemTotal;
+
+		List<PaymentDetailsType> payDetails = new ArrayList<PaymentDetailsType>();
+		PaymentDetailsType paydtl = new PaymentDetailsType();
+		paydtl.setPaymentAction(PaymentActionCodeType.SALE);
+
+		BasicAmountType itemsTotal = new BasicAmountType();
+		itemsTotal.setValue(Double.toString(itemTotal));
+		itemsTotal.setCurrencyID(CurrencyCodeType.fromValue(paypalProperties.getProperty(OFFER_CURRENCY)));
+		paydtl.setOrderTotal(new BasicAmountType(CurrencyCodeType.fromValue(paypalProperties.getProperty(OFFER_CURRENCY)), Double.toString(orderTotal)));
+		paydtl.setPaymentDetailsItem(lineItems);
+
+		paydtl.setItemTotal(itemsTotal);
+		payDetails.add(paydtl);
+		details.setPaymentDetails(payDetails);
+
+		// shipping display options
+		details.setNoShipping("1");
+
+		setExpressCheckoutReq.setSetExpressCheckoutRequestDetails(details);
+
+		SetExpressCheckoutReq expressCheckoutReq = new SetExpressCheckoutReq();
+		expressCheckoutReq.setSetExpressCheckoutRequest(setExpressCheckoutReq);
+
+		SetExpressCheckoutResponseType setExpressCheckoutResponse;
 		try {
-			resp = service.paymentDetails(req);			
+			setExpressCheckoutResponse = service.setExpressCheckout(expressCheckoutReq);
+			if ("SUCCESS".equalsIgnoreCase(setExpressCheckoutResponse.getAck().toString())) {
+				String token = setExpressCheckoutResponse.getToken();
+				return token;
+			}
 		} catch (SSLConfigurationException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
 		} catch (InvalidCredentialException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
 		} catch (HttpErrorException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
 		} catch (InvalidResponseDataException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
 		} catch (ClientActionRequiredException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
 		} catch (MissingCredentialException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
 		} catch (OAuthException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
-		} catch (InterruptedException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
-		} catch (UnsupportedEncodingException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
 		} catch (IOException e) {
-			LOG.error("getTransactionDetails: " + e.getLocalizedMessage(), e);
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
+		} catch (InterruptedException e) {
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
+		} catch (ParserConfigurationException e) {
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
+		} catch (SAXException e) {
+			LOG.error("getExpressCheckoutToken: " + e.getLocalizedMessage(), e);
 		}
-		return resp;
+		return null;
 	}
-	
-	private boolean validateTransaction(PaymentDetailsResponse transactionDetails) {
-		if (transactionDetails != null) {
-			if (transactionDetails.getResponseEnvelope().getAck().toString().equalsIgnoreCase("SUCCESS")) {
-				String sellerEmail = ConfigManager.getInstance().getValue("acctc1.email");
-				String currency = ConfigManager.getInstance().getValue("offer.currency");
+
+	@Override
+	public String getPayerIDFromGetExpressCheckout(String token) {
+		GetExpressCheckoutDetailsReq req = new GetExpressCheckoutDetailsReq();
+		GetExpressCheckoutDetailsRequestType reqType = new GetExpressCheckoutDetailsRequestType(token);
+		req.setGetExpressCheckoutDetailsRequest(reqType);
+		GetExpressCheckoutDetailsResponseType resp = null;
+		try {
+			resp = service.getExpressCheckoutDetails(req);
+		} catch (SSLConfigurationException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (InvalidCredentialException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (HttpErrorException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (InvalidResponseDataException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (ClientActionRequiredException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (MissingCredentialException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (OAuthException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (IOException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (InterruptedException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (ParserConfigurationException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (SAXException e) {
+			LOG.error("getPayerIDFromGetExpressCheckout: " + e.getLocalizedMessage(), e);
+		}
+		if (resp != null) {
+			if (resp.getAck().toString().equalsIgnoreCase("SUCCESS")) {
+				return resp.getGetExpressCheckoutDetailsResponseDetails().getPayerInfo().getPayerID();
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public boolean doExpressCheckout(OfferDTO offer, String token, String payerID) {
+		DoExpressCheckoutPaymentRequestType doCheckoutPaymentRequestType = new DoExpressCheckoutPaymentRequestType();
+		DoExpressCheckoutPaymentRequestDetailsType details = new DoExpressCheckoutPaymentRequestDetailsType();
+		details.setToken(token);
+		details.setPayerID(payerID);
+		details.setPaymentAction(PaymentActionCodeType.SALE);
+		double itemTotalAmt = 0.00;
+		double orderTotalAmt = 0.00;
+		String amt = Double.toString(offer.getPrice());
+		itemTotalAmt = Double.parseDouble(amt);
+		orderTotalAmt += itemTotalAmt;
+		PaymentDetailsType paymentDetails = new PaymentDetailsType();
+		BasicAmountType orderTotal = new BasicAmountType();
+		orderTotal.setValue(Double.toString(orderTotalAmt));
+		orderTotal.setCurrencyID(CurrencyCodeType.fromValue(paypalProperties.getProperty(OFFER_CURRENCY)));
+		paymentDetails.setOrderTotal(orderTotal);
+
+		BasicAmountType itemTotal = new BasicAmountType();
+		itemTotal.setValue(Double.toString(itemTotalAmt));
+
+		itemTotal.setCurrencyID(CurrencyCodeType.fromValue(paypalProperties.getProperty(OFFER_CURRENCY)));
+		paymentDetails.setItemTotal(itemTotal);
+
+		List<PaymentDetailsItemType> paymentItems = new ArrayList<PaymentDetailsItemType>();
+		PaymentDetailsItemType paymentItem = new PaymentDetailsItemType();
+		paymentItem.setName(offer.getTitle());
+		paymentItem.setQuantity(1);
+		BasicAmountType amount = new BasicAmountType();
+		amount.setValue(amt);
+		amount.setCurrencyID(CurrencyCodeType.fromValue(paypalProperties.getProperty(OFFER_CURRENCY)));
+		paymentItem.setAmount(amount);
+		paymentItems.add(paymentItem);
+		paymentDetails.setPaymentDetailsItem(paymentItems);
+		
+		List<PaymentDetailsType> payDetailType = new ArrayList<PaymentDetailsType>();
+		payDetailType.add(paymentDetails);
+		details.setPaymentDetails(payDetailType);
+
+		doCheckoutPaymentRequestType
+				.setDoExpressCheckoutPaymentRequestDetails(details);
+		DoExpressCheckoutPaymentReq doExpressCheckoutPaymentReq = new DoExpressCheckoutPaymentReq();
+		doExpressCheckoutPaymentReq
+				.setDoExpressCheckoutPaymentRequest(doCheckoutPaymentRequestType);
+
+		DoExpressCheckoutPaymentResponseType doCheckoutPaymentResponseType = null;
+		try {
+			doCheckoutPaymentResponseType = service.doExpressCheckoutPayment(doExpressCheckoutPaymentReq);
+		} catch (SSLConfigurationException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (InvalidCredentialException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (HttpErrorException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (InvalidResponseDataException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (ClientActionRequiredException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (MissingCredentialException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (OAuthException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (IOException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (InterruptedException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (ParserConfigurationException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		} catch (SAXException e) {
+			LOG.error("doExpressCheckout: " + e.getLocalizedMessage(), e);
+		}
+		if (doCheckoutPaymentResponseType != null) {
+			if (doCheckoutPaymentResponseType.getAck().toString().equalsIgnoreCase("SUCCESS")) {
+				return true;
 			}
 		}
 		return false;
 	}
+
 }
