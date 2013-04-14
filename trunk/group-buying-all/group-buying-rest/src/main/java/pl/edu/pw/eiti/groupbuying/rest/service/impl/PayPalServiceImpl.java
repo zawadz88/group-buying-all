@@ -60,12 +60,12 @@ public class PayPalServiceImpl implements PayPalService {
 	@PostConstruct
 	public void initConfig() {
 		service = new PayPalAPIInterfaceServiceService(paypalProperties);
-		//disable default logging
-		java.util.logging.Logger.getLogger(APIService.class.toString()).setLevel(java.util.logging.Level.OFF);
 	}
 
 	@Override
 	public String getExpressCheckoutToken(HttpServletRequest request, OfferDTO offer) {
+		//disable default logging
+		java.util.logging.Logger.getLogger(APIService.class.toString()).setLevel(java.util.logging.Level.OFF);
 
 		String returnURL = paypalProperties.getProperty("groupbuying.returnURL");
 		String cancelURL = paypalProperties.getProperty("groupbuying.cancelURL");
@@ -153,6 +153,8 @@ public class PayPalServiceImpl implements PayPalService {
 
 	@Override
 	public String getPayerIDFromGetExpressCheckout(String token) {
+		//disable default logging
+		java.util.logging.Logger.getLogger(APIService.class.toString()).setLevel(java.util.logging.Level.OFF);
 		GetExpressCheckoutDetailsReq req = new GetExpressCheckoutDetailsReq();
 		GetExpressCheckoutDetailsRequestType reqType = new GetExpressCheckoutDetailsRequestType(token);
 		req.setGetExpressCheckoutDetailsRequest(reqType);
@@ -192,6 +194,8 @@ public class PayPalServiceImpl implements PayPalService {
 
 	@Override
 	public boolean doExpressCheckout(OfferDTO offer, String token, String payerID) {
+		//disable default logging
+		java.util.logging.Logger.getLogger(APIService.class.toString()).setLevel(java.util.logging.Level.OFF);
 		DoExpressCheckoutPaymentRequestType doCheckoutPaymentRequestType = new DoExpressCheckoutPaymentRequestType();
 		DoExpressCheckoutPaymentRequestDetailsType details = new DoExpressCheckoutPaymentRequestDetailsType();
 		details.setToken(token);
