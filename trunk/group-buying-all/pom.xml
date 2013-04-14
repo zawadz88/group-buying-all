@@ -21,7 +21,7 @@
 		<jsp.api.version>2.1</jsp.api.version>
 		<jstl.api.version>1.2</jstl.api.version>
 		<jstl.impl.version>1.2</jstl.impl.version>
-		<paypal.merchantsdk.version>2.2.98</paypal.merchantsdk.version>
+		<paypal.adaptivepayments.version>2.2.98</paypal.adaptivepayments.version>
 		<jackson.version>2.1.1</jackson.version>
 		<joda.time.version>1.6.2</joda.time.version>
 		<mysql.connector.version>5.1.17</mysql.connector.version>
@@ -236,8 +236,8 @@
 
 			<dependency>
 				<groupId>com.paypal.sdk</groupId>
-				<artifactId>merchantsdk</artifactId>
-				<version>${paypal.merchantsdk.version}</version>
+				<artifactId>adaptivepaymentssdk</artifactId>
+				<version>${paypal.adaptivepayments.version}</version>
 			</dependency>
 			
 			<!-- Jackson JSON Processor -->
