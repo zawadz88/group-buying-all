@@ -68,7 +68,7 @@
 		
 		<dependency>
 			<groupId>com.paypal.android</groupId>
-			<artifactId>MPL</artifactId>
+			<artifactId>MECL</artifactId>
 		</dependency>
 		
 		<dependency>

@@ -12,7 +12,7 @@
 <resources xmlns:tools="https://schemas.android.com/tools" tools:ignore="TypographyDashes">
     <string name="ga_trackingId">UA-35275090-1</string>
     <string name="ga_appVersion">1</string>
-    <bool name="ga_autoActivityTracking">true</bool>
+    <bool name="ga_autoActivityTracking">false</bool>
     <bool name="ga_reportUncaughtExceptions">true</bool>
-    <bool name="ga_debug">true</bool>
+    <bool name="ga_debug">false</bool>
 </resources>

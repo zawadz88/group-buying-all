@@ -165,6 +165,7 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 		}
 		
 	}
+	
 	@Override
     protected void onResumeFragments() {
         super.onResumeFragments();
