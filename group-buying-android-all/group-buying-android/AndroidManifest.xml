@@ -84,8 +84,8 @@
         <activity
             android:name=".ConfirmPaymentActivity"
             android:label=""
-            android:theme="@style/Theme.groupbuying"
-            android:configChanges="orientation" />
+            android:theme="@style/Theme.groupbuying"            
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity
             android:name=".PaymentConfirmedActivity"
             android:label=""
@@ -98,12 +98,6 @@
             android:name=".CouponDetailsActivity"
             android:label=""
             android:theme="@style/Theme.groupbuying" />
-		<activity 
-		    android:name="com.paypal.android.MEP.PayPalActivity"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar"
-			android:screenOrientation="portrait"
-			android:configChanges="keyboardHidden|orientation"/>
-		
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCJSWAUotAVQoMDObi3x55AkoAPgj2ENwM" />

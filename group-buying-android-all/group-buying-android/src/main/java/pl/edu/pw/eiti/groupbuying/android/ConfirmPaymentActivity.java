@@ -10,76 +10,47 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android;
 
-import java.math.BigDecimal;
-import java.util.Currency;
-
 import pl.edu.pw.eiti.groupbuying.android.api.Offer;
-import pl.edu.pw.eiti.groupbuying.android.util.Constants;
-import android.app.Activity;
-import android.content.Intent;
+import pl.edu.pw.eiti.groupbuying.android.fragment.PayPalPaymentFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.PaymentSummaryFragment;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.androidquery.AQuery;
-import com.paypal.android.MEP.PayPal;
-import com.paypal.android.MEP.PayPalActivity;
-import com.paypal.android.MEP.PayPalInvoiceData;
-import com.paypal.android.MEP.PayPalInvoiceItem;
-import com.paypal.android.MEP.PayPalPayment;
 
 public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity {
 
+    public static final int SUMMARY = 0;
+    public static final int PAYPAL_PAYMENT = 1;
+    private static final int FRAGMENT_COUNT = PAYPAL_PAYMENT + 1;
+    private static final String FRAGMENT_PREFIX = "fragment";
+    private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
+    
 	protected static final String TAG = ConfirmPaymentActivity.class.getSimpleName();
 
+    private boolean restoredFragment = false;
+	
 	private Offer offer;
-
-	private AQuery aq;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_confirm_payment);
 		
-		if(PayPal.getInstance() == null) {
-			PayPal pp = PayPal.initWithAppID(this.getBaseContext(), getString(R.string.paypal_application_id), PayPal.ENV_SANDBOX);
-			pp.setShippingEnabled(false);
-		}
-		
-		aq = new AQuery(this);
 		if (getIntent().getSerializableExtra("offer") != null) {
 			offer = (Offer) getIntent().getSerializableExtra("offer");
 		} else {
 			finish();
 		}
 
-		aq.id(R.id.selectedOfferTitle).text(offer.getTitle());
-		aq.id(R.id.paymentSumValue).text(Double.toString(offer.getPrice()));
-
-		aq.id(R.id.confirmPurchaseButton).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				PayPalPayment newPayment = new PayPalPayment();
-				newPayment.setSubtotal(new BigDecimal(offer.getPrice()));
-				newPayment.setCurrencyType(Currency.getInstance(getString(R.string.currency)));
-				newPayment.setCustomID(Integer.toString(offer.getOfferId()));
-				PayPalInvoiceData invoiceData = new PayPalInvoiceData();
-				PayPalInvoiceItem invoiceItem = new PayPalInvoiceItem();
-				invoiceItem.setTotalPrice(new BigDecimal(offer.getPrice()));
-				invoiceItem.setName(offer.getTitle());
-				invoiceData.add(invoiceItem);
-				newPayment.setInvoiceData(invoiceData);
-				newPayment.setRecipient(getString(R.string.paypal_seller_email_id));
-				newPayment.setIpnUrl(getString(R.string.paypal_ipn_url));
-				newPayment.setMerchantName(getString(R.string.paypal_merchant_name));
-				Intent paypalIntent = PayPal.getInstance().checkout(newPayment, ConfirmPaymentActivity.this);
-				ConfirmPaymentActivity.this.startActivityForResult(paypalIntent, 1);
-			}
-		});
+		for(int i = 0; i < fragments.length; i++) {
+            restoreFragment(savedInstanceState, i);
+        }
 	}
 
 	@Override
@@ -88,30 +59,34 @@ public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity {
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		switch (resultCode) {
-		case Activity.RESULT_OK:
-			// The payment succeeded
-			//String payKey = data.getStringExtra(PayPalActivity.EXTRA_PAY_KEY);
-			// Tell the user their payment succeeded
-			Intent intent = new Intent(ConfirmPaymentActivity.this,
-			PaymentConfirmedActivity.class); intent.putExtra("offer", offer); 
-			startActivity(intent);
-			break;
-		case Activity.RESULT_CANCELED:
-			// The payment was canceled
-			// Tell the user their payment was canceled
-			break;
-		case PayPalActivity.RESULT_FAILURE:
-			// The payment failed -- we get the error from the EXTRA_ERROR_ID
-			// and EXTRA_ERROR_MESSAGE
-			String errorID = data.getStringExtra(PayPalActivity.EXTRA_ERROR_ID);
-			String errorMessage = data.getStringExtra(PayPalActivity.EXTRA_ERROR_MESSAGE);
-			Log.e(Constants.TAG, "errorID: " + errorID + ", errorMessage: " + errorMessage);
-			// Tell the user their payment was failed.
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		FragmentManager manager = getSupportFragmentManager();
+		// Since we're only adding one Fragment at a time, we can only save one.
+		Fragment f = manager.findFragmentById(R.id.fragment_content);
+		for (int i = 0; i < fragments.length; i++) {
+			if (fragments[i] == f) {
+				manager.putFragment(outState, getBundleKey(i), fragments[i]);
+				break;
+			}
 		}
 	}
-
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+	}
+	
+	@Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+        if (restoredFragment) {
+            return;
+        }
+        System.out.println("onResumeFragments");
+        showFragment(SUMMARY, false);
+    }
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.payment_method_menu, menu);
@@ -124,7 +99,7 @@ public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+			onBackPressed();
 			break;
 		case R.id.options_menu_offers:
 			break;
@@ -133,5 +108,43 @@ public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity {
 		}
 		return true;
 	}
-
+		
+	private void restoreFragment(Bundle savedInstanceState, int fragmentIndex) {
+		Fragment fragment = null;
+        if (savedInstanceState != null) {
+            FragmentManager manager = getSupportFragmentManager();
+            fragment = manager.getFragment(savedInstanceState, getBundleKey(fragmentIndex));
+        }
+        if (fragment != null) {
+            fragments[fragmentIndex] = fragment;            
+            restoredFragment = true;
+        } else {
+            switch (fragmentIndex) {
+                case SUMMARY:
+                    fragments[SUMMARY] = PaymentSummaryFragment.newInstance(offer);  
+                    break;
+                case PAYPAL_PAYMENT:
+                    fragments[PAYPAL_PAYMENT] = PayPalPaymentFragment.newInstance(offer);
+                    break;
+                default:
+                    Log.w(TAG, "ConfirmPaymentActivity: invalid fragment index: " + fragmentIndex);
+                    break;
+            }
+        }
+	}
+	
+	public void showFragment(int fragmentNo, boolean addToBackStack) {
+		FragmentManager manager = getSupportFragmentManager();
+		FragmentTransaction transaction = manager.beginTransaction();
+		transaction.replace(R.id.fragment_content, fragments[fragmentNo]);
+		if(addToBackStack) {
+			transaction.addToBackStack(null);
+		}
+		transaction.commit();
+	}
+	
+    private String getBundleKey(int index) {
+        return FRAGMENT_PREFIX + Integer.toString(index);
+    }
+		
 }
