@@ -6,7 +6,7 @@
 #- interfejs androida podstawowy bez logiki
 #- wystawianie ofert z netu
 #- wyciąganie dobre ofert z netu
-- wyciąganie ofert dla danego miasta
+#- wyciąganie ofert dla danego miasta
 - zakup ofert przez Paypal
 - wyświetlanie zakupionych ofert
 - miejsca w pobliżu przez SOLR, Hibernate Search lub Redis
