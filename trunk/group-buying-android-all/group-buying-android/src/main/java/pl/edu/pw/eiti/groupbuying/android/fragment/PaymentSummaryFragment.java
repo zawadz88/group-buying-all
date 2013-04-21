@@ -41,7 +41,11 @@ public class PaymentSummaryFragment extends AbstractPaymentFragment {
 			@Override
 			public void onClick(View v) {
 				if(getActivity() != null) {
-					activity.showFragment(ConfirmPaymentActivity.PAYPAL_PAYMENT, true);
+					if(activity.isConnected()) {
+						activity.showFragment(ConfirmPaymentActivity.PAYPAL_PAYMENT, true);
+					} else {
+						activity.showFragment(ConfirmPaymentActivity.SIGN_IN, true);
+					}
 				}
 			}
 		});

@@ -2,18 +2,10 @@
 package pl.edu.pw.eiti.groupbuying.android;
 
 import static pl.edu.pw.eiti.groupbuying.android.util.Constants.TAG;
-import static pl.edu.pw.eiti.groupbuying.android.util.Constants.CONNECTION_TIMEOUT;
-import static pl.edu.pw.eiti.groupbuying.android.util.Constants.READ_TIMEOUT;
 
 import java.util.Map;
 
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.DuplicateConnectionException;
@@ -22,7 +14,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
 
 import pl.edu.pw.eiti.groupbuying.android.api.GroupBuyingApi;
 import pl.edu.pw.eiti.groupbuying.android.connect.GroupBuyingConnectionFactory;

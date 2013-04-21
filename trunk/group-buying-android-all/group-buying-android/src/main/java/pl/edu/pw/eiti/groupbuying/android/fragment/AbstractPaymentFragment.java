@@ -17,9 +17,4 @@ public abstract class AbstractPaymentFragment extends Fragment {
 		this.activity = (ConfirmPaymentActivity) activity;
 	}
 
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		this.activity = null;
-	}
 }

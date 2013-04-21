@@ -15,22 +15,12 @@
  */
 package pl.edu.pw.eiti.groupbuying.android.api;
 
-import org.springframework.social.ApiBinding;
-
-import pl.edu.pw.eiti.groupbuying.android.api.impl.GroupBuyingTemplate;
-
 /**
- * Interface specifying a basic set of operations for interacting with Group API.
- * Implemented by {@link GroupBuyingTemplate}. Not often used directly, but a
- * useful option to enhance testability, as it can easily be mocked or stubbed.
+ * Interface defining the operations for retrieving purchase information.
  * 
  */
-public interface GroupBuyingApi extends ApiBinding {
-		
-	OfferOperations offerOperations();
+public interface PurchaseOperations {
 
-	CityOperations cityOperations();
-	
-	PurchaseOperations purchaseOperations();
-	
+	String getPaypalRedirectURI(int offerId, String drt);
+
 }

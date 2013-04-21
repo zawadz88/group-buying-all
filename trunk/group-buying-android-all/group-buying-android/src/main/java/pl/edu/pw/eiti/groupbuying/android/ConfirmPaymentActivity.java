@@ -10,9 +10,12 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android;
 
+import pl.edu.pw.eiti.groupbuying.android.api.GroupBuyingApi;
 import pl.edu.pw.eiti.groupbuying.android.api.Offer;
 import pl.edu.pw.eiti.groupbuying.android.fragment.PayPalPaymentFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.PaymentSummaryFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.SignInFragment;
+import pl.edu.pw.eiti.groupbuying.android.fragment.util.SignInListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,11 +26,12 @@ import android.util.Log;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
-public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity {
+public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity implements SignInListener {
 
     public static final int SUMMARY = 0;
     public static final int PAYPAL_PAYMENT = 1;
-    private static final int FRAGMENT_COUNT = PAYPAL_PAYMENT + 1;
+    public static final int SIGN_IN = 2;
+    private static final int FRAGMENT_COUNT = SIGN_IN + 1;
     private static final String FRAGMENT_PREFIX = "fragment";
     private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
     
@@ -83,8 +87,10 @@ public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity {
         if (restoredFragment) {
             return;
         }
-        System.out.println("onResumeFragments");
-        showFragment(SUMMARY, false);
+		FragmentManager manager = getSupportFragmentManager();
+		if(manager.getBackStackEntryCount() == 0) {
+			showFragment(SUMMARY, false);
+		}
     }
 	
 	@Override
@@ -126,6 +132,9 @@ public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity {
                 case PAYPAL_PAYMENT:
                     fragments[PAYPAL_PAYMENT] = PayPalPaymentFragment.newInstance(offer);
                     break;
+                case SIGN_IN:
+                    fragments[SIGN_IN] = SignInFragment.newInstance();
+                    break;
                 default:
                     Log.w(TAG, "ConfirmPaymentActivity: invalid fragment index: " + fragmentIndex);
                     break;
@@ -141,10 +150,24 @@ public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity {
 			transaction.addToBackStack(null);
 		}
 		transaction.commit();
+		if(fragmentNo == SIGN_IN) {
+			((SignInFragment)fragments[SIGN_IN]).setSignInListener(this);
+		}
 	}
 	
     private String getBundleKey(int index) {
         return FRAGMENT_PREFIX + Integer.toString(index);
     }
+    
+    public boolean isConnected() {
+		return getApplicationContext().getConnectionRepository().findPrimaryConnection(GroupBuyingApi.class) != null;
+	}
+
+	@Override
+	public void onSignInSuccessful() {
+		FragmentManager manager = getSupportFragmentManager();
+		manager.popBackStackImmediate();
+		showFragment(PAYPAL_PAYMENT, true);
+	}
 		
 }

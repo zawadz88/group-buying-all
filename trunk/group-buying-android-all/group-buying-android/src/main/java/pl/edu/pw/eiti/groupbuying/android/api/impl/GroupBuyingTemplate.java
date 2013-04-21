@@ -15,6 +15,7 @@ import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
 import pl.edu.pw.eiti.groupbuying.android.api.CityOperations;
 import pl.edu.pw.eiti.groupbuying.android.api.GroupBuyingApi;
 import pl.edu.pw.eiti.groupbuying.android.api.OfferOperations;
+import pl.edu.pw.eiti.groupbuying.android.api.PurchaseOperations;
 import android.os.Build;
 
 public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements GroupBuyingApi {
@@ -23,6 +24,7 @@ public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements Gro
 
 	private OfferOperations offerOperations;
 	private CityOperations cityOperations;
+	private PurchaseTemplate purchaseOperations;
 
 	public GroupBuyingTemplate(String accessToken, String apiUrlBase) {
 		super(accessToken);
@@ -56,10 +58,6 @@ public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements Gro
 			setRequestFactory(requestFactory);
 		}
 	}
-	
-	public OfferOperations offerOperations() {
-		return offerOperations;
-	}
 
 	private void registerGroupBuyingJsonModule() {
 		List<HttpMessageConverter<?>> converters = getRestTemplate().getMessageConverters();
@@ -80,11 +78,21 @@ public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements Gro
 	private void initSubApis() {
 		this.offerOperations = new OfferTemplate(getRestTemplate(), isAuthorized(), getApiUrlBase());//public api
 		this.cityOperations = new CityTemplate(getRestTemplate(), isAuthorized(), getApiUrlBase());//public api
+		this.purchaseOperations = new PurchaseTemplate(getRestTemplate(), isAuthorized(), getApiUrlBase());
 	}
 
 	@Override
 	public CityOperations cityOperations() {
 		return cityOperations;
 	}
-	
+
+	@Override
+	public OfferOperations offerOperations() {
+		return offerOperations;
+	}
+
+	@Override
+	public PurchaseOperations purchaseOperations() {
+		return purchaseOperations;
+	}
 }

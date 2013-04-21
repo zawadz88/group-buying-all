@@ -68,12 +68,6 @@
     
     <string name="loading_more_offers_text">Loading more offers…</string>
     
-    <string name="paypal_seller_email_id">seller@eiti.pl</string>
-    
-    <string name="currency">GBP</string>
-    
-    <string name="paypal_ipn_url">http://87.207.209.32/group-buying-rest/paypal/ipn-endpoint</string>
-    
     <string name="paypal_application_id">APP-80W284485P519543T</string>
     
     <string name="paypal_merchant_name">Group Buying</string>
