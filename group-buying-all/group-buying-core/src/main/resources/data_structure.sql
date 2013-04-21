@@ -113,18 +113,18 @@ CREATE TABLE `cities` (
 DROP TABLE IF EXISTS `paypal_transactions`;
 
 CREATE TABLE `paypal_transactions` (
-  `id` bigint(20) AUTO_INCREMENT,
-  `offer_id` bigint(20) NOT NULL,
-  `client_id` varchar(64) NOT NULL,
-  `transaction_token` varchar(128) NOT NULL unique,
-  `state` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
+  `id` BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+  `offer_id` BIGINT(20) NOT NULL,
+  `client_id` VARCHAR(64) NOT NULL,
+  `transaction_token` VARCHAR(128) NOT NULL UNIQUE,
+  `state` TINYINT(1) NOT NULL,
+  `created` TIMESTAMP NOT NULL,
+  `last_updated` TIMESTAMP NOT NULL,
   KEY `FK_paypal_transactions_offers` (`offer_id`),
   KEY `FK_paypal_transactions_clients` (`client_id`),
   CONSTRAINT `FK_paypal_transactions_clients` FOREIGN KEY (`client_id`) REFERENCES `clients` (`email`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_paypal_transactions_offers` FOREIGN KEY (`offer_id`) REFERENCES `offers` (`offer_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
 DROP TABLE IF EXISTS `coupons`;
 
 CREATE TABLE `coupons` (
