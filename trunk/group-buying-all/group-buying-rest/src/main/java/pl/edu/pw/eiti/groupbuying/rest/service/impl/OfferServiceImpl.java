@@ -35,11 +35,16 @@ public class OfferServiceImpl implements OfferService {
 
 	@Override
 	public OfferDTO getOfferDTO(int offerId) {
-		Offer offer = offerDAO.getOffer(offerId);
+		Offer offer = getOffer(offerId);
 		if(offer != null) {
 			return offer.getOfferDTO();
 		}		
 		return null;
+	}
+
+	@Override
+	public Offer getOffer(int offerId) {
+		return offerDAO.getOffer(offerId);
 	}
 
 }

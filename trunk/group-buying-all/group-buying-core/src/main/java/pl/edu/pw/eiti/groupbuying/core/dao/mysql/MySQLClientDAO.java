@@ -41,4 +41,10 @@ public class MySQLClientDAO implements ClientDAO {
 		return true;
 	}
 
+	@Override
+	public Client getClientByEmail(String email) {
+		Client client = entityManager.find(Client.class, email);
+		return client;
+	}
+
 }

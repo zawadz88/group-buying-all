@@ -20,7 +20,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import org.apache.log4j.Logger;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -42,8 +41,6 @@ import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 @DependsOn(value = "transactionManager")
 public class MySQLCityDAO implements CityDAO {
 	
-	private static final Logger LOG = Logger.getLogger(MySQLCityDAO.class);
-
 	@Value("#{constants['default.city.id']}")
 	private String defaultCityId;
 	

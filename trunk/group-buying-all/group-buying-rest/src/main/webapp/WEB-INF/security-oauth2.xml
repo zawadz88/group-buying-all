@@ -40,6 +40,16 @@
 	</http>
 
 	<http 
+	    pattern="/paypal/mecl/checkout/**"
+	    create-session="stateless" 
+		use-expressions="true"
+	    entry-point-ref="oauthAuthenticationEntryPoint">
+
+	    <intercept-url pattern="/**" access="isAuthenticated()" />
+		<custom-filter ref="resourceServerFilter" before="EXCEPTION_TRANSLATION_FILTER" />
+	</http>
+	
+	<http 
 	    pattern="/**"
 	    create-session="stateless" 
 	    security="none">
@@ -173,6 +183,6 @@
 		<beans:property name="supportRefreshToken" value="true" />
 		<beans:property name="clientDetailsService" ref="clientDetails" />
 		<beans:property name="accessTokenValiditySeconds"
-			value="604800" /> <!-- 1 week -->
+			value="120" /> <!-- 1 week -->
 	</beans:bean>
 </beans:beans>

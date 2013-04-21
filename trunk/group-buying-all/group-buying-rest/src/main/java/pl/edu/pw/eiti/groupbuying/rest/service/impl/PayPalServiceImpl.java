@@ -11,10 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
-import pl.edu.pw.eiti.groupbuying.core.dto.OfferDTO;
+import pl.edu.pw.eiti.groupbuying.core.dao.PaypalTransactionDAO;
+import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
+import pl.edu.pw.eiti.groupbuying.core.domain.PaypalTransaction;
+import pl.edu.pw.eiti.groupbuying.core.domain.PaypalTransaction.TransactionState;
 import pl.edu.pw.eiti.groupbuying.rest.service.PayPalService;
 import urn.ebay.api.PayPalAPI.DoExpressCheckoutPaymentReq;
 import urn.ebay.api.PayPalAPI.DoExpressCheckoutPaymentRequestType;
@@ -52,6 +56,9 @@ public class PayPalServiceImpl implements PayPalService {
 	
 	private static final String OFFER_CURRENCY = "offer.currency";
 
+	@Autowired
+	private PaypalTransactionDAO paypalTransactionDAO;
+	
 	@Resource(name = "paypalProperties")
 	private Properties paypalProperties;
 
@@ -63,7 +70,7 @@ public class PayPalServiceImpl implements PayPalService {
 	}
 
 	@Override
-	public String getExpressCheckoutToken(HttpServletRequest request, OfferDTO offer) {
+	public String getExpressCheckoutToken(HttpServletRequest request, Offer offer) {
 		//disable default logging
 		java.util.logging.Logger.getLogger(APIService.class.toString()).setLevel(java.util.logging.Level.OFF);
 
@@ -193,7 +200,7 @@ public class PayPalServiceImpl implements PayPalService {
 	}
 
 	@Override
-	public boolean doExpressCheckout(OfferDTO offer, String token, String payerID) {
+	public boolean doExpressCheckout(Offer offer, String token, String payerID) {
 		//disable default logging
 		java.util.logging.Logger.getLogger(APIService.class.toString()).setLevel(java.util.logging.Level.OFF);
 		DoExpressCheckoutPaymentRequestType doCheckoutPaymentRequestType = new DoExpressCheckoutPaymentRequestType();
@@ -269,6 +276,20 @@ public class PayPalServiceImpl implements PayPalService {
 			if (doCheckoutPaymentResponseType.getAck().toString().equalsIgnoreCase("SUCCESS")) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	@Override
+	public void createTransaction(PaypalTransaction transaction) {
+		paypalTransactionDAO.createTransaction(transaction);		
+	}
+
+	@Override
+	public boolean updateTransaction(String transactionToken, TransactionState state) {
+		int updatedRows = paypalTransactionDAO.updateTransaction(transactionToken, state);
+		if(updatedRows > 0) {
+			return true;
 		}
 		return false;
 	}

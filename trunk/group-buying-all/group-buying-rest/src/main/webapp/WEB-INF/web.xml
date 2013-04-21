@@ -39,24 +39,18 @@
 		<filter-name>CharacterEncodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
-	<filter>
-	    <filter-name>oemInViewFilter</filter-name>
-	    <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
-		<init-param>
-            <param-name>singleSession</param-name>
-            <param-value>true</param-value>
-        </init-param>
-	</filter>
-	
-	<filter-mapping>
-	    <filter-name>oemInViewFilter</filter-name>
-	    <url-pattern>/cities/*</url-pattern>
-	</filter-mapping>
-	
+		
 	<servlet>
 		<servlet-name>mvc-dispatcher</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+		    <param-name>contextConfigLocation</param-name>
+			<param-value>
+				classpath:/pl/edu/pw/eiti/groupbuying/core/group-buying-core.xml
+				/WEB-INF/mvc-dispatcher-servlet.xml
+				/WEB-INF/security-oauth2.xml
+			</param-value>		    
+		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
