@@ -31,7 +31,7 @@ public class MySQLPaypalTransactionDAO implements PaypalTransactionDAO {
 	@Override
 	@Transactional
 	public int updateTransaction(String transactionToken, TransactionState state) {
-		Query query = entityManager.createQuery("update PaypalTransaction t set t.state = :state, t.last_updated = :now where t.transactionToken = :transactionToken");
+		Query query = entityManager.createQuery("update PaypalTransaction t set t.state = :state, t.lastUpdated = :now where t.transactionToken = :transactionToken");
 		query.setParameter("transactionToken", transactionToken);
 		query.setParameter("state", state);
 		query.setParameter("now", new Date());
