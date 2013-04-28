@@ -65,11 +65,15 @@ public class PaymentMethodActivity extends AbstractGroupBuyingActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = null;
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
 			break;
 		case R.id.options_menu_offers:
+			intent  = new Intent(this, MainMenuActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

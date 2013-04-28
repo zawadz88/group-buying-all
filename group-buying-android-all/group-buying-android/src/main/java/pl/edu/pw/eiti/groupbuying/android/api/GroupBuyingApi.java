@@ -32,5 +32,7 @@ public interface GroupBuyingApi extends ApiBinding {
 	CityOperations cityOperations();
 	
 	PurchaseOperations purchaseOperations();
+
+	CouponOperations couponOperations();
 	
 }

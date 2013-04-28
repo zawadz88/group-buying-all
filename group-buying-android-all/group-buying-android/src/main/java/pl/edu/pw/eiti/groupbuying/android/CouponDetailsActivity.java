@@ -10,6 +10,7 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android;
 
+import pl.edu.pw.eiti.groupbuying.android.api.Coupon;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -29,10 +30,13 @@ public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 
 	private AQuery aq;
 
+	private Coupon coupon;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_coupon_details);
+		coupon = (Coupon) getIntent().getSerializableExtra("coupon");
 		aq = new AQuery(this);
 
 		Bitmap qrcode = null;
@@ -51,6 +55,8 @@ public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 				finish();			
 			}
 		});
+		aq.id(R.id.couponId).text(getString(R.string.coupon_id_prefix) + coupon.getCouponId());
+		aq.id(R.id.securityCode).text(getString(R.string.security_code_prefix) + coupon.getSecurityKey());
 	}
 
 	@Override
@@ -68,6 +74,7 @@ public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = null;
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
@@ -75,11 +82,14 @@ public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 		case R.id.options_menu_settings:
 			break;
 		case R.id.options_menu_coupons:
-			Intent intent = new Intent(this, MyCouponsIntermediateActivity.class);
+			intent  = new Intent(this, MyCouponsActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			this.startActivity(intent);
 			break;
 		case R.id.options_menu_offers:
+			intent = new Intent(this, MainMenuActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

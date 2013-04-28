@@ -96,17 +96,23 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = null;
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			finish();
+			intent = new Intent(this, MainMenuActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			break;
 		case R.id.options_menu_settings:
 			break;
 		case R.id.options_menu_coupons:
-			Intent intent = new Intent(this, MyCouponsIntermediateActivity.class);
+			intent = new Intent(this, MyCouponsActivity.class);
 			this.startActivity(intent);
 			break;
 		case R.id.options_menu_offers:
+			intent = new Intent(this, MainMenuActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			break;
 		default:
 			if(offer == null) {//do not share if offer is not initialized

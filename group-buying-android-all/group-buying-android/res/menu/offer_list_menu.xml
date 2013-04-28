@@ -21,8 +21,6 @@
                   android:title="Settings" />
             <item android:id="@+id/options_menu_coupons"
                   android:title="My coupons" />
-            <item android:id="@+id/options_menu_refresh"
-                  android:title="Refresh" />
         </menu>    
     </item>
 

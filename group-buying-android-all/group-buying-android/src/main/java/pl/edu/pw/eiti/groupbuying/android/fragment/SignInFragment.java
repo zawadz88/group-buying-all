@@ -184,7 +184,6 @@ public class SignInFragment extends Fragment implements AsyncTaskListener {
 				displayAppAuthorizationError(message);
 			}
 		}
-		signInListener = null;
 	}
 
 	public void showProgressDialog() {

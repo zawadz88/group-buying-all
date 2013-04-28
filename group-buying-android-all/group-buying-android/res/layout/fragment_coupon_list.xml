@@ -14,10 +14,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <FrameLayout
-        android:id="@+id/body_frame"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-    />
+    <ExpandableListView
+        android:id="@+id/offers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+    </ExpandableListView>
 
 </RelativeLayout>

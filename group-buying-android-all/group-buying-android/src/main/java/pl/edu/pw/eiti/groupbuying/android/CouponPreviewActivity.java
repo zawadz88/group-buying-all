@@ -10,7 +10,7 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.android;
 
-import pl.edu.pw.eiti.groupbuying.android.api.Offer;
+import pl.edu.pw.eiti.groupbuying.android.api.Coupon;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -24,7 +24,7 @@ public class CouponPreviewActivity extends AbstractGroupBuyingActivity {
 
 	protected static final String TAG = CouponPreviewActivity.class.getSimpleName();
 
-	private Offer offer;
+	private Coupon coupon;
 
 	private AQuery aq;
 
@@ -33,18 +33,16 @@ public class CouponPreviewActivity extends AbstractGroupBuyingActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_coupon_preview);
 		aq = new AQuery(this);
-		if (getIntent().getSerializableExtra("offer") != null) {
-			offer = (Offer) getIntent().getSerializableExtra("offer");
-		}
-		aq.id(R.id.offerImage).image(offer.getImageUrl());
-		aq.id(R.id.offerTitle).text(offer.getTitle());
-		aq.id(R.id.offerConditions).text(offer.getDescription());
+		coupon = (Coupon) getIntent().getSerializableExtra("coupon");
+		aq.id(R.id.offerImage).image(coupon.getOffer().getImageUrl());
+		aq.id(R.id.offerTitle).text(coupon.getOffer().getTitle());
+		aq.id(R.id.offerConditions).text(coupon.getOffer().getDescription());
 		aq.id(R.id.viewCouponButton).clicked(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(CouponPreviewActivity.this, CouponDetailsActivity.class);
-				intent.putExtra("offer", offer);
+				intent.putExtra("coupon", coupon);
 				startActivity(intent);				
 			}
 		});
@@ -65,6 +63,7 @@ public class CouponPreviewActivity extends AbstractGroupBuyingActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = null;
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
@@ -72,11 +71,14 @@ public class CouponPreviewActivity extends AbstractGroupBuyingActivity {
 		case R.id.options_menu_settings:
 			break;
 		case R.id.options_menu_coupons:
-			Intent intent = new Intent(this, MyCouponsIntermediateActivity.class);
+			intent = new Intent(this, MyCouponsActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			this.startActivity(intent);
 			break;
 		case R.id.options_menu_offers:
+			intent = new Intent(this, MainMenuActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
