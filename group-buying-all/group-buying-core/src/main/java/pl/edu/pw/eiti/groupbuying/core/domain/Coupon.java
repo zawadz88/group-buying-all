@@ -25,6 +25,8 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import pl.edu.pw.eiti.groupbuying.core.dto.CouponDTO;
+
 @Entity
 @Table(name = "coupons")
 public class Coupon implements Serializable {
@@ -110,10 +112,13 @@ public class Coupon implements Serializable {
 	
 	public static enum CouponState {
 		BOUGHT,
-		PAID_FOR,
 		REDEEMED,
 		EXPIRED;
 
+	}
+	
+	public CouponDTO getCouponDTO() {
+		return new CouponDTO(couponId, useDate, securityKey, offer.getOfferDTO(), couponState);
 	}
 
 }

@@ -45,7 +45,7 @@ public class MySQLCouponDAO implements CouponDAO {
 	@Override
 	@Transactional
 	public List<Coupon> getCouponsForClientId(final String email) {
-		TypedQuery<Coupon> query = entityManager.createQuery("select c from Coupon o where c.client.email = :email", Coupon.class);
+		TypedQuery<Coupon> query = entityManager.createQuery("select c from Coupon c where c.client.email = :email", Coupon.class);
 		query.setParameter("email", email);
 		return query.getResultList();
 	}

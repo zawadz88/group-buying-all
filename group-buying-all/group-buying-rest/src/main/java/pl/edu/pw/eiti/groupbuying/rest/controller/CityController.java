@@ -62,7 +62,7 @@ public class CityController {
 			LOG.error("DB error occured in getCityConfig, latitude: " + latitude + ", longitude: " + longitude, e);
 			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
 		} catch (Exception e) {
-			LOG.error("Internal server occured in getCityConfig, latitude: " + latitude + ", longitude: " + longitude, e);
+			LOG.error("Internal server error occured in getCityConfig, latitude: " + latitude + ", longitude: " + longitude, e);
 			throw new InternalServerErrorException("Unknown error", ErrorCode.UNKNOWN_ERROR);
 		}
 		cityConfig.setCities(cities);

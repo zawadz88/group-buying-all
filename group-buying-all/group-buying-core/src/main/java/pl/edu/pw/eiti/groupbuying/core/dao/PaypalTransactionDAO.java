@@ -9,4 +9,6 @@ public interface PaypalTransactionDAO {
 	
 	int updateTransaction(String transactionToken, TransactionState state);
 	
+	PaypalTransaction getTransaction(String transactionToken);
+	
 }

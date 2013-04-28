@@ -128,18 +128,18 @@ CREATE TABLE `paypal_transactions` (
 DROP TABLE IF EXISTS `coupons`;
 
 CREATE TABLE `coupons` (
-  `id` bigint(20) NOT NULL,
-  `email` varchar(64) NOT NULL,
-  `offer_id` bigint(20) NOT NULL,
-  `use_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `security_key` varchar(64) NOT NULL,
-  `coupon_state` tinyint(2) NOT NULL DEFAULT '0',
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(64) NOT NULL,
+  `offer_id` BIGINT(20) NOT NULL,
+  `use_date` TIMESTAMP NULL,
+  `security_key` VARCHAR(64) NOT NULL,
+  `coupon_state` TINYINT(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_client_offers_offers` (`offer_id`),
   KEY `FK_client_offers_clients` (`email`),
   CONSTRAINT `FK_client_offers_clients` FOREIGN KEY (`email`) REFERENCES `clients` (`email`) ON UPDATE CASCADE,
   CONSTRAINT `FK_client_offers_offers` FOREIGN KEY (`offer_id`) REFERENCES `offers` (`offer_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `persistent_logins`;
 
