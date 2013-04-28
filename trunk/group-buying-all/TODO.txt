@@ -7,20 +7,18 @@
 #- wystawianie ofert z netu
 #- wyciąganie dobre ofert z netu
 #- wyciąganie ofert dla danego miasta
-- zakup ofert przez Paypal
-- wyświetlanie zakupionych ofert
-- miejsca w pobliżu przez SOLR, Hibernate Search lub Redis
+#- zakup ofert przez Paypal
+#- wyświetlanie zakupionych ofert
+- opcja logout
+- miejsca w pobliżu przez SOLR lub Hibernate Search
 - notyfikacje
 #- QR code
 - NFC
 - odbieranie kuponów na telefonie
 - odbieranie kuponów - backend
 - panel sprzedawcy wzbogacony o ilość sprzedanych ofert
-- Redis do ofert w ogóle?
 - Async z Servletu 3.0?
 - poprawa walidacji formularzy
 - panel Account do zmiany hasła użytkowników
 - profile Mavenowe
 - Javadoc
-- wrzucenie na Cloud Foundry?
-- haproxy?
