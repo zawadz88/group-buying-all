@@ -38,13 +38,21 @@
          UserDatabaseRealm to authenticate users
     -->
     <Resource auth="Container" description="User database that can be updated and saved" factory="org.apache.catalina.users.MemoryUserDatabaseFactory" name="UserDatabase" pathname="conf/tomcat-users.xml" type="org.apache.catalina.UserDatabase"/>
-    <Resource name="jdbc/groupDB" auth="Container" type="javax.sql.DataSource"
-              username="root" password=""
-              url="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8"
-              driverClassName="com.mysql.jdbc.Driver"
-              initialSize="5" maxWait="5000"
-              maxActive="15" maxIdle="5"
-              poolPreparedStatements="true"/>
+    <Resource 
+        auth="Container" 
+        driverClassName="com.mysql.jdbc.Driver" 
+        initialSize="5" 
+        maxActive="15" 
+        maxIdle="5" 
+        maxWait="5000" 
+        validationQuery="/* ping */ SELECT 1" 
+	    testWhileIdle="true" 
+        poolPreparedStatements="true" 
+        type="javax.sql.DataSource" 
+        name="jdbc/groupDB" 
+        url="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8"
+        username="root"
+        password=""  />
   </GlobalNamingResources>
 
   <!-- A "Service" is a collection of one or more "Connectors" that share
@@ -68,7 +76,7 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL HTTP/1.1 Connector on port 8080
     -->
-    <Connector connectionTimeout="20000" port="20000" protocol="HTTP/1.1" redirectPort="8443"/>
+    <Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443"/>
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"
@@ -131,7 +139,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log." suffix=".txt"/>
 
-      <Context docBase="group-buying-rest" path="/group-buying-rest" reloadable="true" source="org.eclipse.jst.jee.server:group-buying-rest"/><Context docBase="group-buying-web" path="/group-buying-web" reloadable="true" source="org.eclipse.jst.jee.server:group-buying-web"/></Host>
+      <Context docBase="group-buying-rest" path="/group-buying-rest" reloadable="true" source="org.eclipse.jst.jee.server:group-buying-rest"/></Host>
     </Engine>
   </Service>
 </Server>

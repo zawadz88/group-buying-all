@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
@@ -36,6 +37,13 @@ public class MySQLPaypalTransactionDAO implements PaypalTransactionDAO {
 		query.setParameter("state", state);
 		query.setParameter("now", new Date());
 		return query.executeUpdate();
+	}
+
+	@Override
+	public PaypalTransaction getTransaction(String transactionToken) {
+		TypedQuery<PaypalTransaction> query = entityManager.createQuery("select t from PaypalTransaction t where t.transactionToken = :token", PaypalTransaction.class);
+		query.setParameter("token", transactionToken);
+		return query.getSingleResult();
 	}
 
 }

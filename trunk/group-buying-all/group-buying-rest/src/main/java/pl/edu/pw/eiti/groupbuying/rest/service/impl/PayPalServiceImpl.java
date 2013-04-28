@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.PaypalTransactionDAO;
+import pl.edu.pw.eiti.groupbuying.core.domain.Client;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 import pl.edu.pw.eiti.groupbuying.core.domain.PaypalTransaction;
 import pl.edu.pw.eiti.groupbuying.core.domain.PaypalTransaction.TransactionState;
@@ -292,6 +293,16 @@ public class PayPalServiceImpl implements PayPalService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Client getClientFromTransactionToken(String token) {
+		Client client = null;
+		PaypalTransaction transaction = paypalTransactionDAO.getTransaction(token);
+		if(transaction != null) {
+			client = transaction.getClient();
+		}
+		return client;
 	}
 
 }

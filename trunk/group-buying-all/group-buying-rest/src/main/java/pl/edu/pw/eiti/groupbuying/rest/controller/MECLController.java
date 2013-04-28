@@ -6,10 +6,13 @@ import java.util.Date;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,13 +23,18 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Client;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 import pl.edu.pw.eiti.groupbuying.core.domain.PaypalTransaction;
 import pl.edu.pw.eiti.groupbuying.core.domain.PaypalTransaction.TransactionState;
+import pl.edu.pw.eiti.groupbuying.rest.exception.InternalServerErrorException;
+import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 import pl.edu.pw.eiti.groupbuying.rest.service.ClientService;
+import pl.edu.pw.eiti.groupbuying.rest.service.CouponService;
 import pl.edu.pw.eiti.groupbuying.rest.service.OfferService;
 import pl.edu.pw.eiti.groupbuying.rest.service.PayPalService;
 
 @Controller
 @RequestMapping("/paypal/mecl")
 public class MECLController {
+
+	private static final Logger LOG = Logger.getLogger(MECLController.class);
 	
 	@Resource(name = "paypalProperties")
 	private Properties paypalProperties;
@@ -40,29 +48,43 @@ public class MECLController {
 	@Autowired
 	private ClientService clientService;
 	
+	@Autowired
+	private CouponService couponService;
+	
 	@RequestMapping(value = "/checkout/{offerId}")
 	public @ResponseBody String setCheckOut(HttpServletRequest request, @PathVariable int offerId, HttpServletResponse response, @RequestParam("drt") String deviceReferenceToken, Principal principal) throws IOException {
 		//TODO try catche
-		Offer offer = offerService.getOffer(offerId);		
-		if(offer != null) {
-			String token = payPalService.getExpressCheckoutToken(request, offer);
-			if(token != null) {
-				PaypalTransaction transaction = new PaypalTransaction();				
-				Client client = clientService.getClientByEmail(principal.getName());
-				if(client != null) {
-					transaction.setClient(client);
-					transaction.setOffer(offer);
-					transaction.setTransactionToken(token);
-					transaction.setState(TransactionState.STARTED);
-					Date now = new Date();
-					transaction.setCreated(now);
-					transaction.setLastUpdated(now);
-					payPalService.createTransaction(transaction);
-					String redirectURL = String.format(paypalProperties.getProperty("paypal.redirectURL"), deviceReferenceToken, token);
-					return redirectURL;
+		try {
+			Offer offer = offerService.getOffer(offerId);		
+			if(offer != null) {
+				String token = payPalService.getExpressCheckoutToken(request, offer);
+				if(token != null) {
+					PaypalTransaction transaction = new PaypalTransaction();				
+					Client client = clientService.getClientByEmail(principal.getName());
+					if(client != null) {
+						transaction.setClient(client);
+						transaction.setOffer(offer);
+						transaction.setTransactionToken(token);
+						transaction.setState(TransactionState.STARTED);
+						Date now = new Date();
+						transaction.setCreated(now);
+						transaction.setLastUpdated(now);
+						payPalService.createTransaction(transaction);
+						String redirectURL = String.format(paypalProperties.getProperty("paypal.redirectURL"), deviceReferenceToken, token);
+						return redirectURL;
+					}
 				}
-			}
-		}		
+			}	
+		} catch (DataAccessException e) {
+			LOG.error("DB error occured in setCheckOut, offerId: " + offerId + ", deviceReferenceToken: " + deviceReferenceToken, e);
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (PersistenceException e) {
+			LOG.error("DB error occured in setCheckOut, offerId: " + offerId + ", deviceReferenceToken: " + deviceReferenceToken, e);
+			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
+		} catch (Exception e) {
+			LOG.error("Internal server error occured in setCheckOut, offerId: " + offerId + ", deviceReferenceToken: " + deviceReferenceToken, e);
+			throw new InternalServerErrorException("Unknown error", ErrorCode.UNKNOWN_ERROR);
+		}
 		return null;			
 	}
 
@@ -74,10 +96,18 @@ public class MECLController {
 			boolean paymentSucceeded = payPalService.doExpressCheckout(offer, token, payerID);
 			if(paymentSucceeded) {
 				boolean dbUpdated = payPalService.updateTransaction(token, TransactionState.COMPLETED);
+				Client client = payPalService.getClientFromTransactionToken(token);
+				if(client != null) {
+					dbUpdated = dbUpdated && couponService.createCoupon(client, offer);
+				}
 				//TODO create coupon
 				if(dbUpdated) {
 					return "redirect:/paypal/mecl/success";
-				}				
+				} else {
+					LOG.error("Couldn't complete transaction, token: " + token + ", offerId: " + offerId + ", client: " + client);
+				}
+			} else {
+				LOG.error("Error occured during doExpressCheckout, token: " + token + ", offerId: " + offerId);
 			}
 		}			
 		return "redirect:/paypal/mecl/error";	
