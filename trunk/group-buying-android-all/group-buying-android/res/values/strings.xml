@@ -27,7 +27,7 @@
 	<string name="connection_repository_encryption_salt">${connection.repository.encryption.salt}</string>
     <string name="base_url">${base.url}</string> -->
     <!-- <string name="base_url">http://192.168.0.197:8080/group-buying-rest/</string> -->
-    <string name="base_url">http://192.168.0.195:8080/group-buying-rest/</string>
+    <string name="base_url">http://87.207.209.32:8080/group-buying-rest/</string>
     <string name="client_id">tonr</string>
 	<string name="client_secret">secret</string>
 	<string name="connection_repository_encryption_password">password</string>
@@ -73,6 +73,16 @@
     <string name="paypal_merchant_name">Group Buying</string>
     
     <string name="paypal_checkout_url_prefix">https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout-mobile</string>
+    
+    <string name="coupon_id_prefix">"Coupon ID: "</string>
+    
+    <string name="security_code_prefix">"Security code: "</string>
+    
+    <string name="log_in_header">Log in</string>
+    
+    <string name="username_hint">Username</string>
+    
+    <string name="password_hint">Password</string>
     
     
 </resources>

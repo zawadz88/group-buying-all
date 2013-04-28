@@ -92,7 +92,7 @@ public class GroupBuyingApplication extends Application {
 		return getConnectionRepository().findPrimaryConnection(GroupBuyingApi.class);
 	}
 
-	public GroupBuyingApi getAuthorizedGroupBuyingApi() {
+	public synchronized GroupBuyingApi getAuthorizedGroupBuyingApi() {
 		Connection<GroupBuyingApi> connection = getPrimaryConnection();
 		if (connection != null) {
 			return connection.getApi();

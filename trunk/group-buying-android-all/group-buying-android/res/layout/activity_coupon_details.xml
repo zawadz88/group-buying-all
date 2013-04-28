@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:gravity="center"
-                android:text="Coupon: 12345678"
+                android:text="@string/coupon_id_prefix"
                 android:textSize="20sp" />
             
             <ImageView
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/qrCode"
                 android:gravity="center"
-                android:text="Security code: 12345678"
+                android:text="@string/security_code_prefix"
                 android:textSize="18sp" />
 
 

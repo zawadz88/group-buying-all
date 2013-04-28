@@ -16,6 +16,7 @@ import pl.edu.pw.eiti.groupbuying.android.fragment.PayPalPaymentFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.PaymentSummaryFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.SignInFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.util.SignInListener;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -103,11 +104,15 @@ public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity implemen
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent = null;
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			onBackPressed();
 			break;
 		case R.id.options_menu_offers:
+			intent  = new Intent(this, MainMenuActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

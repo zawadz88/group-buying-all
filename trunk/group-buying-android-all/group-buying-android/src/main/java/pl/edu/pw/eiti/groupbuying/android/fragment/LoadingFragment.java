@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import com.androidquery.AQuery;
 
 public class LoadingFragment extends Fragment {
-	
-	private String message;
-	
+		
 	public static LoadingFragment newInstance(String message) {
 		LoadingFragment fragment = new LoadingFragment();
-		fragment.message = message;
+		Bundle args = new Bundle();
+		args.putString("message", message);
+		fragment.setArguments(args);
 		return fragment;
 	}
 	
@@ -23,7 +23,7 @@ public class LoadingFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	    View rootView = inflater.inflate(R.layout.fragment_loading, container, false);
 	    AQuery aq = new AQuery(getActivity(), rootView);
-	    aq.id(R.id.loadingMessage).text(message);
+	    aq.id(R.id.loadingMessage).text(getArguments().getString("message"));
 	    
 	    return rootView;
 	}

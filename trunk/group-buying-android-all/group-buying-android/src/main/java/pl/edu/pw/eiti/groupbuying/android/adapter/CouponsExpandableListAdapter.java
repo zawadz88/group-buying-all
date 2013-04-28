@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.android.R;
-import pl.edu.pw.eiti.groupbuying.android.api.Offer;
+import pl.edu.pw.eiti.groupbuying.android.api.Coupon;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,30 +14,29 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
-public class OffersExpandableListAdapter extends BaseExpandableListAdapter {
+public class CouponsExpandableListAdapter extends BaseExpandableListAdapter {
 
 	private Activity activity;
-	private List<OfferExpandListGroup> groups;
+	private List<CouponExpandListGroup> groups;
 
-	public OffersExpandableListAdapter(Activity activity,
-			List<OfferExpandListGroup> groups) {
+	public CouponsExpandableListAdapter(Activity activity, List<CouponExpandListGroup> groups) {
 		this.activity = activity;
 		this.groups = groups;
 	}
 
-	public void addItem(Offer item, OfferExpandListGroup group) {
+	public void addItem(Coupon item, CouponExpandListGroup group) {
 		if (!groups.contains(group)) {
 			groups.add(group);
 		}
 		int index = groups.indexOf(group);
-		List<Offer> ch = groups.get(index).getItems();
+		List<Coupon> ch = groups.get(index).getItems();
 		ch.add(item);
 		groups.get(index).setItems(ch);
 	}
 	
 	@Override
-	public Offer getChild(int groupPosition, int childPosition) {
-		List<Offer> chList = groups.get(groupPosition).getItems();
+	public Coupon getChild(int groupPosition, int childPosition) {
+		List<Coupon> chList = groups.get(groupPosition).getItems();
 		return chList.get(childPosition);
 	}
 
@@ -49,7 +48,7 @@ public class OffersExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View view, ViewGroup parent) {
-		Offer child = getChild(groupPosition, childPosition);
+		Coupon child = getChild(groupPosition, childPosition);
 		if (view == null) {
 			LayoutInflater infalInflater = (LayoutInflater) activity
 					.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -57,21 +56,21 @@ public class OffersExpandableListAdapter extends BaseExpandableListAdapter {
 		}
 		AQuery aq = new AQuery(activity, view);
 
-		aq.id(R.id.offerImage).image(child.getImageUrl());
-		aq.id(R.id.offerTitle).text(child.getTitle());
+		aq.id(R.id.offerImage).image(child.getOffer().getImageUrl());
+		aq.id(R.id.offerTitle).text(child.getOffer().getTitle());
 		return view;
 	}
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		List<Offer> chList = groups.get(groupPosition).getItems();
+		List<Coupon> chList = groups.get(groupPosition).getItems();
 
 		return chList.size();
 
 	}
 
 	@Override
-	public OfferExpandListGroup getGroup(int groupPosition) {
+	public CouponExpandListGroup getGroup(int groupPosition) {
 		return groups.get(groupPosition);
 	}
 
@@ -88,11 +87,10 @@ public class OffersExpandableListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isLastChild, View view,
 			ViewGroup parent) {
-		OfferExpandListGroup group = getGroup(groupPosition);
+		CouponExpandListGroup group = getGroup(groupPosition);
 		if (view == null) {
-			LayoutInflater inf = (LayoutInflater) activity
-					.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-			 view = inf.inflate(R.layout.coupon_category_row, null);
+			LayoutInflater inf = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+			view = inf.inflate(R.layout.coupon_category_row, null);
 		}
 		TextView categoryTitle = (TextView) view.findViewById(R.id.categoryName);
 		categoryTitle.setText(group.getName());
@@ -109,11 +107,11 @@ public class OffersExpandableListAdapter extends BaseExpandableListAdapter {
 		return true;
 	}
 
-	public static class OfferExpandListGroup {
+	public static class CouponExpandListGroup {
 
 		private String name;
 
-		private List<Offer> items = new ArrayList<Offer>();
+		private List<Coupon> items = new ArrayList<Coupon>();
 
 		public String getName() {
 			return name;
@@ -123,23 +121,23 @@ public class OffersExpandableListAdapter extends BaseExpandableListAdapter {
 			this.name = name;
 		}
 
-		public List<Offer> getItems() {
+		public List<Coupon> getItems() {
 			return items;
 		}
 
-		public void setItems(List<Offer> items) {
+		public void setItems(List<Coupon> items) {
 			this.items = items;
 		}
 		
-		public OfferExpandListGroup(String name) {
+		public CouponExpandListGroup(String name) {
 			super();
 			this.name = name;
 		}
 
 		@Override
 		public boolean equals(Object o) {
-			if(o != null && o instanceof OfferExpandListGroup) {
-				return this.name.equals(((OfferExpandListGroup) o).getName());
+			if(o != null && o instanceof CouponExpandListGroup) {
+				return this.name.equals(((CouponExpandListGroup) o).getName());
 			}
 			return false;
 		}

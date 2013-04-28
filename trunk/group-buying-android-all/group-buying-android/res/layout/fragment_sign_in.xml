@@ -15,24 +15,28 @@
     android:layout_gravity="fill_vertical"
     android:background="#ffffff" >
 
-    <FrameLayout
-        android:id="@+id/header_frameLayout"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/sign_in_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#6DB33F" >
-    </FrameLayout>
+        android:text="@string/log_in_header"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        android:textSize="24sp" >
+    </TextView>
 
     <EditText
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/header_frameLayout"
+        android:layout_below="@id/sign_in_header"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="@string/username_hint"
         android:inputType="textEmailAddress" >
 
         <requestFocus />
@@ -46,6 +50,7 @@
         android:layout_alignRight="@+id/username"
         android:layout_below="@+id/username"
         android:ems="10"
+        android:hint="@string/password_hint"
         android:inputType="textPassword" />
 
     <LinearLayout

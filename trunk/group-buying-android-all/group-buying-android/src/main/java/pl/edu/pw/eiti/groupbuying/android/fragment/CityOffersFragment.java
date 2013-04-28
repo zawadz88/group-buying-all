@@ -220,11 +220,11 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 
 	@Override
 	public void onDeviceOnline() {
+		loading = true;
 		if(offerList.isEmpty()) {
 			setListViewState(ListViewState.LOADING);			
 		} else {
 			loadingMoreItems = true;
-			loading = true;
 			connectionAvailable = true;
 			refreshList(); //needed to show loading view
 		}
@@ -297,6 +297,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 		currentPage = -1;
 		endOfItemsReached = false;
 		loading = true;
+		setListViewState(ListViewState.LOADING);	
 		refreshList();
 		new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, CityOffersFragment.this, application).execute();
 	}
