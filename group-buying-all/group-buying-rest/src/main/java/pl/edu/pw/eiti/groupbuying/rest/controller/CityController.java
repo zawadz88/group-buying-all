@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.CityDAO;
+import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.rest.exception.InternalServerErrorException;
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
@@ -38,10 +39,14 @@ public class CityController {
 	
 	@Autowired
 	private CityService cityService;
-	
+
 	//TODO usunac
 	@Autowired
 	private CityDAO cityDAO;
+	
+	//TODO usunac
+	@Autowired
+	private OfferDAO offerDAO;
 	
 	@RequestMapping(value = "city-config", method = RequestMethod.GET)
 	public @ResponseBody CityConfig getCityConfig(@RequestParam(value="latitude", required = false) final Double latitude, @RequestParam(value="longitude", required = false) final Double longitude) {
@@ -76,6 +81,7 @@ public class CityController {
 		CityDTO city = null;
 		try {
 			cityDAO.indexCities();
+			offerDAO.indexOffers();
 		} catch (DataAccessException e) {
 			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
 		} catch (PersistenceException e) {

@@ -94,6 +94,8 @@ CREATE TABLE `offers` (
   `expiration_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `username` varchar(50) NOT NULL,
   `city_id` varchar(50) DEFAULT NULL,
+  `latitude` double NULL,
+  `longitude` double NULL,
   PRIMARY KEY (`offer_id`),
   KEY `FK_OFFERS_USERS` (`username`),
   CONSTRAINT `FK_OFFERS_USERS` FOREIGN KEY (`username`) REFERENCES `sellers` (`email`) ON DELETE CASCADE ON UPDATE CASCADE

@@ -20,28 +20,32 @@ import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
 public interface OfferDAO {
 	
-	public boolean saveOffer(Offer offer);
+	boolean saveOffer(Offer offer);
 
-	public void updateOffer(Offer offer);
+	void updateOffer(Offer offer);
 		
-	public List<OfferEssentialDTO> getOfferEssentialsByCategoryAndPageNumber(Category category, OfferState state, int pageNumber, int pageSize);
+	List<OfferEssentialDTO> getOfferEssentialsByCategoryAndPageNumber(Category category, OfferState state, int pageNumber, int pageSize);
 
-	public List<Offer> getActiveOffers(String username);
+	List<Offer> getActiveOffers(String username);
 	
-	public List<Offer> getWaitingOffers(String username);
+	List<Offer> getWaitingOffers(String username);
 	
-	public List<Offer> getFinishedOffers(String username);
+	List<Offer> getFinishedOffers(String username);
 	
-	public List<Offer> getActiveOffers();
+	List<Offer> getActiveOffers();
 	
-	public List<Offer> getWaitingOffers();
+	List<Offer> getWaitingOffers();
 	
-	public List<Offer> getFinishedOffers();
+	List<Offer> getFinishedOffers();
 	
-	public Offer getOffer(int offerId);
+	Offer getOffer(int offerId);
 	
-	public String getUsernameForOffer(int offerId);
+	String getUsernameForOffer(int offerId);
 
 	List<OfferEssentialDTO> getOfferEssentialsByCityAndPageNumber(String cityId, OfferState state, int pageNumber, int pageSize);
+
+	int indexOffers();
+
+	List<OfferEssentialDTO> getClosestOffers(double latitude, double longitude, double searchRadius);
 
 }

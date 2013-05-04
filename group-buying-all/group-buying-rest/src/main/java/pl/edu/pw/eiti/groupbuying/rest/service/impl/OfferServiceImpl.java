@@ -47,4 +47,9 @@ public class OfferServiceImpl implements OfferService {
 		return offerDAO.getOffer(offerId);
 	}
 
+	@Override
+	public List<OfferEssentialDTO> getClosestOffers(double latitude, double longitude, int zoom) {
+		return offerDAO.getClosestOffers(latitude, longitude, zoom * 100);
+	}
+
 }

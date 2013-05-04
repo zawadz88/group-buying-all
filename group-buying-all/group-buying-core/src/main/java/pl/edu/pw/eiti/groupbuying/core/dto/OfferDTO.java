@@ -13,6 +13,8 @@ package pl.edu.pw.eiti.groupbuying.core.dto;
 import java.io.Serializable;
 import java.util.Date;
 
+import pl.edu.pw.eiti.groupbuying.core.domain.City;
+
 @SuppressWarnings("serial")
 public class OfferDTO implements Serializable {
 
@@ -45,6 +47,12 @@ public class OfferDTO implements Serializable {
 	private Category category;
 
 	private SellerDTO seller;
+
+	private City city;
+
+	private Double latitude;
+
+	private Double longitude;
 
 	public int getOfferId() {
 		return offerId;
@@ -166,6 +174,30 @@ public class OfferDTO implements Serializable {
 		this.seller = seller;
 	}
 
+	public City getCity() {
+		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
+	}
+
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
 	public OfferDTO() {
 	}
 
@@ -173,7 +205,7 @@ public class OfferDTO implements Serializable {
 			String conditions, AddressDTO address, String imageUrl,
 			double price, double priceBeforeDiscount, Date startDate,
 			Date endDate, Date expirationDate, OfferState state,
-			Category category, SellerDTO seller) {
+			Category category, SellerDTO seller, City city, Double latitude, Double longitude) {
 		super();
 		this.offerId = offerId;
 		this.title = title;
@@ -190,18 +222,15 @@ public class OfferDTO implements Serializable {
 		this.state = state;
 		this.category = category;
 		this.seller = seller;
+		this.city = city;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 
 	@Override
 	public String toString() {
-		return "OfferDTO [offerId=" + offerId + ", title=" + title + ", lead="
-				+ lead + ", description=" + description + ", conditions="
-				+ conditions + ", address=" + address + ", imageUrl="
-				+ imageUrl + ", price=" + price + ", priceBeforeDiscount="
-				+ priceBeforeDiscount + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate
-				+ ", state=" + state + ", category=" + category + ", seller="
-				+ seller + "]";
+		return "OfferDTO [offerId=" + offerId + ", title=" + title + ", lead=" + lead + ", description=" + description + ", conditions=" + conditions + ", address=" + address + ", imageUrl=" + imageUrl + ", price=" + price + ", priceBeforeDiscount=" + priceBeforeDiscount + ", startDate="
+				+ startDate + ", endDate=" + endDate + ", expirationDate=" + expirationDate + ", state=" + state + ", category=" + category + ", seller=" + seller + ", city=" + city + ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}
 
 }

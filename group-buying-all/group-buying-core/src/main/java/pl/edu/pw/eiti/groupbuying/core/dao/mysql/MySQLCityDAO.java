@@ -101,15 +101,18 @@ public class MySQLCityDAO implements CityDAO {
 
 	@Override
 	@Transactional
-	public void indexCities() {
+	public int indexCities() {
+		int counter= 0;
 		TypedQuery<City> query = entityManager.createQuery("from City", City.class);
 		List<City> cities = query.getResultList();
 		FullTextEntityManager fullTextEntityManager = getFullTextEntityManager();
 		for (City city : cities) {
 			fullTextEntityManager.index(city);
+			counter++;
 		}
 		fullTextEntityManager.getSearchFactory().optimize(City.class);
 		fullTextEntityManager.flushToIndexes();
+		return counter;
 	}
 
 }
