@@ -17,4 +17,6 @@ public interface OfferService {
 
 	List<OfferEssentialDTO> getCityOfferEssentials(String cityId, int pageNumber);
 	
+	List<OfferEssentialDTO> getClosestOffers(double latitude, double longitude, int zoom);
+		
 }

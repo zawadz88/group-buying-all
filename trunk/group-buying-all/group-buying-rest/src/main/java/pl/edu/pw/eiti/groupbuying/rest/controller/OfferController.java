@@ -108,9 +108,8 @@ public class OfferController {
 	}
 
 	@RequestMapping(value = "nearby", method = RequestMethod.GET)
-	public @ResponseBody List<OfferEssentialDTO> getNearbyOffers(@RequestParam(value = "latitude") final double latitude, @RequestParam(value = "longitude") final double longitude) {
-		List<OfferEssentialDTO> selectedOffers = offerService.getOfferEssentials(Category.CITY, 0);
-		//TODO przeszukac przestrzennie
+	public @ResponseBody List<OfferEssentialDTO> getNearbyOffers(@RequestParam(value = "latitude") final double latitude, @RequestParam(value = "longitude") final double longitude, @RequestParam(value = "zoom", defaultValue = "1") final int zoom) {
+		List<OfferEssentialDTO> selectedOffers = offerService.getClosestOffers(latitude, longitude, zoom);
 		return selectedOffers;
 	}
 	

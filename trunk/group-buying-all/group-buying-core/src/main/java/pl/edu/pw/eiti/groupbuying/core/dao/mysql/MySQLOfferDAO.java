@@ -10,6 +10,7 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.dao.mysql;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -20,6 +21,14 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.FullTextQuery;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.search.query.dsl.Unit;
+import org.hibernate.search.spatial.impl.DistanceSortField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,8 +36,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
+import pl.edu.pw.eiti.groupbuying.core.domain.City;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 import pl.edu.pw.eiti.groupbuying.core.dto.Category;
+import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferEssentialDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
@@ -43,6 +54,10 @@ public class MySQLOfferDAO implements OfferDAO {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	public FullTextEntityManager getFullTextEntityManager(){
+		return Search.getFullTextEntityManager(entityManager);
+	}
+	
 	@Override
 	@Transactional
 	public boolean saveOffer(final Offer offer) {
@@ -164,5 +179,42 @@ public class MySQLOfferDAO implements OfferDAO {
 		
 		return result;
 	}
+	
+	@Override
+	@Transactional
+	public List<OfferEssentialDTO> getClosestOffers(double latitude, double longitude, double searchRadius) {
+		QueryBuilder builder = getFullTextEntityManager().getSearchFactory().buildQueryBuilder().forEntity(Offer.class).get();
+		Query luceneQuery = builder.spatial().onCoordinates("loc").within(searchRadius, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery();
 
+		FullTextQuery hibQuery = getFullTextEntityManager().createFullTextQuery(luceneQuery, Offer.class);
+		Sort distanceSort = new Sort(new DistanceSortField(latitude, longitude, "loc"));
+		hibQuery.setSort(distanceSort);
+		List<?> results = hibQuery.getResultList();
+		List<OfferEssentialDTO> offers = new ArrayList<OfferEssentialDTO>();
+		if (results != null) {
+			for(Object offer : results) {
+				OfferEssentialDTO offerEssentialDTO = ((Offer) offer).getOfferEssentialDTO();
+				offers.add(offerEssentialDTO);
+			}
+		}
+		return offers;
+	}
+	
+	@Override
+	@Transactional
+	public int indexOffers() {
+		int counter = 0;
+		TypedQuery<Offer> query = entityManager.createQuery("from Offer", Offer.class);
+		List<Offer> offers = query.getResultList();
+		FullTextEntityManager fullTextEntityManager = getFullTextEntityManager();
+		for (Offer offer : offers) {
+			if(offer.getLatitude() != null && offer.getLongitude() != null) {
+				fullTextEntityManager.index(offer);
+				counter++;
+			}
+		}
+		fullTextEntityManager.getSearchFactory().optimize(Offer.class);
+		fullTextEntityManager.flushToIndexes();
+		return counter;
+	}
 }

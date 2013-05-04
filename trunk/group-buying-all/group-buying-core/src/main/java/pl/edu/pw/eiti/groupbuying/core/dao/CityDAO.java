@@ -20,7 +20,7 @@ public interface CityDAO {
 	
 	CityDTO getClosestCity(double latitude, double longitude);
 	
-	void indexCities();
+	int indexCities();
 
 	CityDTO getDefaultCity();
 

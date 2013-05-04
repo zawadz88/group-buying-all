@@ -45,13 +45,9 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 		    <param-name>contextConfigLocation</param-name>
-			<param-value>
-				classpath:/pl/edu/pw/eiti/groupbuying/core/group-buying-core.xml
-				/WEB-INF/mvc-dispatcher-servlet.xml
-				/WEB-INF/security-oauth2.xml
-			</param-value>		    
+			<param-value></param-value>		    
 		</init-param>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>mvc-dispatcher</servlet-name>
