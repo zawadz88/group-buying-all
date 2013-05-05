@@ -4,6 +4,6 @@ import pl.edu.pw.eiti.groupbuying.android.task.AbstractGroupBuyingTask;
 
 public interface AsyncTaskListener {
 
-	void onTaskFinished(AbstractGroupBuyingTask<?> task, TaskResult result);
+	void onTaskFinished(final AbstractGroupBuyingTask<?> task, final TaskResult result);
 	
 }

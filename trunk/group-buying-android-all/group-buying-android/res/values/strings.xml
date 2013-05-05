@@ -86,5 +86,11 @@
     
     <string name="password_hint">Password</string>
     
+    <string name="no_location_message">Your network location service is disabled. Please enable it to fetch nearby offers.</string>
+    
+    <string name="enable">Enable</string>
+    
+    <string name="do_nothing">Do nothing</string>
+    
     
 </resources>

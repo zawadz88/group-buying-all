@@ -31,6 +31,10 @@ public class OfferEssential implements Serializable {
 	private Date endDate;
 	
 	private Category category;
+	
+	private Double latitude;
+	
+	private Double longitude;	
 
 	public int getOfferId() {
 		return offerId;
@@ -99,9 +103,25 @@ public class OfferEssential implements Serializable {
 	public OfferEssential() {
 	}
 	
+	public Double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
 	public OfferEssential(int offerId, String title, String imageUrl,
 			double price, double priceBeforeDiscount, Date startDate,
-			Date endDate, Category category) {
+			Date endDate, Category category, Double latitude, Double longitude) {
 		super();
 		this.offerId = offerId;
 		this.title = title;
@@ -111,6 +131,8 @@ public class OfferEssential implements Serializable {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.category = category;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}	
 
 }
