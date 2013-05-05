@@ -107,8 +107,8 @@ public class OfferController {
 		return selectedOffers;
 	}
 
-	@RequestMapping(value = "nearby", method = RequestMethod.GET)
-	public @ResponseBody List<OfferEssentialDTO> getNearbyOffers(@RequestParam(value = "latitude") final double latitude, @RequestParam(value = "longitude") final double longitude, @RequestParam(value = "zoom", defaultValue = "1") final int zoom) {
+	@RequestMapping(value = "nearby/{latitude}/{longitude}", method = RequestMethod.GET)
+	public @ResponseBody List<OfferEssentialDTO> getNearbyOffers(@PathVariable(value = "latitude") final double latitude, @PathVariable(value = "longitude") final double longitude, @RequestParam(value = "zoom", defaultValue = "1") final int zoom) {
 		List<OfferEssentialDTO> selectedOffers = offerService.getClosestOffers(latitude, longitude, zoom);
 		return selectedOffers;
 	}

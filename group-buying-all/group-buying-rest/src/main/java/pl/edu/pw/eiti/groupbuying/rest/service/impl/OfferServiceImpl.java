@@ -16,6 +16,8 @@ import pl.edu.pw.eiti.groupbuying.rest.service.OfferService;
 @Service("offerService")
 public class OfferServiceImpl implements OfferService {
 
+	private static final int SEARCH_RADIUS_MULTIPLIER = 50;
+
 	private static final int DEFAULT_PAGE_SIZE = 10;
 	
 	@Autowired
@@ -49,7 +51,7 @@ public class OfferServiceImpl implements OfferService {
 
 	@Override
 	public List<OfferEssentialDTO> getClosestOffers(double latitude, double longitude, int zoom) {
-		return offerDAO.getClosestOffers(latitude, longitude, zoom * 100);
+		return offerDAO.getClosestOffers(latitude, longitude, zoom * SEARCH_RADIUS_MULTIPLIER);
 	}
 
 }
