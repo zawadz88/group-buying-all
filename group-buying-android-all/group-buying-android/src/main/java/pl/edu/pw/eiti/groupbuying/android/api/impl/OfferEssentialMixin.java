@@ -36,8 +36,10 @@ abstract class OfferEssentialMixin {
 			@JsonProperty("title") String title, 
 			@JsonProperty("imageUrl") String imageUrl, 
 			@JsonProperty("price") double price, 
-			@JsonProperty("priceBeforeDiscount") double priceBeforeDiscount/*, 
+			@JsonProperty("priceBeforeDiscount") double priceBeforeDiscount,
 			@JsonProperty("startDate") Date startDate, 
 			@JsonProperty("endDate") Date endDate, 
-			@JsonProperty("category") Category category*/) {}
+			@JsonProperty("category") Category category, 
+			@JsonProperty("latitude") Double latitude, 
+			@JsonProperty("longitude") Double longitude) {}
 }

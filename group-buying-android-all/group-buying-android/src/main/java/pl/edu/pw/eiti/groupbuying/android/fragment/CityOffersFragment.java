@@ -167,55 +167,62 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 	}
 	
 	@Override
-	public void onTaskFinished(AbstractGroupBuyingTask<?> task,	TaskResult result) {
+	public void onTaskFinished(final AbstractGroupBuyingTask<?> task,	final TaskResult result) {
 		loadingMoreItems = false;
 		loading = false;
 		listView.onRefreshComplete();
-		if(result.equals(TaskResult.SUCCESSFUL)) {
-			connectionAvailable = true;
-			List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
-			if(downloadedOffers == null || downloadedOffers.isEmpty()) {
-				endOfItemsReached = true;
-				if(offerList.isEmpty()) {
-					setListViewState(ListViewState.EMPTY);					
-				} else {
-					setListViewState(ListViewState.CONTENT);
-					refreshList();
-				}
-			} else {
-		        currentPage++;
-				if(downloadedOffers.size() < Constants.OFFERS_PAGE_SIZE) { //do not download more offers, none will be available anyways
-					endOfItemsReached = true;
-				}
-				if(offerList.isEmpty()) {
-					offerList.addAll(downloadedOffers);
-					if(getActivity() != null) {
-						setListAdapter(new OfferEssentialListAdapter(this, 0, offerList));
-					}			
-					listView.setOnScrollListener(this);	
-				} else {
-					offerList.addAll(downloadedOffers);
-					refreshList();
-				}
-				setListViewState(ListViewState.CONTENT);
-			}
-		} else if(result.equals(TaskResult.FAILED)) {
+		mainActivity.runOnUiThread(new Runnable() {
 			
-			Exception exception = task.getException();
-			if(exception != null) {
-				if(offerList.isEmpty()) {
-					if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
-						setListViewState(ListViewState.NO_INTERNET, networkErrorTitle, networkErrorMessage);
+			@Override
+			public void run() {
+				if(result.equals(TaskResult.SUCCESSFUL)) {
+					connectionAvailable = true;
+					List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
+					if(downloadedOffers == null || downloadedOffers.isEmpty()) {
+						endOfItemsReached = true;
+						if(offerList.isEmpty()) {
+							setListViewState(ListViewState.EMPTY);					
+						} else {
+							setListViewState(ListViewState.CONTENT);
+							refreshList();
+						}
 					} else {
-						setListViewState(ListViewState.NO_INTERNET, connectionErrorTitle, connectionErrorMessage);
+				        currentPage++;
+						if(downloadedOffers.size() < Constants.OFFERS_PAGE_SIZE) { //do not download more offers, none will be available anyways
+							endOfItemsReached = true;
+						}
+						if(offerList.isEmpty()) {
+							offerList.addAll(downloadedOffers);
+							if(getActivity() != null) {
+								setListAdapter(new OfferEssentialListAdapter(CityOffersFragment.this, 0, offerList));
+							}			
+							listView.setOnScrollListener(CityOffersFragment.this);	
+						} else {
+							offerList.addAll(downloadedOffers);
+							refreshList();
+						}
+						setListViewState(ListViewState.CONTENT);
 					}
-				} else {
-					setListViewState(ListViewState.CONTENT);
-					connectionAvailable = false;
-					refreshList();
-				}
+				} else if(result.equals(TaskResult.FAILED)) {
+					
+					Exception exception = task.getException();
+					if(exception != null) {
+						if(offerList.isEmpty()) {
+							if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
+								setListViewState(ListViewState.NO_INTERNET, networkErrorTitle, networkErrorMessage);
+							} else {
+								setListViewState(ListViewState.NO_INTERNET, connectionErrorTitle, connectionErrorMessage);
+							}
+						} else {
+							setListViewState(ListViewState.CONTENT);
+							connectionAvailable = false;
+							refreshList();
+						}
+					}
+				}				
 			}
-		}
+		});
+		
 	}
 
 	@Override
