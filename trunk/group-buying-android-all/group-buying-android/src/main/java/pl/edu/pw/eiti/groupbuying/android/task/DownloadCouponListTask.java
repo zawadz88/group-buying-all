@@ -8,7 +8,7 @@ import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
 
 public class DownloadCouponListTask extends AbstractGroupBuyingTask<Void> {
 	
-	private List<Coupon> couponList;
+	private Coupon [] couponList;
 	private GroupBuyingApplication application;
 	
 	public DownloadCouponListTask(AsyncTaskListener listener, GroupBuyingApplication application) {
@@ -28,7 +28,7 @@ public class DownloadCouponListTask extends AbstractGroupBuyingTask<Void> {
 		couponList = application.getAuthorizedGroupBuyingApi().couponOperations().getCoupons();
 	}
 	
-	public List<Coupon> getCouponList() {
+	public Coupon [] getCouponList() {
 		return couponList;
 	}
 }

@@ -20,6 +20,8 @@
                   android:title="Settings" />
             <item android:id="@+id/options_menu_offers"
                   android:title="Offers" />
+            <item android:id="@+id/options_menu_logout"
+                  android:title="Log out" />
         </menu>    
     </item>
 

@@ -4,4 +4,5 @@ public interface SignInListener {
 	
 	void onSignInSuccessful();
 	
+	void onSignInCancelled();
 }

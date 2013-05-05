@@ -155,9 +155,6 @@ public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity implemen
 			transaction.addToBackStack(null);
 		}
 		transaction.commit();
-		if(fragmentNo == SIGN_IN) {
-			((SignInFragment)fragments[SIGN_IN]).setSignInListener(this);
-		}
 	}
 	
     private String getBundleKey(int index) {
@@ -173,6 +170,13 @@ public class ConfirmPaymentActivity extends AbstractGroupBuyingActivity implemen
 		FragmentManager manager = getSupportFragmentManager();
 		manager.popBackStackImmediate();
 		showFragment(PAYPAL_PAYMENT, true);
+	}
+	
+	@Override
+	public void onSignInCancelled() {
+		FragmentManager manager = getSupportFragmentManager();
+		manager.popBackStackImmediate();
+		showFragment(SUMMARY, false);
 	}
 		
 }

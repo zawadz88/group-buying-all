@@ -92,19 +92,23 @@ public class GroupBuyingApplication extends Application {
 		return getConnectionRepository().findPrimaryConnection(GroupBuyingApi.class);
 	}
 
-	public synchronized GroupBuyingApi getAuthorizedGroupBuyingApi() {
-		Connection<GroupBuyingApi> connection = getPrimaryConnection();
-		if (connection != null) {
-			return connection.getApi();
-		}
-		return null;
+	public GroupBuyingApi getAuthorizedGroupBuyingApi() {
+		synchronized (GroupBuyingApi.class) {
+			Connection<GroupBuyingApi> connection = getPrimaryConnection();
+			if (connection != null) {
+				return connection.getApi();
+			}
+			return null;
+		}		
 	}
 	
-	public synchronized GroupBuyingApi getUnauthorizedGroupBuyingApi() {
-		if(unauthorizedGroupBuyingApi == null) {
-			unauthorizedGroupBuyingApi = new GroupBuyingTemplate(getApiUrlBase());
+	public GroupBuyingApi getUnauthorizedGroupBuyingApi() {
+		synchronized (GroupBuyingApi.class) {
+			if(unauthorizedGroupBuyingApi == null) {
+				unauthorizedGroupBuyingApi = new GroupBuyingTemplate(getApiUrlBase());
+			}
+			return unauthorizedGroupBuyingApi;
 		}
-		return unauthorizedGroupBuyingApi;
 	}
 
 	public City getSelectedCity() {

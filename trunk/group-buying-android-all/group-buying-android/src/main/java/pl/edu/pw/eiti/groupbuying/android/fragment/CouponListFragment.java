@@ -21,10 +21,10 @@ import com.androidquery.AQuery;
 
 public class CouponListFragment extends Fragment implements OnChildClickListener {
 	
-	private List<Coupon> coupons;
+	private Coupon [] coupons;
 	private ExpandableListView couponExpandableListView;
 	
-	public static CouponListFragment newInstance(List<Coupon> coupons) {
+	public static CouponListFragment newInstance(Coupon [] coupons) {
 		CouponListFragment fragment = new CouponListFragment();
 		fragment.coupons = coupons;
 		return fragment;
@@ -81,7 +81,7 @@ public class CouponListFragment extends Fragment implements OnChildClickListener
 
 	@Override
 	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-		Coupon selectedCoupon = coupons.get(childPosition);
+		Coupon selectedCoupon = coupons[childPosition];
 		Intent intent = new Intent(getActivity(), CouponPreviewActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra("coupon", selectedCoupon);

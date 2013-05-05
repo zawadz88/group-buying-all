@@ -29,7 +29,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +56,17 @@ public class SignInFragment extends Fragment implements AsyncTaskListener {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		this.application = (GroupBuyingApplication) activity.getApplicationContext();
+		try {
+			signInListener = (SignInListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement SignInListener");
+        }
+	}
+	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		signInListener = null;
 	}
 
 	@Override
@@ -74,8 +84,7 @@ public class SignInFragment extends Fragment implements AsyncTaskListener {
 		aq.id(R.id.cancel_button).clicked(new OnClickListener() {
 			@Override
 			public void onClick(final View view) {
-				FragmentManager manager = getActivity().getSupportFragmentManager();
-				manager.popBackStack();
+				signInListener.onSignInCancelled();
 			}
 		});
 
@@ -103,10 +112,6 @@ public class SignInFragment extends Fragment implements AsyncTaskListener {
 			}
 		});
 		return rootView;
-	}
-
-	public void setSignInListener(SignInListener signInListener) {
-		this.signInListener = signInListener;
 	}
 
 	private boolean validateFormData() {
