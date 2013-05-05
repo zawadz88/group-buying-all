@@ -3,6 +3,7 @@ package pl.edu.pw.eiti.groupbuying.android.fragment;
 import pl.edu.pw.eiti.groupbuying.android.R;
 import pl.edu.pw.eiti.groupbuying.android.fragment.util.NoInternetListener;
 import pl.edu.pw.eiti.groupbuying.android.util.NetUtils;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,10 +15,25 @@ public class NoInternetFragment extends Fragment {
 	
 	private NoInternetListener listener;
 	
-	public static NoInternetFragment newInstance(NoInternetListener listener) {
+	public static NoInternetFragment newInstance() {
 		NoInternetFragment fragment = new NoInternetFragment();
-		fragment.listener = listener;
 		return fragment;
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			listener = (NoInternetListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement NoInternetListener");
+        }
+	}
+	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		listener = null;
 	}
 	
 	@Override
@@ -33,14 +49,6 @@ public class NoInternetFragment extends Fragment {
 			}
 		});
 	    return view;
-	}
-
-	public NoInternetListener getListener() {
-		return listener;
-	}
-
-	public void setListener(NoInternetListener listener) {
-		this.listener = listener;
 	}
 		
 }

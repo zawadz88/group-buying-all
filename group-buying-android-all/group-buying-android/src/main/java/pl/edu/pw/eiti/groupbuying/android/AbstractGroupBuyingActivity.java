@@ -3,6 +3,7 @@ package pl.edu.pw.eiti.groupbuying.android;
 import java.util.ArrayList;
 
 import pl.edu.pw.eiti.groupbuying.android.api.City;
+import pl.edu.pw.eiti.groupbuying.android.api.GroupBuyingApi;
 import pl.edu.pw.eiti.groupbuying.android.fragment.CityOffersFragment;
 import android.os.Bundle;
 
@@ -24,13 +25,25 @@ public abstract class AbstractGroupBuyingActivity extends SherlockFragmentActivi
     
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putSerializable(CityOffersFragment.CITY_TAG, getApplicationContext().getSelectedCity());
         outState.putSerializable(CityOffersFragment.CITIES_TAG, getApplicationContext().getCities());
+        super.onSaveInstanceState(outState);
     }
     
+    @Override
 	public GroupBuyingApplication getApplicationContext() {
 		return (GroupBuyingApplication) super.getApplicationContext();
 	}
-
+	
+	protected void signOut() {
+		synchronized (GroupBuyingApi.class) {
+			getApplicationContext().getConnectionRepository().removeConnections(getApplicationContext().getConnectionFactory().getProviderId());
+		}
+    }
+	
+    protected boolean isConnected() {
+    	synchronized (GroupBuyingApi.class) {
+    		return getApplicationContext().getConnectionRepository().findPrimaryConnection(GroupBuyingApi.class) != null;
+    	}
+	}
 }

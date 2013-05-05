@@ -197,9 +197,6 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
         }
         if (fragment != null) {
             fragments[fragmentIndex] = fragment;
-            if(fragmentIndex == NO_INTERNET) {
-            	((NoInternetFragment)fragment).setListener(this);
-            }
             restoredFragment = true;
         } else {
             switch (fragmentIndex) {
@@ -209,7 +206,7 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
                 	}
                     break;
                 case NO_INTERNET:
-                    fragments[NO_INTERNET] = NoInternetFragment.newInstance(this);
+                    fragments[NO_INTERNET] = NoInternetFragment.newInstance();
                     break;
                 case LOADING:
                     fragments[LOADING] = LoadingFragment.newInstance(getString(R.string.loading_offer_message));

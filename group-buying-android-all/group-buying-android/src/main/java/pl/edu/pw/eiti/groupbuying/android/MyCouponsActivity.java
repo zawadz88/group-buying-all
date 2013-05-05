@@ -1,14 +1,11 @@
 package pl.edu.pw.eiti.groupbuying.android;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.social.ExpiredAuthorizationException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 
 import pl.edu.pw.eiti.groupbuying.android.api.Coupon;
-import pl.edu.pw.eiti.groupbuying.android.api.GroupBuyingApi;
 import pl.edu.pw.eiti.groupbuying.android.fragment.CouponListFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.LoadingFragment;
 import pl.edu.pw.eiti.groupbuying.android.fragment.NoInternetFragment;
@@ -31,10 +28,12 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 public class MyCouponsActivity extends AbstractGroupBuyingActivity implements SignInListener, AsyncTaskListener, NoInternetListener{
+	private static final String COUPONS_TAG = "coupons";
+
 	protected static final String TAG = MyCouponsActivity.class.getSimpleName();
 	
 	private static final int LOADING = 0;
-    private static final int COUPON = 1;
+    private static final int COUPONS = 1;
     private static final int SIGN_IN = 2;
     private static final int NO_INTERNET = 3;
     private static final int FRAGMENT_COUNT = NO_INTERNET + 1;
@@ -42,12 +41,16 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity implements Si
     private Fragment[] fragments = new Fragment[FRAGMENT_COUNT];
     private boolean restoredFragment = false;
 		
-	private List<Coupon> coupons;
+	private Coupon [] coupons;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_coupons);
+		
+		if(savedInstanceState != null && savedInstanceState.containsKey(COUPONS_TAG)) {
+			coupons = (Coupon[]) savedInstanceState.getSerializable(COUPONS_TAG);
+		}
 		
 		for(int i = 0; i < fragments.length; i++) {
             restoreFragment(savedInstanceState, i);
@@ -71,7 +74,7 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity implements Si
             return;
         }
         if(coupons != null) {
-        	showFragment(COUPON);	
+        	showFragment(COUPONS);	
         } else {        	
             if(NetUtils.isOnline(this)) {
             	if(isConnected()) {
@@ -84,19 +87,20 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity implements Si
             }
         }    
     }	
-	
+		
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
 		FragmentManager manager = getSupportFragmentManager();
 		// Since we're only adding one Fragment at a time, we can only save one.
-		Fragment f = manager.findFragmentById(R.id.fragment_content);
+		Fragment f = manager.findFragmentById(R.id.body_frame);
 		for (int i = 0; i < fragments.length; i++) {
 			if (fragments[i] == f) {
 				manager.putFragment(outState, getBundleKey(i), fragments[i]);
 				break;
 			}
 		}
+        outState.putSerializable(COUPONS_TAG, coupons);
+		super.onSaveInstanceState(outState);
 	}
 	
 	@Override
@@ -123,6 +127,11 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity implements Si
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
+		case R.id.options_menu_logout:
+			signOut();
+			coupons = null;
+			showFragment(SIGN_IN);
+			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -137,22 +146,19 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity implements Si
         }
         if (fragment != null) {
             fragments[fragmentIndex] = fragment;
-            if(fragmentIndex == NO_INTERNET) {
-            	((NoInternetFragment)fragment).setListener(this);
-            }
             restoredFragment = true;
         } else {
             switch (fragmentIndex) {
-                case COUPON:
+                case COUPONS:
                 	if(coupons != null) {
-            			fragments[COUPON] = CouponListFragment.newInstance(coupons);             		
+            			fragments[COUPONS] = CouponListFragment.newInstance(coupons);             		
                 	}
                     break;
                 case NO_INTERNET:
-                    fragments[NO_INTERNET] = NoInternetFragment.newInstance(this);
+                    fragments[NO_INTERNET] = NoInternetFragment.newInstance();
                     break;
                 case LOADING:
-                    fragments[LOADING] = LoadingFragment.newInstance(getString(R.string.loading_offer_message));
+                    fragments[LOADING] = LoadingFragment.newInstance(getString(R.string.loading_coupons_message));
                     break;
                 case SIGN_IN:
                     fragments[SIGN_IN] = SignInFragment.newInstance();
@@ -165,31 +171,36 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity implements Si
 	}
 	
 	public void showFragment(int fragmentNo) {
-		if(fragmentNo == COUPON && fragments[COUPON] == null) {
-			fragments[COUPON] = CouponListFragment.newInstance(coupons);
+		if(fragmentNo == COUPONS && fragments[COUPONS] == null) {
+			fragments[COUPONS] = CouponListFragment.newInstance(coupons);
 		}
 		FragmentManager manager = getSupportFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
 		transaction.replace(R.id.body_frame, fragments[fragmentNo]).commit();
-		if(fragmentNo == SIGN_IN) {
-			((SignInFragment)fragments[SIGN_IN]).setSignInListener(this);
-		}
 	}
 	
     private String getBundleKey(int index) {
         return FRAGMENT_PREFIX + Integer.toString(index);
     }
-    
-    public boolean isConnected() {
-		return getApplicationContext().getConnectionRepository().findPrimaryConnection(GroupBuyingApi.class) != null;
-	}
 
 	@Override
 	public void onSignInSuccessful() {
-		showFragment(LOADING);
-		new DownloadCouponListTask( this, getApplicationContext()).execute();	
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				showFragment(LOADING);
+				new DownloadCouponListTask(MyCouponsActivity.this, getApplicationContext()).execute();
+			}
+		});
+			
 	}
 
+	@Override
+	public void onSignInCancelled() {
+		finish();
+	}
+	
 	@Override
 	public void onDeviceOnline() {
 		if(isConnected()) {
@@ -205,33 +216,41 @@ public class MyCouponsActivity extends AbstractGroupBuyingActivity implements Si
 	}
 
 	@Override
-	public void onTaskFinished(AbstractGroupBuyingTask<?> task, TaskResult result) {
-		if(result.equals(TaskResult.SUCCESSFUL)) {
-			List<Coupon> downloadedCoupons = ((DownloadCouponListTask) task).getCouponList();
-			if(downloadedCoupons == null) {
-				//TODO show error stub?
-			} else {
-				coupons = downloadedCoupons;
-			    showFragment(COUPON);
-			}
-		} else if(result.equals(TaskResult.FAILED)) {
-			Exception e = task.getException();
-			if (e instanceof ResourceAccessException) {
-				showFragment(NO_INTERNET);
-			} else if (e instanceof HttpClientErrorException) {
-				HttpClientErrorException httpError = (HttpClientErrorException) e;
-				if (httpError.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-					getApplicationContext().getConnectionRepository().removeConnections(getApplicationContext().getConnectionFactory().getProviderId());
-					showFragment(ConfirmPaymentActivity.SIGN_IN);
-				}
-			} else if(e instanceof ExpiredAuthorizationException) {
-				getApplicationContext().getConnectionRepository().removeConnections(getApplicationContext().getConnectionFactory().getProviderId());
-				showFragment(ConfirmPaymentActivity.SIGN_IN);					
-			} else {
-				showFragment(NO_INTERNET);
-			}
+	public void onTaskFinished(final AbstractGroupBuyingTask<?> task, final TaskResult result) {
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				if(result.equals(TaskResult.SUCCESSFUL)) {
+					Coupon [] downloadedCoupons = ((DownloadCouponListTask) task).getCouponList();
+					if(downloadedCoupons == null) {
+						//TODO show error stub?
+					} else {
+						coupons = downloadedCoupons;
+					    showFragment(COUPONS);
+					}
+				} else if(result.equals(TaskResult.FAILED)) {
+					Exception e = task.getException();
+					if (e instanceof ResourceAccessException) {
+						showFragment(NO_INTERNET);
+					} else if (e instanceof HttpClientErrorException) {
+						HttpClientErrorException httpError = (HttpClientErrorException) e;
+						if (httpError.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+							getApplicationContext().getConnectionRepository().removeConnections(getApplicationContext().getConnectionFactory().getProviderId());
+							showFragment(ConfirmPaymentActivity.SIGN_IN);
+						}
+					} else if(e instanceof ExpiredAuthorizationException) {
+						getApplicationContext().getConnectionRepository().removeConnections(getApplicationContext().getConnectionFactory().getProviderId());
+						showFragment(ConfirmPaymentActivity.SIGN_IN);					
+					} else {
+						showFragment(NO_INTERNET);
+					}
 
-		}
+				}				
+			}
+		});
+		
 		
 	}
+
 }

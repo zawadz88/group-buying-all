@@ -80,6 +80,12 @@ public class CouponPreviewActivity extends AbstractGroupBuyingActivity {
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
 			break;
+		case R.id.options_menu_logout:
+			signOut();
+			intent = new Intent(this, MyCouponsActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			this.startActivity(intent);
+			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

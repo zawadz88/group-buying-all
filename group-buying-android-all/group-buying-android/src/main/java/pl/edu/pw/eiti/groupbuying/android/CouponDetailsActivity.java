@@ -82,7 +82,7 @@ public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 		case R.id.options_menu_settings:
 			break;
 		case R.id.options_menu_coupons:
-			intent  = new Intent(this, MyCouponsActivity.class);
+			intent = new Intent(this, MyCouponsActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			this.startActivity(intent);
 			break;
@@ -90,6 +90,12 @@ public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 			intent = new Intent(this, MainMenuActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
+			break;
+		case R.id.options_menu_logout:
+			signOut();
+			intent = new Intent(this, MyCouponsActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			this.startActivity(intent);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

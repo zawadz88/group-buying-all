@@ -1,7 +1,6 @@
 package pl.edu.pw.eiti.groupbuying.android.api.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.http.HttpEntity;
@@ -24,7 +23,7 @@ public class CouponTemplate extends AbstractGroupBuyingOperations implements Cou
 	}
 
 	@Override
-	public List<Coupon> getCoupons() {
+	public Coupon[] getCoupons() {
 		// Set the Accept header for "application/json"
 		HttpHeaders requestHeaders = new HttpHeaders();
 		List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
@@ -36,9 +35,9 @@ public class CouponTemplate extends AbstractGroupBuyingOperations implements Cou
 		ResponseEntity<Coupon[]> responseEntity = restTemplate.exchange(buildUri("account/coupon/coupons"), HttpMethod.GET, requestEntity, Coupon[].class);
 		Coupon[] offers = responseEntity.getBody();
 		if (offers != null) {
-			return Arrays.asList(offers);
+			return offers;
 		} else {
-			return new ArrayList<Coupon>();
+			return new Coupon[0];
 		}
 	}
 
