@@ -9,8 +9,8 @@
 #- wyciąganie ofert dla danego miasta
 #- zakup ofert przez Paypal
 #- wyświetlanie zakupionych ofert
-- opcja logout
-- miejsca w pobliżu przez SOLR lub Hibernate Search
+#- opcja logout
+#- miejsca w pobliżu przez SOLR lub Hibernate Search
 - notyfikacje
 #- QR code
 - NFC
