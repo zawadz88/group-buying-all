@@ -39,7 +39,12 @@ import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -68,13 +73,13 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 	private boolean locationDetermined = false;
 	private Map<Marker, OfferEssential> markers = new HashMap<Marker, OfferEssential>();
 	private List<OfferEssential> offerList = new ArrayList<OfferEssential>();
-	private String networkErrorTitle;
-	private String networkErrorMessage;
-	private String connectionErrorTitle;
-	private String connectionErrorMessage;
 	private GroupBuyingApplication application;
 	private View mapFragmentLayout;
 	private MapHoldingRelativeLayout mapLayout;
+	private RelativeLayout infoTopLayout;
+	private ProgressBar infoProgressBar;
+	private TextView infoMessage;
+	private Button infoActionButton;
 
 	public static NearbyOffersFragment newInstance(String content) {
 		NearbyOffersFragment fragment = new NearbyOffersFragment();
@@ -96,67 +101,43 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		final View rootView = inflater.inflate(R.layout.fragment_nearby_offers, container, false);
 		mapFragmentLayout = super.onCreateView(inflater, container, savedInstanceState);
 		mapLayout = (MapHoldingRelativeLayout) rootView.findViewById(R.id.mapLayout);
+		infoTopLayout = (RelativeLayout) rootView.findViewById(R.id.infoTopLayout);
+		infoProgressBar = (ProgressBar) rootView.findViewById(R.id.infoProgressBar);
+		infoMessage = (TextView) rootView.findViewById(R.id.infoMessage);
+		infoActionButton = (Button) rootView.findViewById(R.id.infoActionButton);
 		mapLayout.addView(mapFragmentLayout);
+		infoTopLayout.setVisibility(View.GONE);
 		return rootView;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		networkErrorTitle = getString(R.string.network_error_title);
-		networkErrorMessage = getString(R.string.network_error_message);
-		connectionErrorTitle = getString(R.string.connection_error_title);
-		connectionErrorMessage = getString(R.string.connection_error_message);
 		// Acquire a reference to the system Location Manager
 		locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
 		if (currentBestLocation == null) {
 			currentBestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		}
-
-		if (currentBestLocation == null)
-			System.out.println("\nLocation[unknown]\n\n");
-		else
-			System.out.println("\n\n" + currentBestLocation.toString());
 		if (!locationDetermined) {
-						
+			infoTopLayout.setVisibility(View.VISIBLE);
+			infoActionButton.setVisibility(View.GONE);
+			infoMessage.setText(R.string.getting_location_text);
 			Handler handler = new Handler();
-			handler.postDelayed(new Runnable() {
-
-				@Override
-				public void run() {
-					System.out.println("handler.postDelayed");
-					locationDetermined = true;
-					locationManager.removeUpdates(NearbyOffersFragment.this);
-					if (currentBestLocation != null) {
-						new DownloadOfferListTask("nearby/" + currentBestLocation.getLatitude() + "/" + currentBestLocation.getLongitude(), 1, NearbyOffersFragment.this, application).execute();
-					} else {
-						// TODO display message 'Couldn't get your location'
-					}
-				}
-			}, DETERMINE_LOCATION_PERIOD);
-
+			handler.postDelayed(determineLocationRunnable, DETERMINE_LOCATION_PERIOD);
 		}
 	}
-
+	
 	@Override
 	public void onResume() {
 		super.onResume();
 		setUpMapIfNeeded();
 
 		if (!locationDetermined) {
-			System.out.println("locationManager.requestLocationUpdates");
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TIME_CHANGE_THRESHOLD, DISTANCE_CHANGE_THRESHOLD, this);
-		}
-		if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-			Toast.makeText(getActivity(), "No provider", Toast.LENGTH_SHORT).show();
-			//TODO display message 'Enable location services'
-			/*Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-			startActivity(gpsOptionsIntent);*/
 		}
 
 	}
@@ -179,43 +160,52 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 
 	@Override
 	public void onLocationChanged(Location location) {
-		boolean updated = updateLocation(location);
-		System.out.println("onLocationChanged: " + location + ", updated: " + updated);
+		updateLocation(location);
 	}
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		System.out.println("onProviderDisabled: " + provider);
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		System.out.println("onProviderEnabled: " + provider);
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		System.out.println("onStatusChanged: " + provider + ", status: " + status);
 	}
 
 	@Override
 	public void onTaskFinished(AbstractGroupBuyingTask<?> task, TaskResult result) {
 		if (result.equals(TaskResult.SUCCESSFUL)) {
+			infoTopLayout.setVisibility(View.GONE);			
 			List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
-			System.out.println("downloaded: " + downloadedOffers);
 			if (downloadedOffers == null || downloadedOffers.isEmpty()) {
-				//TODO display message 'No offers available nearby'
+				Toast.makeText(application, "No offers available nearby", Toast.LENGTH_SHORT).show();
 			} else {
 				offerList.addAll(downloadedOffers);
 				addMarkersToGoogleMap();
 			}
 		} else if (result.equals(TaskResult.FAILED)) {
+			infoActionButton.setVisibility(View.VISIBLE);
+			infoProgressBar.setVisibility(View.INVISIBLE);
+			infoActionButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {					
+					infoActionButton.setVisibility(View.GONE);
+					infoActionButton.setOnClickListener(null);
+					infoProgressBar.setVisibility(View.VISIBLE);
+					infoMessage.setText(R.string.loading_offers_message);
+					new DownloadOfferListTask("nearby/" + currentBestLocation.getLatitude() + "/" + currentBestLocation.getLongitude(), 1, NearbyOffersFragment.this, application).execute();
+				}
+			});
 			Exception exception = task.getException();
 			if (exception != null) {
 				if (exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
-					//TODO setListViewState(ListViewState.NO_INTERNET, networkErrorTitle, networkErrorMessage);
+					infoMessage.setText(R.string.network_error_title);
 				} else {
-					//TODO setListViewState(ListViewState.NO_INTERNET, connectionErrorTitle, connectionErrorMessage);
+					infoMessage.setText(R.string.connection_error_title);
 				}
 			}
 		}
@@ -335,4 +325,40 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 		}
 	}
 	
+	private Runnable determineLocationRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			if(!locationDetermined) {
+				if (currentBestLocation != null) {
+					locationDetermined = true;
+					locationManager.removeUpdates(NearbyOffersFragment.this);
+					infoMessage.setText(R.string.loading_offers_message);
+					infoProgressBar.setVisibility(View.VISIBLE);
+					new DownloadOfferListTask("nearby/" + currentBestLocation.getLatitude() + "/" + currentBestLocation.getLongitude(), 1, NearbyOffersFragment.this, application).execute();
+				} else {
+					infoMessage.setText(R.string.couldn_t_get_your_location_text);
+					infoActionButton.setVisibility(View.VISIBLE);
+					infoProgressBar.setVisibility(View.INVISIBLE);
+					infoActionButton.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+								Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+								startActivity(gpsOptionsIntent);
+							} else {
+								infoActionButton.setVisibility(View.GONE);
+								infoActionButton.setOnClickListener(null);
+								infoProgressBar.setVisibility(View.VISIBLE);
+								infoMessage.setText(R.string.getting_location_text);
+								Handler handler = new Handler();
+								handler.postDelayed(determineLocationRunnable, DETERMINE_LOCATION_PERIOD);
+							}
+						}
+					});
+				}
+			}			
+		}
+	};
 }
