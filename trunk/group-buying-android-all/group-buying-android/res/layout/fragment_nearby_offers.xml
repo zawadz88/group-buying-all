@@ -8,24 +8,52 @@
   
   Contributors:
       Piotr Zawadzki - initial API and implementation
+      
 -->
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent" >
 
-    <Button 
-        android:id="@+id/switchNearbyOffersButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="XXXX"
-        />
-    
     <pl.edu.pw.eiti.groupbuying.android.view.MapHoldingRelativeLayout
         android:id="@+id/mapLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/switchNearbyOffersButton"
-         />
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/infoTopLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/map_info_gradient" >
+
+        <ProgressBar
+            android:id="@+id/infoProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/infoMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/infoActionButton"
+            android:layout_toRightOf="@id/infoProgressBar"
+            android:text="@string/couldn_t_get_your_location_text"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/infoActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/retry" />
+    </RelativeLayout>
 
 </RelativeLayout>

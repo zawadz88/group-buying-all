@@ -66,6 +66,8 @@
     
     <string name="loading_offer_message">Loading offer…</string>
     
+    <string name="loading_offers_message">Loading offers…</string>
+    
     <string name="loading_coupons_message">Loading coupons…</string>
     
     <string name="loading_more_offers_text">Loading more offers…</string>
@@ -91,6 +93,10 @@
     <string name="enable">Enable</string>
     
     <string name="do_nothing">Do nothing</string>
+    
+    <string name="getting_location_text">Getting location…</string>
+    
+    <string name="couldn_t_get_your_location_text">Couldn\'t get your location</string>
     
     
 </resources>
