@@ -66,20 +66,24 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 	private static final long TIME_CHANGE_THRESHOLD = 100;
 	private static final float ACCURACY_THRESHOLD = 10f;
 	private static final long DETERMINE_LOCATION_PERIOD = 4000L;
-
-	private GoogleMap googleMap;
-	private LocationManager locationManager;
-	private Location currentBestLocation;
-	private boolean locationDetermined = false;
-	private Map<Marker, OfferEssential> markers = new HashMap<Marker, OfferEssential>();
-	private List<OfferEssential> offerList = new ArrayList<OfferEssential>();
+	
 	private GroupBuyingApplication application;
+	
 	private View mapFragmentLayout;
 	private MapHoldingRelativeLayout mapLayout;
 	private RelativeLayout infoTopLayout;
 	private ProgressBar infoProgressBar;
 	private TextView infoMessage;
 	private Button infoActionButton;
+	private GoogleMap googleMap;
+
+	private LocationManager locationManager;
+	private Location currentBestLocation;
+	private Map<Marker, OfferEssential> markers = new HashMap<Marker, OfferEssential>();
+	
+	private List<OfferEssential> offerList = new ArrayList<OfferEssential>();
+	private ProgressState progressState = ProgressState.NONE;	
+	private Exception lastOffersException = null;
 
 	public static NearbyOffersFragment newInstance(String content) {
 		NearbyOffersFragment fragment = new NearbyOffersFragment();
@@ -95,8 +99,7 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// setUpMapIfNeeded();
-		setRetainInstance(true);
+		setRetainInstance(true);		
 	}
 
 	@Override
@@ -122,10 +125,8 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 		if (currentBestLocation == null) {
 			currentBestLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		}
-		if (!locationDetermined) {
-			infoTopLayout.setVisibility(View.VISIBLE);
-			infoActionButton.setVisibility(View.GONE);
-			infoMessage.setText(R.string.getting_location_text);
+		if (progressState.equals(ProgressState.NONE)) {
+			progressState = ProgressState.FETCHING_LOCATION;
 			Handler handler = new Handler();
 			handler.postDelayed(determineLocationRunnable, DETERMINE_LOCATION_PERIOD);
 		}
@@ -134,10 +135,80 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 	@Override
 	public void onResume() {
 		super.onResume();
+		System.out.println("progressState:" + progressState);
 		setUpMapIfNeeded();
 
-		if (!locationDetermined) {
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TIME_CHANGE_THRESHOLD, DISTANCE_CHANGE_THRESHOLD, this);
+		switch (progressState) {
+		case NONE:
+		case OFFERS_FETCHED:
+			infoTopLayout.setVisibility(View.GONE);
+			break;
+		case FETCHING_LOCATION:
+			infoTopLayout.setVisibility(View.VISIBLE);
+			infoActionButton.setVisibility(View.GONE);
+			infoActionButton.setOnClickListener(null);
+			infoMessage.setText(R.string.getting_location_text);
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TIME_CHANGE_THRESHOLD, DISTANCE_CHANGE_THRESHOLD, this);		
+			break;
+		case LOCATION_FAILED:
+			infoTopLayout.setVisibility(View.VISIBLE);
+			infoMessage.setText(R.string.couldn_t_get_your_location_text);
+			infoActionButton.setVisibility(View.VISIBLE);
+			infoProgressBar.setVisibility(View.INVISIBLE);
+			infoActionButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+						Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+						startActivity(gpsOptionsIntent);
+					} else {
+						progressState = ProgressState.FETCHING_LOCATION;
+						infoActionButton.setVisibility(View.GONE);
+						infoActionButton.setOnClickListener(null);
+						infoProgressBar.setVisibility(View.VISIBLE);
+						infoMessage.setText(R.string.getting_location_text);
+						Handler handler = new Handler();
+						handler.postDelayed(determineLocationRunnable, DETERMINE_LOCATION_PERIOD);
+					}
+				}
+			});
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, TIME_CHANGE_THRESHOLD, DISTANCE_CHANGE_THRESHOLD, this);	
+			break;
+		case FETCHING_OFFERS:
+			infoTopLayout.setVisibility(View.VISIBLE);
+			infoMessage.setText(R.string.loading_offers_message);
+			infoProgressBar.setVisibility(View.VISIBLE);
+			infoActionButton.setVisibility(View.GONE);
+			infoActionButton.setOnClickListener(null);
+			break;
+		case OFFERS_FAILED:
+			infoTopLayout.setVisibility(View.VISIBLE);
+			infoActionButton.setVisibility(View.VISIBLE);
+			infoProgressBar.setVisibility(View.INVISIBLE);
+			infoActionButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {			
+					progressState = ProgressState.FETCHING_OFFERS;		
+					infoActionButton.setVisibility(View.GONE);
+					infoActionButton.setOnClickListener(null);
+					infoProgressBar.setVisibility(View.VISIBLE);
+					infoMessage.setText(R.string.loading_offers_message);
+					new DownloadOfferListTask("nearby/" + currentBestLocation.getLatitude() + "/" + currentBestLocation.getLongitude(), 1, NearbyOffersFragment.this, application).execute();
+				}
+			});
+			
+			if (lastOffersException != null) {
+				if (lastOffersException instanceof HttpClientErrorException || lastOffersException instanceof DuplicateConnectionException || lastOffersException instanceof ResourceAccessException) {
+					infoMessage.setText(R.string.network_error_title);
+				} else {
+					infoMessage.setText(R.string.connection_error_title);
+				}
+			}
+			break;
+		default:
+			break;
 		}
 
 	}
@@ -178,21 +249,24 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 	@Override
 	public void onTaskFinished(AbstractGroupBuyingTask<?> task, TaskResult result) {
 		if (result.equals(TaskResult.SUCCESSFUL)) {
+			progressState = ProgressState.OFFERS_FETCHED;
 			infoTopLayout.setVisibility(View.GONE);			
 			List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
 			if (downloadedOffers == null || downloadedOffers.isEmpty()) {
-				Toast.makeText(application, "No offers available nearby", Toast.LENGTH_SHORT).show();
+				Toast.makeText(application, getString(R.string.no_offers_available), Toast.LENGTH_SHORT).show();
 			} else {
 				offerList.addAll(downloadedOffers);
 				addMarkersToGoogleMap();
 			}
 		} else if (result.equals(TaskResult.FAILED)) {
+			progressState = ProgressState.OFFERS_FAILED;
 			infoActionButton.setVisibility(View.VISIBLE);
 			infoProgressBar.setVisibility(View.INVISIBLE);
 			infoActionButton.setOnClickListener(new OnClickListener() {
 				
 				@Override
-				public void onClick(View v) {					
+				public void onClick(View v) {			
+					progressState = ProgressState.FETCHING_OFFERS;		
 					infoActionButton.setVisibility(View.GONE);
 					infoActionButton.setOnClickListener(null);
 					infoProgressBar.setVisibility(View.VISIBLE);
@@ -200,9 +274,9 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 					new DownloadOfferListTask("nearby/" + currentBestLocation.getLatitude() + "/" + currentBestLocation.getLongitude(), 1, NearbyOffersFragment.this, application).execute();
 				}
 			});
-			Exception exception = task.getException();
-			if (exception != null) {
-				if (exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
+			lastOffersException = task.getException();
+			if (lastOffersException != null) {
+				if (lastOffersException instanceof HttpClientErrorException || lastOffersException instanceof DuplicateConnectionException || lastOffersException instanceof ResourceAccessException) {
 					infoMessage.setText(R.string.network_error_title);
 				} else {
 					infoMessage.setText(R.string.connection_error_title);
@@ -317,7 +391,7 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 		googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 		googleMap.getUiSettings().setZoomControlsEnabled(true);
 		googleMap.getUiSettings().setAllGesturesEnabled(true);
-		if(offerList != null && !offerList.isEmpty()) {
+		if(progressState.equals(ProgressState.OFFERS_FETCHED) && offerList != null && !offerList.isEmpty()) {
 			addMarkersToGoogleMap();
 		} else {
 			CameraPosition cameraPosition = new CameraPosition.Builder().target(DEFAULT_LOCATION).zoom(14.5f).build();
@@ -329,14 +403,15 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 
 		@Override
 		public void run() {
-			if(!locationDetermined) {
+			if(progressState.equals(ProgressState.FETCHING_LOCATION)) {
 				if (currentBestLocation != null) {
-					locationDetermined = true;
+					progressState = ProgressState.FETCHING_OFFERS;
 					locationManager.removeUpdates(NearbyOffersFragment.this);
 					infoMessage.setText(R.string.loading_offers_message);
 					infoProgressBar.setVisibility(View.VISIBLE);
 					new DownloadOfferListTask("nearby/" + currentBestLocation.getLatitude() + "/" + currentBestLocation.getLongitude(), 1, NearbyOffersFragment.this, application).execute();
 				} else {
+					progressState = ProgressState.LOCATION_FAILED;
 					infoMessage.setText(R.string.couldn_t_get_your_location_text);
 					infoActionButton.setVisibility(View.VISIBLE);
 					infoProgressBar.setVisibility(View.INVISIBLE);
@@ -348,6 +423,7 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 								Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 								startActivity(gpsOptionsIntent);
 							} else {
+								progressState = ProgressState.FETCHING_LOCATION;
 								infoActionButton.setVisibility(View.GONE);
 								infoActionButton.setOnClickListener(null);
 								infoProgressBar.setVisibility(View.VISIBLE);
@@ -361,4 +437,8 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 			}			
 		}
 	};
+	
+	private static enum ProgressState {
+		NONE, FETCHING_LOCATION, LOCATION_FAILED, FETCHING_OFFERS, OFFERS_FAILED, OFFERS_FETCHED;
+	}
 }

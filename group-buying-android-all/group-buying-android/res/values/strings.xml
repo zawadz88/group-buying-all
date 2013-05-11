@@ -98,5 +98,7 @@
     
     <string name="couldn_t_get_your_location_text">Couldn\'t get your location</string>
     
+    <string name="no_offers_available">No offers available nearby</string>
+    
     
 </resources>
