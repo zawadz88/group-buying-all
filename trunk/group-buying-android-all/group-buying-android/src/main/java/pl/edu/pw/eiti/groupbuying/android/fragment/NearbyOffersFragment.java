@@ -135,7 +135,6 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 	@Override
 	public void onResume() {
 		super.onResume();
-		System.out.println("progressState:" + progressState);
 		setUpMapIfNeeded();
 
 		switch (progressState) {

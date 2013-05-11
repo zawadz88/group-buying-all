@@ -53,14 +53,13 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 	public static final String CITY_TAG = "city";
 	public static final String CITIES_TAG = "cities";
 	private List<OfferEssential> offerList = new ArrayList<OfferEssential>();
-    private City city;
-    private ArrayList<City> cities;
+	private City city;
+	private ArrayList<City> cities;
 	private String networkErrorTitle;
 	private String networkErrorMessage;
 	private String connectionErrorTitle;
 	private String connectionErrorMessage;
-	
-	
+
 	public static CityOffersFragment newInstance(City city, ArrayList<City> cities) {
 		CityOffersFragment fragment = new CityOffersFragment();
 		Bundle bundle = new Bundle();
@@ -76,13 +75,13 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
 		Bundle args = getArguments();
-		if(args == null || args.getSerializable(CITY_TAG) == null || args.getSerializable(CITIES_TAG) == null) {
-			if(savedInstanceState == null || !savedInstanceState.containsKey(CITY_TAG) || !savedInstanceState.containsKey(CITIES_TAG)) {
+		if (args == null || args.getSerializable(CITY_TAG) == null || args.getSerializable(CITIES_TAG) == null) {
+			if (savedInstanceState == null || !savedInstanceState.containsKey(CITY_TAG) || !savedInstanceState.containsKey(CITIES_TAG)) {
 				throw new IllegalStateException("CityOffersFragment must have non-null city and cities!");
 			} else {
 				city = (City) savedInstanceState.getSerializable(CITY_TAG);
 				cities = (ArrayList<City>) savedInstanceState.getSerializable(CITIES_TAG);
-			}			
+			}
 		} else {
 			this.city = (City) args.getSerializable(CITY_TAG);
 			this.cities = (ArrayList<City>) args.getSerializable(CITIES_TAG);
@@ -97,7 +96,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 		loadingView = aq.id(R.id.list_loading).getProgressBar();
 		emptyView = aq.id(R.id.list_empty).getTextView();
 		noInternetLayout = (LinearLayout) aq.id(R.id.noInternetLayout).getView();
-		
+
 		setUpSpinner(aq);
 		setUpNoInternetButton(noInternetLayout, this);
 		setUpRefreshListener();
@@ -105,7 +104,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 
 		return rootView;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -114,7 +113,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 		connectionErrorTitle = getString(R.string.connection_error_title);
 		connectionErrorMessage = getString(R.string.connection_error_message);
 	}
-	
+
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -122,13 +121,13 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 			setListAdapter(new OfferEssentialListAdapter(this, 0, offerList));
 			listView.setOnScrollListener(this);
 			setListViewState(ListViewState.CONTENT);
-		} else if(offerList.isEmpty() && endOfItemsReached) {
-			setListViewState(ListViewState.EMPTY);			
+		} else if (offerList.isEmpty() && endOfItemsReached) {
+			setListViewState(ListViewState.EMPTY);
 		} else {
 			setListViewState(ListViewState.LOADING);
-			if(!loading) {
+			if (!loading) {
 				loading = true;
-				new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, this, application).execute();	
+				new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, this, application).execute();
 			}
 		}
 	}
@@ -158,113 +157,108 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 		intent.putExtra("offerId", selectedOffer.getOfferId());
 		startActivity(intent);
 	}
-	
+
 	@Override
 	public void refreshList() {
-		if(getListAdapter() != null) {
-			((BaseAdapter)((HeaderViewListAdapter) getListAdapter()).getWrappedAdapter()).notifyDataSetChanged();			
+		if (getListAdapter() != null) {
+			((BaseAdapter) ((HeaderViewListAdapter) getListAdapter()).getWrappedAdapter()).notifyDataSetChanged();
 		}
 	}
-	
+
 	@Override
-	public void onTaskFinished(final AbstractGroupBuyingTask<?> task,	final TaskResult result) {
+	public void onTaskFinished(final AbstractGroupBuyingTask<?> task, final TaskResult result) {
 		loadingMoreItems = false;
 		loading = false;
 		listView.onRefreshComplete();
-		mainActivity.runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				if(result.equals(TaskResult.SUCCESSFUL)) {
-					connectionAvailable = true;
-					List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
-					if(downloadedOffers == null || downloadedOffers.isEmpty()) {
-						endOfItemsReached = true;
-						if(offerList.isEmpty()) {
-							setListViewState(ListViewState.EMPTY);					
-						} else {
-							setListViewState(ListViewState.CONTENT);
-							refreshList();
-						}
-					} else {
-				        currentPage++;
-						if(downloadedOffers.size() < Constants.OFFERS_PAGE_SIZE) { //do not download more offers, none will be available anyways
-							endOfItemsReached = true;
-						}
-						if(offerList.isEmpty()) {
-							offerList.addAll(downloadedOffers);
-							if(getActivity() != null) {
-								setListAdapter(new OfferEssentialListAdapter(CityOffersFragment.this, 0, offerList));
-							}			
-							listView.setOnScrollListener(CityOffersFragment.this);	
-						} else {
-							offerList.addAll(downloadedOffers);
-							refreshList();
-						}
-						setListViewState(ListViewState.CONTENT);
+		if (result.equals(TaskResult.SUCCESSFUL)) {
+			connectionAvailable = true;
+			List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
+			if (downloadedOffers == null || downloadedOffers.isEmpty()) {
+				endOfItemsReached = true;
+				if (offerList.isEmpty()) {
+					setListViewState(ListViewState.EMPTY);
+				} else {
+					setListViewState(ListViewState.CONTENT);
+					refreshList();
+				}
+			} else {
+				currentPage++;
+				if (downloadedOffers.size() < Constants.OFFERS_PAGE_SIZE) { // do not download more offers, none will be available anyways
+					endOfItemsReached = true;
+				}
+				if (offerList.isEmpty()) {
+					offerList.addAll(downloadedOffers);
+					if (getActivity() != null) {
+						setListAdapter(new OfferEssentialListAdapter(CityOffersFragment.this, 0, offerList));
 					}
-				} else if(result.equals(TaskResult.FAILED)) {
-					
-					Exception exception = task.getException();
-					if(exception != null) {
-						if(offerList.isEmpty()) {
-							if(exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
-								setListViewState(ListViewState.NO_INTERNET, networkErrorTitle, networkErrorMessage);
-							} else {
-								setListViewState(ListViewState.NO_INTERNET, connectionErrorTitle, connectionErrorMessage);
-							}
-						} else {
-							setListViewState(ListViewState.CONTENT);
-							connectionAvailable = false;
-							refreshList();
-						}
-					}
-				}				
+					listView.setOnScrollListener(CityOffersFragment.this);
+				} else {
+					offerList.addAll(downloadedOffers);
+					refreshList();
+				}
+				setListViewState(ListViewState.CONTENT);
 			}
-		});
-		
+		} else if (result.equals(TaskResult.FAILED)) {
+
+			Exception exception = task.getException();
+			if (exception != null) {
+				if (offerList.isEmpty()) {
+					if (exception instanceof HttpClientErrorException || exception instanceof DuplicateConnectionException || exception instanceof ResourceAccessException) {
+						setListViewState(ListViewState.NO_INTERNET, networkErrorTitle, networkErrorMessage);
+					} else {
+						setListViewState(ListViewState.NO_INTERNET, connectionErrorTitle, connectionErrorMessage);
+					}
+				} else {
+					setListViewState(ListViewState.CONTENT);
+					connectionAvailable = false;
+					refreshList();
+				}
+			}
+		}
+
 	}
 
 	@Override
 	public void onDeviceOnline() {
 		loading = true;
-		if(offerList.isEmpty()) {
-			setListViewState(ListViewState.LOADING);			
+		if (offerList.isEmpty()) {
+			setListViewState(ListViewState.LOADING);
 		} else {
 			loadingMoreItems = true;
 			connectionAvailable = true;
-			refreshList(); //needed to show loading view
+			refreshList(); // needed to show loading view
 		}
 		new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, this, application).execute();
 	}
 
 	@Override
-	public void onDeviceOffline() {		
+	public void onDeviceOffline() {
 	}
-	
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        if(!loadingMoreItems && visibleItemCount != totalItemCount && (totalItemCount - visibleItemCount) <= (firstVisibleItem + VISIBLE_ITEM_THRESHOLD) && !endOfItemsReached && connectionAvailable) { //visibleItemCount != totalItemCount is needed for when new items are added this is false
-        	loadingMoreItems = true;
-			loading = true;
-			refreshList(); //needed to show loading view
-     		new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, this, application).execute();
-        }
-    }
 
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-    }
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+		if (!loadingMoreItems && visibleItemCount != totalItemCount && (totalItemCount - visibleItemCount) <= (firstVisibleItem + VISIBLE_ITEM_THRESHOLD) && !endOfItemsReached && connectionAvailable) {
+			// visibleItemCount != totalItemCount is needed for when new items are added this is false
+			loadingMoreItems = true;
+			loading = true;
+			refreshList(); // needed to show loading view
+			new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, this, application).execute();
+		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+	}
 
 	private void setUpRefreshListener() {
 		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
-			
+
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
 				refetchOffers();
 			}
 		});
-		
+
 	}
 
 	private void setUpSpinner(AQuery aq) {
@@ -273,7 +267,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(dataAdapter);
 		int selectedCity = cities.indexOf(city);
-		if(selectedCity == -1) {
+		if (selectedCity == -1) {
 			selectedCity = 0;
 			city = cities.get(0);
 			application.setSelectedCity(city);
@@ -283,7 +277,7 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				if(!cities.get(position).equals(city)) {
+				if (!cities.get(position).equals(city)) {
 					city = cities.get(position);
 					application.setSelectedCity(city);
 					getArguments().putSerializable(CITY_TAG, city);
@@ -294,17 +288,17 @@ public final class CityOffersFragment extends AbstractListFragment implements As
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
 			}
-			
+
 		});
 		spinner.setSelection(selectedCity);
 	}
-	
+
 	private void refetchOffers() {
 		offerList.clear();
 		currentPage = -1;
 		endOfItemsReached = false;
 		loading = true;
-		setListViewState(ListViewState.LOADING);	
+		setListViewState(ListViewState.LOADING);
 		refreshList();
 		new DownloadOfferListTask("city/" + city.getCityId(), currentPage + 1, CityOffersFragment.this, application).execute();
 	}
