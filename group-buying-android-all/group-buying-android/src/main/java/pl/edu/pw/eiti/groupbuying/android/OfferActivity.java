@@ -102,6 +102,7 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 			intent = new Intent(this, MainMenuActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
+			finish();
 			break;
 		case R.id.options_menu_settings:
 			break;
@@ -113,6 +114,7 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 			intent = new Intent(this, MainMenuActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);
+			finish();
 			break;
 		default:
 			if(offer == null) {//do not share if offer is not initialized
@@ -122,6 +124,14 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 			}
 		}
 		return true;
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(this, MainMenuActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);		
+		finish();
 	}
 	
 	@Override
@@ -144,7 +154,7 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 		if(result.equals(TaskResult.SUCCESSFUL)) {
 			Offer downloadedOffer = ((DownloadOfferTask) task).getOffer();
 			if(downloadedOffer == null) {
-				//TODO show error stub?
+				finish();
 			} else {
 				offer = downloadedOffer;
 		        setTitle(offer.getTitle());
@@ -238,8 +248,6 @@ public class OfferActivity extends AbstractGroupBuyingActivity implements AsyncT
 	}
 
 	@Override
-	public void onDeviceOffline() {
-		// TODO Auto-generated method stub
-		
+	public void onDeviceOffline() {		
 	}
 }

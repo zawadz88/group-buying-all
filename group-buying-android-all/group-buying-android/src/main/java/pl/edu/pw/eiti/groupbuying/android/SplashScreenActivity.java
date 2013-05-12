@@ -15,6 +15,7 @@ import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.android.api.City;
 import pl.edu.pw.eiti.groupbuying.android.api.CityConfig;
+import pl.edu.pw.eiti.groupbuying.android.gcm.model.PushNotification;
 import pl.edu.pw.eiti.groupbuying.android.task.AbstractGroupBuyingTask;
 import pl.edu.pw.eiti.groupbuying.android.task.DownloadCityConfigTask;
 import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
@@ -131,10 +132,18 @@ public class SplashScreenActivity extends Activity implements AsyncTaskListener 
 	}
 	
 	public void startNextActivity() {
-		Intent intent = new Intent(this, MainMenuActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		((GroupBuyingApplication) getApplicationContext()).setCities(cities);
 		((GroupBuyingApplication) getApplicationContext()).setSelectedCity(city);
+
+		Intent intent;
+		if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("pushData")) {
+			PushNotification push = (PushNotification) getIntent().getExtras().getSerializable("pushData");
+			intent = new Intent(this, OfferActivity.class);
+			intent.putExtra("offerId", push.getOfferId());			
+		} else {
+			intent = new Intent(this, MainMenuActivity.class);
+		}
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		this.startActivity(intent);
 		finish();
 	}

@@ -255,7 +255,9 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 				Toast.makeText(application, getString(R.string.no_offers_available), Toast.LENGTH_SHORT).show();
 			} else {
 				offerList.addAll(downloadedOffers);
-				addMarkersToGoogleMap();
+				if(getActivity() != null) {
+					addMarkersToGoogleMap();			
+				}
 			}
 		} else if (result.equals(TaskResult.FAILED)) {
 			progressState = ProgressState.OFFERS_FAILED;
