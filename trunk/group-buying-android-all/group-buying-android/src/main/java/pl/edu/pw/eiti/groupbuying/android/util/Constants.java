@@ -7,4 +7,5 @@ public class Constants {
 	public static final int OFFERS_PAGE_SIZE = 10;
 	public static final String CITY_ID_KEY = "cityId";
 	public static final String PREFERENCES_KEY = "preferences";
+	public static final String GCM_SENDER_ID = "589889680197";
 }

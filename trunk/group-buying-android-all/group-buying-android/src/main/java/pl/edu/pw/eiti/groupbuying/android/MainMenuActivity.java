@@ -11,18 +11,24 @@
 package pl.edu.pw.eiti.groupbuying.android;
 
 import pl.edu.pw.eiti.groupbuying.android.fragment.util.OffersFragmentAdapter;
+import pl.edu.pw.eiti.groupbuying.android.gcm.GCMServerUtilities;
+import pl.edu.pw.eiti.groupbuying.android.util.Constants;
 import pl.edu.pw.eiti.groupbuying.android.view.MapFragmentScrollOverrideViewPager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.google.android.gcm.GCMRegistrar;
 
 public class MainMenuActivity extends AbstractGroupBuyingActivity {
     protected OffersFragmentAdapter mAdapter;
     protected MapFragmentScrollOverrideViewPager mPager;
+	private AsyncTask<Void, Void, Void> mRegisterTask;
     
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +53,63 @@ public class MainMenuActivity extends AbstractGroupBuyingActivity {
         }
         bar.setSelectedNavigationItem(selectedPage);
         mPager.setCurrentItem(selectedPage, false);
+        
+        registerToGCM();
     }
     
-    @Override
+    private void registerToGCM() {
+        System.out.println("registerToGCM");
+    	GCMRegistrar.checkDevice(getApplicationContext());
+        // Make sure the manifest was properly set - comment out this line
+        // while developing the app, then uncomment it when it's ready.
+        GCMRegistrar.checkManifest(getApplicationContext());
+        final String regId = GCMRegistrar.getRegistrationId(getApplicationContext());
+        System.out.println("regId: " + regId);
+        if (regId.equals("")) {
+            // Automatically registers application on startup.
+        	System.out.println("Registering...");
+            GCMRegistrar.register(getApplicationContext(), Constants.GCM_SENDER_ID);
+        } else {
+            // Device is already registered on GCM, check server.
+            if (GCMRegistrar.isRegisteredOnServer(getApplicationContext())) {
+                // Skips registration.
+            	System.out.println("Already registered...");
+            } else {
+                // Try to register again, but not in the UI thread.
+                // It's also necessary to cancel the thread onDestroy(),
+                // hence the use of AsyncTask instead of a raw thread.
+            	System.out.println("Reregistering...");
+                final Context context = getApplicationContext();
+                mRegisterTask = new AsyncTask<Void, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        boolean registered = GCMServerUtilities.register(context, regId);
+                        // At this point all attempts to register with the app
+                        // server failed, so we need to unregister the device
+                        // from GCM - the app will try to register again when
+                        // it is restarted. Note that GCM will send an
+                        // unregistered callback upon completion, but
+                        // GCMIntentService.onUnregistered() will ignore it.
+                        if (!registered) {
+                            GCMRegistrar.unregister(context);
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void result) {
+                        mRegisterTask = null;
+                    }
+
+                };
+                mRegisterTask.execute(null, null, null);
+            }
+        }
+		
+	}
+
+	@Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("tab", getSupportActionBar().getSelectedNavigationIndex());
