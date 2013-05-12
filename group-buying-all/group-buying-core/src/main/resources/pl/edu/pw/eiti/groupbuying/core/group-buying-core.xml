@@ -22,7 +22,7 @@
 	<context:component-scan base-package="pl.edu.pw.eiti.groupbuying.core" />
 	<context:annotation-config />
 	
-	<context:property-placeholder location="classpath:props.properties" file-encoding="UTF-8" />
+	<context:property-placeholder location="classpath:props.properties" file-encoding="UTF-8" order="0"/>
 	
 	<util:properties id="constants" location="classpath:constants.properties" />
 		

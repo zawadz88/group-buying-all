@@ -24,7 +24,7 @@
 	<beans:bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 	
 	<util:properties id="paypalProperties" location="classpath:paypal.properties" />
-	
+		
     <beans:bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
         <beans:property name="order" value="1" />
         

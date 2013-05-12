@@ -53,7 +53,6 @@ public class MECLController {
 	
 	@RequestMapping(value = "/checkout/{offerId}")
 	public @ResponseBody String setCheckOut(HttpServletRequest request, @PathVariable int offerId, HttpServletResponse response, @RequestParam("drt") String deviceReferenceToken, Principal principal) throws IOException {
-		//TODO try catche
 		try {
 			Offer offer = offerService.getOffer(offerId);		
 			if(offer != null) {
