@@ -15,10 +15,10 @@
 - odbieranie kuponów na telefonie
 - NFC
 - odbieranie kuponów - backend
-- notyfikacje
+#- notyfikacje
 - panel sprzedawcy wzbogacony o ilość sprzedanych ofert
 - Async z Servletu 3.0?
-- poprawa walidacji formularzy
+- poprawa walidacji formularzy?
 - panel Account do zmiany hasła użytkowników
 - profile Mavenowe
 - Javadoc
