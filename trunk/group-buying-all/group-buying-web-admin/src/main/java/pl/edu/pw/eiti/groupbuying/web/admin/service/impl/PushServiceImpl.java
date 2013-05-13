@@ -1,4 +1,4 @@
-package pl.edu.pw.eiti.groupbuying.rest.service.impl;
+package pl.edu.pw.eiti.groupbuying.web.admin.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,11 +21,9 @@ import org.springframework.util.StringUtils;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.AndroidRegisteredDeviceDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.AndroidRegisteredDevice;
-import pl.edu.pw.eiti.groupbuying.rest.exception.AbstractHttpException;
-import pl.edu.pw.eiti.groupbuying.rest.exception.InternalServerErrorException;
-import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
-import pl.edu.pw.eiti.groupbuying.rest.model.PushNotification;
-import pl.edu.pw.eiti.groupbuying.rest.service.PushService;
+import pl.edu.pw.eiti.groupbuying.web.admin.exception.InternalServerErrorException;
+import pl.edu.pw.eiti.groupbuying.web.admin.model.PushNotification;
+import pl.edu.pw.eiti.groupbuying.web.admin.service.PushService;
 
 import com.google.android.gcm.server.Constants;
 import com.google.android.gcm.server.Message;
@@ -81,12 +79,7 @@ public class PushServiceImpl implements PushService {
 					try {
 						Exception ex = i.next().get();
 						if (ex != null) {
-							if (ex instanceof AbstractHttpException) {
-								exceptionBuilder.append("Error(s) occured while sending Android notifications. " + ((AbstractHttpException) ex).getCustomMessage() + " \n");
-							} else {
-								exceptionBuilder.append("Error(s) occured while sending Android notifications. \n");
-							}
-							break;
+							exceptionBuilder.append("Error(s) occured while sending Android notifications. \n");
 						}
 					} catch (InterruptedException e) {
 						LOG.error(e.getLocalizedMessage(), e);
@@ -103,7 +96,7 @@ public class PushServiceImpl implements PushService {
 
 		String exceptionString = exceptionBuilder.toString();
 		if (StringUtils.hasText(exceptionString)) {
-			throw new InternalServerErrorException(exceptionString + "Please contact your administrator.", ErrorCode.DATABASE_ERROR);
+			throw new InternalServerErrorException(exceptionString + "Please contact your administrator.");
 		}
 	}
 
@@ -111,7 +104,6 @@ public class PushServiceImpl implements PushService {
 
 		final List<Future<Exception>> exceptionList = Collections.synchronizedList(new ArrayList<Future<Exception>>());
 		final ExecutorService gcmExecutorService = Executors.newFixedThreadPool(GCM_THREAD_POOL_SIZE);
-		System.out.println("apiKey: " + apiKey);
 		final Sender sender = new Sender(apiKey);
 
 		final int total = devices.size();
@@ -160,11 +152,11 @@ public class PushServiceImpl implements PushService {
 					try {
 						multicastResult = sender.send(message, devices, 3);
 					} catch (IOException e) {
-						LOG.error("Error posting message. Devices: " + partialDeviceRegistrationIds, e);
+						LOG.error("Error posting message. Devices: " + devices, e);
 						failCount.addAndGet(devices.size());
 						return e;
 					} catch (IllegalArgumentException e) {
-						LOG.error("Error posting message. Devices: " + partialDeviceRegistrationIds, e);
+						LOG.error("Error posting message. Devices: " + devices, e);
 						failCount.addAndGet(devices.size());
 						return new InternalServerErrorException("IllegalArgumentException - server IP is probably not whitelisted");
 					}
@@ -196,7 +188,7 @@ public class PushServiceImpl implements PushService {
 					}
 					return null;
 				} catch (Exception e) {
-					LOG.error("Unexpected exception in asyncSendToGCM: " + e.getLocalizedMessage() + "\nDevices: " + partialDeviceRegistrationIds, e);
+					LOG.error("Unexpected exception in asyncSendToGCM: " + e.getLocalizedMessage() + "\nDevices: " + devices, e);
 					failCount.addAndGet(devices.size());
 					return e;
 				}

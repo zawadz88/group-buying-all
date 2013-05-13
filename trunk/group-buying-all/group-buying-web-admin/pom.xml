@@ -13,14 +13,14 @@
 	<name>Group Buying Web Admin</name>
 
 	<dependencies>
-		
-		
+
+
 		<dependency>
 			<groupId>pl.edu.pw.eiti.groupbuying</groupId>
 			<artifactId>group-buying-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>pl.edu.pw.eiti.groupbuying</groupId>
 			<artifactId>group-buying-security-core</artifactId>
@@ -117,7 +117,7 @@
 			<artifactId>log4j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-		
+
 		<!-- Servlet -->
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
@@ -148,14 +148,24 @@
 					<artifactId>servlet-api</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>		
+		</dependency>
 
-		
+		<dependency>
+			<groupId>com.google.android.gcm</groupId>
+			<artifactId>gcm-server</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
