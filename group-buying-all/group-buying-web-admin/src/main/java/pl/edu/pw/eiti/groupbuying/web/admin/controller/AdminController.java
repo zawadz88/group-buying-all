@@ -15,15 +15,23 @@ package pl.edu.pw.eiti.groupbuying.web.admin.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
+import pl.edu.pw.eiti.groupbuying.web.admin.exception.InternalServerErrorException;
+import pl.edu.pw.eiti.groupbuying.web.admin.model.PushNotification;
+import pl.edu.pw.eiti.groupbuying.web.admin.service.PushService;
 
 /**
  * 
@@ -33,10 +41,15 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController extends BaseController {
+	
+	private static final Logger LOG = Logger.getLogger(AdminController.class);
 
 	@Autowired
 	private OfferDAO offerDAO;
-	
+
+	@Autowired
+	private PushService pushService;
+
 	@RequestMapping(method = RequestMethod.GET, value = "home.do")
 	public void home() {		
 	}
@@ -66,5 +79,26 @@ public class AdminController extends BaseController {
 		model.addAttribute("offer", offer);
 
 	}
+
+	@RequestMapping(value = "push.do", method = RequestMethod.GET)
+	protected String pushGet(@ModelAttribute PushNotification pushNotification) {
+		return "admin/sendPush";
+	}
 	
+	@RequestMapping(value = "push.do", method = RequestMethod.POST)
+	protected String pushPost(@ModelAttribute @Valid PushNotification pushNotification, BindingResult result) {
+		if (result.hasErrors()) {
+			return "admin/sendPush";
+		} else {
+			try {
+				pushService.push(pushNotification);
+			} catch (InternalServerErrorException e) {
+				LOG.error("Error occured when sending a push notification.", e);
+				result.reject("push.failed");
+				return "admin/sendPush";
+			}
+			return "redirect:home.do";
+		}
+		
+	}
 }

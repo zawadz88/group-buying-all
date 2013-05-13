@@ -14,3 +14,6 @@
 			<li>
 				<a href="../admin/finishedOffers.do">Finished offers</a>
 			</li>
+			<li>
+				<a href="../admin/push.do">Push notifications</a>
+			</li>

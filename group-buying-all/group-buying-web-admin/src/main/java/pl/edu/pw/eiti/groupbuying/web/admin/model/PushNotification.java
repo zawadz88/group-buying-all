@@ -1,7 +1,15 @@
-package pl.edu.pw.eiti.groupbuying.rest.model;
+package pl.edu.pw.eiti.groupbuying.web.admin.model;
+
+import javax.validation.constraints.Min;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 public class PushNotification {
+	
+	@Min(value = 1)
 	private int offerId;
+	
+	@NotBlank
 	private String message;
 
 	public int getOfferId() {

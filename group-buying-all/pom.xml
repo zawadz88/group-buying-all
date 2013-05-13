@@ -34,6 +34,7 @@
 		<junit.version>4.8.2</junit.version>
 		<json.path.version>0.8.1</json.path.version>
 		<hamcrest.library.version>1.3</hamcrest.library.version>
+		<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
 		<maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -312,10 +313,13 @@
 				<version>${cglib.version}</version>
 			</dependency>
 
-			<!-- File Upload -->
-			<!-- <dependency> <groupId>commons-fileupload</groupId> <artifactId>commons-fileupload</artifactId> 
-				<version>1.2.2</version> </dependency> <dependency> <groupId>commons-io</groupId> 
-				<artifactId>commons-io</artifactId> <version>2.0.1</version> </dependency> -->
+
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-validator</artifactId>
+				<version>${hibernate-validator.version}</version>
+			</dependency>
+
 			<!-- Test -->
 			<dependency>
 				<groupId>org.springframework</groupId>

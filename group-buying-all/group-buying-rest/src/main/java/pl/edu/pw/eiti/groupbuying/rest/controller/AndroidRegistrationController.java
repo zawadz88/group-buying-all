@@ -18,10 +18,8 @@ import pl.edu.pw.eiti.groupbuying.core.domain.AndroidDeviceStatus;
 import pl.edu.pw.eiti.groupbuying.core.domain.AndroidRegisteredDevice;
 import pl.edu.pw.eiti.groupbuying.rest.exception.BadRequestException;
 import pl.edu.pw.eiti.groupbuying.rest.exception.InternalServerErrorException;
-import pl.edu.pw.eiti.groupbuying.rest.model.PushNotification;
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 import pl.edu.pw.eiti.groupbuying.rest.service.AndroidRegistrationService;
-import pl.edu.pw.eiti.groupbuying.rest.service.PushService;
 
 /**
  * Controller that registers/unregisters a device.
@@ -39,10 +37,7 @@ public class AndroidRegistrationController {
 
 	@Autowired
 	private AndroidRegistrationService androidRegistrationService;
-	
-	@Autowired
-	private PushService pushService;
-	
+		
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	protected @ResponseBody boolean register(
 			@RequestParam(value = "regId", required = false) final String registrationId,
@@ -71,16 +66,6 @@ public class AndroidRegistrationController {
 			throw new InternalServerErrorException("Unknown error", ErrorCode.UNKNOWN_ERROR);
 		}
 				
-		return true;
-	}
-	
-	//TODO usunac
-	@RequestMapping(value = "push", method = RequestMethod.GET)
-	protected @ResponseBody boolean push() {
-		PushNotification pushNotification = new PushNotification();
-		pushNotification.setMessage("Tralalala");
-		pushNotification.setOfferId(19);
-		pushService.push(pushNotification);
 		return true;
 	}
 	
