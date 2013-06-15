@@ -211,10 +211,11 @@
 	</build>
 	<modules>
 		<module>facebook-android-sdk</module>
-		<module>group-buying-android</module>
 		<module>actionbarsherlock</module>
 		<module>google-play-services-library</module>
 		<module>pull-to-refresh-library</module>
+		<module>group-buying-android</module>
+		<module>group-buying-partner-android</module>
 	</modules>
 
 	<repositories>
