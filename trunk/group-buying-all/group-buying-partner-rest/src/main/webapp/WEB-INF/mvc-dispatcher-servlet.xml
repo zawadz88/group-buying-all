@@ -1,0 +1,56 @@
+<beans:beans 
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd" >
+
+	<mvc:annotation-driven />
+	
+	<context:component-scan base-package="pl.edu.pw.eiti.groupbuying" />
+	
+	<beans:bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+			
+    <beans:bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <beans:property name="order" value="1" />
+        
+        <beans:property name="contentNegotiationManager">
+            <beans:bean class="org.springframework.web.accept.ContentNegotiationManager">
+                <beans:constructor-arg>
+                    <beans:bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+                        <beans:constructor-arg>
+                            <beans:map>
+                                <beans:entry key="json" value="application/json"/>
+                            </beans:map>
+                        </beans:constructor-arg>
+                    </beans:bean>
+                </beans:constructor-arg>
+            </beans:bean>
+        </beans:property>
+        
+        <beans:property name="defaultViews">
+            <beans:list>
+                <!-- JSON View -->
+                <beans:bean name="MappingJacksonJsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />                
+            </beans:list>
+        </beans:property>
+          		
+    </beans:bean>
+	  	
+	<beans:bean id="exceptionResolver" class="pl.edu.pw.eiti.groupbuying.partner.rest.resolver.ApiHandlerExceptionResolver">
+        <beans:property name="order" value="0" />
+	</beans:bean>
+		
+</beans:beans>
