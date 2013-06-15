@@ -86,10 +86,6 @@
             android:theme="@style/Theme.groupbuying" >
         </activity>
         <activity
-            android:name=".SignInActivity"
-            android:label=""
-            android:theme="@style/Theme.groupbuying" />
-        <activity
             android:name=".OfferActivity"
             android:label=""
             android:theme="@style/Theme.groupbuying" />

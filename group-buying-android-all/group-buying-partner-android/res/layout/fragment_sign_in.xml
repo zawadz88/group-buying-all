@@ -1,38 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright (c) 2013 Piotr Zawadzki.
-  All rights reserved. This program and the accompanying materials
-  are made available under the terms of the GNU Public License v3.0
-  which accompanies this distribution, and is available at
-  http://www.gnu.org/licenses/gpl.html
-  
-  Contributors:
-      Piotr Zawadzki - initial API and implementation
--->
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:layout_gravity="fill_vertical"
     android:background="#ffffff" >
 
-    <FrameLayout
-        android:id="@+id/header_frameLayout"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/sign_in_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#6DB33F" >
-    </FrameLayout>
+        android:text="@string/log_in_header"
+        android:textColor="@android:color/black"
+        android:gravity="center"
+        android:textSize="24sp" >
+    </TextView>
 
     <EditText
         android:id="@+id/username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/header_frameLayout"
+        android:layout_below="@id/sign_in_header"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
         android:ems="10"
+        android:hint="@string/username_hint"
         android:inputType="textEmailAddress" >
 
         <requestFocus />
@@ -46,6 +41,7 @@
         android:layout_alignRight="@+id/username"
         android:layout_below="@+id/username"
         android:ems="10"
+        android:hint="@string/password_hint"
         android:inputType="textPassword" />
 
     <LinearLayout
@@ -72,12 +68,5 @@
             android:layout_weight=".5"
             android:text="@string/sign_in" />
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/spring_logo_framelayout"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
-    </FrameLayout>
 
 </RelativeLayout>
