@@ -365,6 +365,7 @@
 		<module>group-buying-core</module>
 		<module>group-buying-security-core</module>
 		<module>group-buying-rest</module>
+		<module>group-buying-partner-rest</module>
 		<module>group-buying-web</module>
 		<module>group-buying-web-admin</module>
 	</modules>
