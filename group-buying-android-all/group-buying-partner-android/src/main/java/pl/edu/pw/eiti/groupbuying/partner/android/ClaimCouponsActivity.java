@@ -269,8 +269,6 @@ public class ClaimCouponsActivity extends AbstractGroupBuyingActivity implements
 			Exception e = task.getException();
 			if (e instanceof HttpClientErrorException) {
 				HttpClientErrorException httpError = (HttpClientErrorException) e;
-				e.printStackTrace();
-				System.out.println("httpError: " + httpError.getLocalizedMessage() + ", " + httpError.getResponseBodyAsString() + ", " + httpError.getStatusText());
 				if (httpError.getStatusCode() == HttpStatus.UNAUTHORIZED) {
 					getApplicationContext().getConnectionRepository().removeConnections(getApplicationContext().getConnectionFactory().getProviderId());
 					showFragment(SIGN_IN, true);
@@ -302,6 +300,7 @@ public class ClaimCouponsActivity extends AbstractGroupBuyingActivity implements
 					showFragment(NO_INTERNET, true);					
 				}
 			} else {
+				Log.e(TAG, "Unknown error: " + e.getLocalizedMessage());
 				Toast.makeText(getApplicationContext(), "Unknown error occurred. Please try again later.", Toast.LENGTH_LONG).show();
 				couponInfo = null;
 				showFragment(OPTIONS, false);

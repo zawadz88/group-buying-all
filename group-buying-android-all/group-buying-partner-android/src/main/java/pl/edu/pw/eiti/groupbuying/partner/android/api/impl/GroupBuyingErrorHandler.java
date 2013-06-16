@@ -42,7 +42,6 @@ public class GroupBuyingErrorHandler extends DefaultResponseErrorHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			System.out.println("apierror:" + apiError);
 			if(apiError != null) {
 				throw new ApiErrorException(apiError);
 			} else {
