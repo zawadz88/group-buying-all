@@ -38,9 +38,6 @@ public class CouponController {
 		} catch (PersistenceException e) {
 			LOG.error("DB error occured in claimCoupon", e);
 			throw new InternalServerErrorException("Database error", ErrorCode.DATABASE_ERROR);
-		} catch (Exception e) {
-			LOG.error("Internal server error occured in claimCoupon", e);
-			throw new InternalServerErrorException("Unknown error", ErrorCode.UNKNOWN_ERROR);
 		}
 		
 		return response;			
