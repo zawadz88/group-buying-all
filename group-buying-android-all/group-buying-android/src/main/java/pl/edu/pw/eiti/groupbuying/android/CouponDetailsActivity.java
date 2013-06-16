@@ -42,7 +42,7 @@ public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 		Bitmap qrcode = null;
 		
 		try {
-			QRCodeEncoder qrCodeEncoder = new QRCodeEncoder("http://www.elka.pw.edu.pl", 400);
+			QRCodeEncoder qrCodeEncoder = new QRCodeEncoder(coupon.getCouponId() + ";" + coupon.getSecurityKey(), 400);
 			qrcode = qrCodeEncoder.encodeAsBitmap();
 		} catch (WriterException e) {
 			Log.e(TAG, e.getLocalizedMessage(), e);

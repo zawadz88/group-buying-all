@@ -15,32 +15,39 @@
  */
 package pl.edu.pw.eiti.groupbuying.partner.android.api.impl;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
+import org.codehaus.jackson.Version;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.module.SimpleModule;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 
-import pl.edu.pw.eiti.groupbuying.partner.android.util.Constants;
-
-import android.util.Log;
+import pl.edu.pw.eiti.groupbuying.partner.android.api.ApiError;
+import pl.edu.pw.eiti.groupbuying.partner.android.util.ErrorCodeDeserializer;
 
 public class GroupBuyingErrorHandler extends DefaultResponseErrorHandler {
 
 	@Override
 	public void handleError(ClientHttpResponse response) throws IOException {
+		ApiError apiError = null;
 		try {
-			BufferedReader r = new BufferedReader(new InputStreamReader(response.getBody()));
-			StringBuilder total = new StringBuilder();
-			String line;
-			while ((line = r.readLine()) != null) {
-			    total.append(line);
-			}
-			Log.e(Constants.TAG, "Status code: " + response.getRawStatusCode() + ", response body: " + total.toString());
+			if (response.getStatusCode().equals(HttpStatus.BAD_REQUEST)) {
+				ObjectMapper mapper = new ObjectMapper();
+				SimpleModule errorCodeModule = new SimpleModule("MyModule", new Version(1, 0, 0, null)).addDeserializer(ApiError.ErrorCode.class, new ErrorCodeDeserializer());
+				mapper.registerModule(errorCodeModule);
+				apiError = mapper.readValue(response.getBody(), ApiError.class);				
+			}		
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
-			super.handleError(response);
+			System.out.println("apierror:" + apiError);
+			if(apiError != null) {
+				throw new ApiErrorException(apiError);
+			} else {
+				super.handleError(response);
+			}
 		}
 	}
 	
