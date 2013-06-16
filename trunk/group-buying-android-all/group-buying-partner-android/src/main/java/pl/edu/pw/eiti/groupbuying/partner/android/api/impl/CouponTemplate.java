@@ -1,5 +1,6 @@
 package pl.edu.pw.eiti.groupbuying.partner.android.api.impl;
 
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import pl.edu.pw.eiti.groupbuying.partner.android.api.ClaimResponse;
@@ -18,6 +19,7 @@ public class CouponTemplate extends AbstractGroupBuyingOperations implements Cou
 	@Override
 	public ClaimResponse claimCoupon(CouponInfo couponInfo) {
 		ClaimResponse claimResponse = null;
+		restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
 		claimResponse = restTemplate.postForObject(buildUri("account/coupon/claim"), couponInfo, ClaimResponse.class);
 		return claimResponse;
 

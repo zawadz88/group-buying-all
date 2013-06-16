@@ -1,10 +1,8 @@
 package pl.edu.pw.eiti.groupbuying.partner.android.fragment;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import pl.edu.pw.eiti.groupbuying.partner.android.R;
 import pl.edu.pw.eiti.groupbuying.partner.android.fragment.util.AlertDialogListener;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -17,12 +15,22 @@ import android.widget.LinearLayout;
 
 public class ManualClaimAlertDialogFragment extends DialogFragment {
 	
-	private Set<AlertDialogListener> listeners = new HashSet<AlertDialogListener>();
+	private static final String SECURITY_KEY_TAG = "securityKey";
+	private static final String COUPON_ID_TAG = "couponId";
+	private AlertDialogListener listener;
 
-    public static ManualClaimAlertDialogFragment newInstance(AlertDialogListener listener) {
+    public static ManualClaimAlertDialogFragment newInstance() {
     	ManualClaimAlertDialogFragment frag = new ManualClaimAlertDialogFragment();
-    	frag.listeners.add(listener);
-        return frag;
+    	return frag;
+    }
+    
+    public static ManualClaimAlertDialogFragment newInstance(String couponId, String securityKey) {
+    	ManualClaimAlertDialogFragment frag = new ManualClaimAlertDialogFragment();
+    	Bundle args = new Bundle();
+    	args.putString(COUPON_ID_TAG, couponId);
+    	args.putString(SECURITY_KEY_TAG, securityKey);
+    	frag.setArguments(args);
+    	return frag;
     }
 
     @Override
@@ -31,9 +39,19 @@ public class ManualClaimAlertDialogFragment extends DialogFragment {
     	setRetainInstance(true);
     }
     
+ 	@Override
+ 	public void onAttach(Activity activity) {
+ 		super.onAttach(activity);
+ 		try {
+ 			listener = (AlertDialogListener) activity;
+         } catch (ClassCastException e) {
+             throw new ClassCastException(activity.toString() + " must implement AlertDialogListener");
+         }
+ 	}
+ 	
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LinearLayout layout = new LinearLayout(getActivity());
+    	LinearLayout layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
 
         final EditText couponIdBox = new EditText(getActivity());
@@ -45,6 +63,12 @@ public class ManualClaimAlertDialogFragment extends DialogFragment {
         couponSecretKeyBox.setHint(R.string.security_key);
         layout.addView(couponSecretKeyBox);
 
+        Bundle args = getArguments();
+        if(args != null && args.containsKey(COUPON_ID_TAG) && args.containsKey(SECURITY_KEY_TAG)) {
+        	couponIdBox.setText(args.getString(COUPON_ID_TAG));
+        	couponSecretKeyBox.setText(args.getString(SECURITY_KEY_TAG));
+        }
+        
         return new AlertDialog.Builder(getActivity())
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle(R.string.claim_dialog_title)
@@ -52,10 +76,8 @@ public class ManualClaimAlertDialogFragment extends DialogFragment {
                 .setPositiveButton(android.R.string.ok,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            if(!listeners.isEmpty()) {
-                            	for(AlertDialogListener listener : listeners) {
-                            		listener.doPositiveClick(couponIdBox.getText().toString(), couponSecretKeyBox.getText().toString());
-                            	}
+                            if(listener != null) {
+                            	listener.doPositiveClick(couponIdBox.getText().toString(), couponSecretKeyBox.getText().toString());
                             }
                         }
                     }
@@ -63,10 +85,8 @@ public class ManualClaimAlertDialogFragment extends DialogFragment {
                 .setNegativeButton(android.R.string.cancel,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                        	if(!listeners.isEmpty()) {
-                            	for(AlertDialogListener listener : listeners) {
-                            		listener.doNegativeClick();
-                            	}
+                        	if(listener != null) {
+                            	listener.doNegativeClick();
                             }
                         }
                     }
@@ -79,10 +99,8 @@ public class ManualClaimAlertDialogFragment extends DialogFragment {
 					public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                 		if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
         					dialog.dismiss();
-        					if(!listeners.isEmpty()) {
-                            	for(AlertDialogListener listener : listeners) {
-                            		listener.doNegativeClick();
-                            	}
+        					if(listener != null) {
+                            	listener.doNegativeClick();
                             }
         		        }
 						return false;
@@ -90,12 +108,13 @@ public class ManualClaimAlertDialogFragment extends DialogFragment {
 				})
                 .create();
     }
-    
-    @Override
-    public void onDetach() {
-    	super.onDetach();
-    	listeners.clear();
-    }
+ 
+	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		listener = null;
+	}
     
     @Override
     public void onDestroyView() {
@@ -103,14 +122,5 @@ public class ManualClaimAlertDialogFragment extends DialogFragment {
             getDialog().setDismissMessage(null);
             super.onDestroyView();
     }
-    
-	public void addListener(AlertDialogListener listener) {
-		listeners.add(listener);
-	}
-
-	public void removeListener(AlertDialogListener listener) {
-		listeners.remove(listener);
-	}
-    
     
 }
