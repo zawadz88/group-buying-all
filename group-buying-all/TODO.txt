@@ -12,9 +12,9 @@
 #- opcja logout
 #- miejsca w pobliżu przez SOLR lub Hibernate Search
 #- QR code
-- odbieranie kuponów na telefonie
+#- odbieranie kuponów na telefonie
 - NFC
-- odbieranie kuponów - backend
+#- odbieranie kuponów - backend
 #- notyfikacje
 - panel sprzedawcy wzbogacony o ilość sprzedanych ofert
 - Async z Servletu 3.0?
