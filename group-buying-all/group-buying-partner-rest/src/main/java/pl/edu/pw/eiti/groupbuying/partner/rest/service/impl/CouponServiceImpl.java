@@ -10,7 +10,6 @@ import pl.edu.pw.eiti.groupbuying.core.dao.CouponDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Coupon;
 import pl.edu.pw.eiti.groupbuying.core.domain.Coupon.CouponState;
 import pl.edu.pw.eiti.groupbuying.partner.rest.exception.BadRequestException;
-import pl.edu.pw.eiti.groupbuying.partner.rest.exception.UnauthorizedException;
 import pl.edu.pw.eiti.groupbuying.partner.rest.model.ApiError.ErrorCode;
 import pl.edu.pw.eiti.groupbuying.partner.rest.model.ClaimResponse;
 import pl.edu.pw.eiti.groupbuying.partner.rest.service.CouponService;
@@ -30,11 +29,11 @@ public class CouponServiceImpl implements CouponService {
 		if(coupon == null) {
 			throw new BadRequestException("Coupon with ID: '" + couponId + "' not found.", ErrorCode.COUPON_NOT_FOUND);
 		}
+		if(!coupon.getOffer().getSeller().getEmail().equals(username)) {
+			throw new BadRequestException("Coupon '" + couponId + "' belongs to another partner.", ErrorCode.INVALID_PARTNER);
+		}
 		if(!coupon.getSecurityKey().equals(securityKey)) {
 			throw new BadRequestException("Invalid security key.", ErrorCode.INVALID_SECURITY_KEY);
-		}
-		if(!coupon.getOffer().getSeller().getEmail().equals(username)) {
-			throw new UnauthorizedException("Coupon '" + couponId + "' belongs to another partner.", ErrorCode.UNAUTHORIZED);
 		}
 		ClaimResponse response = null;
 		switch (coupon.getCouponState()) {
