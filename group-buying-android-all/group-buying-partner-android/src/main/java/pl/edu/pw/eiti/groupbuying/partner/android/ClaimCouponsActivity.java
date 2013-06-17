@@ -336,7 +336,6 @@ public class ClaimCouponsActivity extends AbstractGroupBuyingActivity implements
         // only one message sent during the beam
         NdefMessage msg = (NdefMessage) rawMsgs[0];
         // record 0 contains the MIME type, record 1 is the AAR, if present
-        Toast.makeText(getApplicationContext(), "incoming: " + new String(msg.getRecords()[0].getPayload()), Toast.LENGTH_LONG).show();
         extractCouponInfo(new String(msg.getRecords()[0].getPayload()));
         setIntent(null);
     }
