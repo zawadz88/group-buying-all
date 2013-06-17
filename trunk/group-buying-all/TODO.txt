@@ -13,12 +13,10 @@
 #- miejsca w pobliżu przez SOLR lub Hibernate Search
 #- QR code
 #- odbieranie kuponów na telefonie
-- NFC
+#- NFC
 #- odbieranie kuponów - backend
 #- notyfikacje
-- panel sprzedawcy wzbogacony o ilość sprzedanych ofert
+- info o ilości sprzedanych ofert wyciągane razem z ofertą
 - Async z Servletu 3.0?
-- poprawa walidacji formularzy?
-- panel Account do zmiany hasła użytkowników
-- profile Mavenowe
+- profile Mavenowe przywrócić poprawne
 - Javadoc
