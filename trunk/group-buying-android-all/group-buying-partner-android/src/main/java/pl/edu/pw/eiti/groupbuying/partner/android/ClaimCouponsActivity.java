@@ -33,9 +33,14 @@ import pl.edu.pw.eiti.groupbuying.partner.android.task.util.TaskResult;
 import pl.edu.pw.eiti.groupbuying.partner.android.util.IntentIntegrator;
 import pl.edu.pw.eiti.groupbuying.partner.android.util.IntentResult;
 import pl.edu.pw.eiti.groupbuying.partner.android.util.NetUtils;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.nfc.NdefMessage;
+import android.nfc.NfcAdapter;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -95,13 +100,17 @@ public class ClaimCouponsActivity extends AbstractGroupBuyingActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(couponInfo != null && couponInfoReceived) {
-			couponInfoReceived = false;
-			FragmentManager fm = getSupportFragmentManager();
-			ManualClaimAlertDialogFragment dialog = ManualClaimAlertDialogFragment.newInstance(Integer.toString(couponInfo.getCouponId()), couponInfo.getSecurityKey());
-			dialog.show(fm, "dialog");
-		}
-	}
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD_MR1 && getIntent() != null && NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
+            processIntent(getIntent());
+        }
+
+	} 
+	
+	@Override
+    public void onNewIntent(Intent intent) {
+        // onResume gets called after this to handle the intent
+        setIntent(intent);
+    }
 	
 	@Override
 	protected void onResumeFragments() {
@@ -113,6 +122,12 @@ public class ClaimCouponsActivity extends AbstractGroupBuyingActivity implements
 		if (manager.getBackStackEntryCount() == 0) {
 			showFragment(OPTIONS, false);
 		}
+		if(couponInfo != null && couponInfoReceived) {
+			couponInfoReceived = false;
+			FragmentManager fm = getSupportFragmentManager();
+			ManualClaimAlertDialogFragment dialog = ManualClaimAlertDialogFragment.newInstance(Integer.toString(couponInfo.getCouponId()), couponInfo.getSecurityKey());
+			dialog.show(fm, "dialog");
+		}
 	}
 
 	@Override
@@ -120,21 +135,25 @@ public class ClaimCouponsActivity extends AbstractGroupBuyingActivity implements
 		IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 		if (result != null) {
 			String contents = result.getContents();
-			if (contents != null) {
-				String [] params = contents.split(";");
-				if (params != null && params.length == 2 && params[0] != null && params[1] != null) {
-					try {
-						Integer.parseInt(params[0]);
-						couponInfo = new CouponInfo();
-						couponInfo.setCouponId(Integer.parseInt((String) params[0]));
-						couponInfo.setSecurityKey((String) params[1]);
-						couponInfoReceived  = true;
-					} catch (NumberFormatException e) {
-						Toast.makeText(getApplicationContext(), "Invalid coupon format!", Toast.LENGTH_LONG).show();						
-					}					
-				} else {
-					Toast.makeText(getApplicationContext(), "Invalid coupon format!", Toast.LENGTH_LONG).show();
-				}
+			extractCouponInfo(contents);
+		}
+	}
+
+	private void extractCouponInfo(String contents) {
+		if (contents != null) {
+			String [] params = contents.split(";");
+			if (params != null && params.length == 2 && params[0] != null && params[1] != null) {
+				try {
+					Integer.parseInt(params[0]);
+					couponInfo = new CouponInfo();
+					couponInfo.setCouponId(Integer.parseInt((String) params[0]));
+					couponInfo.setSecurityKey((String) params[1]);
+					couponInfoReceived = true;
+				} catch (NumberFormatException e) {
+					Toast.makeText(getApplicationContext(), "Invalid coupon format!", Toast.LENGTH_LONG).show();						
+				}					
+			} else {
+				Toast.makeText(getApplicationContext(), "Invalid coupon format!", Toast.LENGTH_LONG).show();
 			}
 		}
 	}
@@ -305,8 +324,20 @@ public class ClaimCouponsActivity extends AbstractGroupBuyingActivity implements
 				couponInfo = null;
 				showFragment(OPTIONS, false);
 			}
-
 		}
-
 	}
+	
+	/**
+     * Parses the NDEF Message from the intent and prints to the TextView
+     */
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
+    private void processIntent(Intent intent) {
+        Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+        // only one message sent during the beam
+        NdefMessage msg = (NdefMessage) rawMsgs[0];
+        // record 0 contains the MIME type, record 1 is the AAR, if present
+        Toast.makeText(getApplicationContext(), "incoming: " + new String(msg.getRecords()[0].getPayload()), Toast.LENGTH_LONG).show();
+        extractCouponInfo(new String(msg.getRecords()[0].getPayload()));
+        setIntent(null);
+    }
 }

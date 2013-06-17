@@ -1,7 +1,6 @@
 package pl.edu.pw.eiti.groupbuying.partner.android.fragment;
 
 import pl.edu.pw.eiti.groupbuying.partner.android.R;
-import pl.edu.pw.eiti.groupbuying.partner.android.fragment.util.AlertDialogListener;
 import pl.edu.pw.eiti.groupbuying.partner.android.util.IntentIntegrator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,14 +38,6 @@ public class SelectClaimOptionFragment extends Fragment {
 			public void onClick(View v) {
 				IntentIntegrator integrator = new IntentIntegrator(getActivity());
 				integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
-			}
-		});
-		aq.id(R.id.nfcClaimButton).clicked(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 

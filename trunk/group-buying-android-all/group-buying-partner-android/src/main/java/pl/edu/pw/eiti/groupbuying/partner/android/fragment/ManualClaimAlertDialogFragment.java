@@ -42,6 +42,7 @@ public class ManualClaimAlertDialogFragment extends DialogFragment {
  	@Override
  	public void onAttach(Activity activity) {
  		super.onAttach(activity);
+ 		System.out.println("onAttach: " + activity);
  		try {
  			listener = (AlertDialogListener) activity;
          } catch (ClassCastException e) {
