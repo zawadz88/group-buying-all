@@ -21,17 +21,16 @@
     </string-array>
     
     
-    <!-- <string name="client_id">${client.id}</string>
+    <string name="client_id">${client.id}</string>
 	<string name="client_secret">${client.secret}</string>
 	<string name="connection_repository_encryption_password">${connection.repository.encryption.password}</string>
 	<string name="connection_repository_encryption_salt">${connection.repository.encryption.salt}</string>
-    <string name="base_url">${base.url}</string> -->
-    <string name="base_url">http://192.168.0.195:8080/group-buying-rest/</string>
-    <!-- <string name="base_url">http://87.207.209.32:8080/group-buying-rest/</string> -->
+    <string name="base_url">${base.url}</string>
+<!--     <string name="base_url">http://192.168.0.195:8080/group-buying-rest/</string>
     <string name="client_id">tonr</string>
 	<string name="client_secret">secret</string>
 	<string name="connection_repository_encryption_password">password</string>
-	<string name="connection_repository_encryption_salt">5c0744940b5c369b</string>
+	<string name="connection_repository_encryption_salt">5c0744940b5c369b</string> -->
 	
     <string name="sign_in">Sign In</string>
     <string name="cancel">Cancel</string>
