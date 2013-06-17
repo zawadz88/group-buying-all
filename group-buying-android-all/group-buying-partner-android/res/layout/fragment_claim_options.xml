@@ -28,11 +28,4 @@
         android:gravity="center"
         android:text="@string/qr_code_claim_text" />
 
-    <Button
-        android:id="@+id/nfcClaimButton"
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/nfc_claim_text" />
-
 </LinearLayout>

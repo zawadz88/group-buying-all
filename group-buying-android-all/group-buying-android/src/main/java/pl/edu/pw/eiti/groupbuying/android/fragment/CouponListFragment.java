@@ -22,8 +22,8 @@ import com.androidquery.AQuery;
 public class CouponListFragment extends Fragment implements OnChildClickListener {
 	
 	private Coupon [] coupons;
-	private ExpandableListView couponExpandableListView;
-	
+	private CouponsExpandableListAdapter listAdapter;
+		
 	public static CouponListFragment newInstance(Coupon [] coupons) {
 		CouponListFragment fragment = new CouponListFragment();
 		fragment.coupons = coupons;
@@ -43,12 +43,12 @@ public class CouponListFragment extends Fragment implements OnChildClickListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View rootView = inflater.inflate(R.layout.fragment_coupon_list,	container, false);
 		AQuery aq = new AQuery(getActivity(), rootView);
-		couponExpandableListView = aq.id(R.id.offers).getExpandableListView();
+		ExpandableListView couponExpandableListView = aq.id(R.id.offers).getExpandableListView();
 		CouponExpandListGroup available = new CouponExpandListGroup(getString(R.string.coupon_available_title));
 		CouponExpandListGroup used = new CouponExpandListGroup(getString(R.string.coupon_used_title));
 		CouponExpandListGroup expired = new CouponExpandListGroup(getString(R.string.coupon_expired_title));
 		List<CouponExpandListGroup> groups = Arrays.asList(available, used, expired);
-		CouponsExpandableListAdapter listAdapter = new CouponsExpandableListAdapter(getActivity(), groups);
+		listAdapter = new CouponsExpandableListAdapter(getActivity(), groups);
 		
 		for(Coupon coupon : coupons) {
 			switch (coupon.getCouponState()) {
@@ -80,8 +80,8 @@ public class CouponListFragment extends Fragment implements OnChildClickListener
 	}
 
 	@Override
-	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-		Coupon selectedCoupon = coupons[childPosition];
+	public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {		
+		Coupon selectedCoupon = listAdapter.getChild(groupPosition, childPosition);
 		Intent intent = new Intent(getActivity(), CouponPreviewActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		intent.putExtra("coupon", selectedCoupon);

@@ -11,12 +11,19 @@
 package pl.edu.pw.eiti.groupbuying.android;
 
 import pl.edu.pw.eiti.groupbuying.android.api.Coupon;
+import pl.edu.pw.eiti.groupbuying.android.nfc.NfcHelper;
+import pl.edu.pw.eiti.groupbuying.android.nfc.NfcHelperJellyBean;
+import pl.edu.pw.eiti.groupbuying.android.util.NfcMessageSentListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -24,14 +31,18 @@ import com.androidquery.AQuery;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.android.encode.QRCodeEncoder;
 
-public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
+public class CouponDetailsActivity extends AbstractGroupBuyingActivity implements NfcMessageSentListener {
 
 	protected static final String TAG = CouponDetailsActivity.class.getSimpleName();
+	
+    private static final int MESSAGE_SENT = 1;
 
 	private AQuery aq;
 
 	private Coupon coupon;
-
+	
+	private NfcHelper nfcHelper;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,6 +68,9 @@ public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 		});
 		aq.id(R.id.couponId).text(getString(R.string.coupon_id_prefix) + coupon.getCouponId());
 		aq.id(R.id.securityCode).text(getString(R.string.security_code_prefix) + coupon.getSecurityKey());
+		
+		nfcHelper = NfcHelper.createInstance(this, coupon.getCouponId() + ";" + coupon.getSecurityKey());
+		nfcHelper.initAdapter(this);
 	}
 
 	@Override
@@ -102,5 +116,23 @@ public class CouponDetailsActivity extends AbstractGroupBuyingActivity {
 		}
 		return true;
 	}
+
+	@Override
+	public void sendSuccessful() {
+		mHandler.obtainMessage(MESSAGE_SENT).sendToTarget();		
+	}
+	
+	 /** This handler receives a message from sendSuccessful */
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+        	
+            switch (msg.what) {
+            case MESSAGE_SENT:
+                Toast.makeText(CouponDetailsActivity.this, getString(R.string.nfc_message_sent), Toast.LENGTH_LONG).show();
+                break;
+            }
+        }
+    };
 
 }

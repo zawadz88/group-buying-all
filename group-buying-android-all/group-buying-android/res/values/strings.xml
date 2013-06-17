@@ -100,5 +100,7 @@
     
     <string name="no_offers_available">No offers available nearby</string>
     
+    <string name="nfc_message_sent">Message sent!</string>
+    
     
 </resources>

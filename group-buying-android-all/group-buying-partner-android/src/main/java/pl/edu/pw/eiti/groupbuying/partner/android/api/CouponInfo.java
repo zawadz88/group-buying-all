@@ -35,4 +35,9 @@ public class CouponInfo implements Serializable {
 		this.couponId = couponId;
 	}
 
+	@Override
+	public String toString() {
+		return "CouponInfo [couponId=" + couponId + ", securityKey=" + securityKey + "]";
+	}
+
 }
