@@ -18,5 +18,5 @@
 #- notyfikacje
 - info o ilości sprzedanych ofert wyciągane razem z ofertą
 - Async z Servletu 3.0?
-- profile Mavenowe przywrócić poprawne
+#- profile Mavenowe przywrócić poprawne
 - Javadoc
