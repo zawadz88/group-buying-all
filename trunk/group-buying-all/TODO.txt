@@ -17,6 +17,8 @@
 #- odbieranie kuponów - backend
 #- notyfikacje
 - info o ilości sprzedanych ofert wyciągane razem z ofertą
+- wyskakiwanie niewykorzystanego kuponu po uruchomieniu aplikacji jeśli w poblizu miejsca realizacji i zalogowany
+- logowanie Facebookiem?
 - Async z Servletu 3.0?
 #- profile Mavenowe przywrócić poprawne
 - Javadoc
