@@ -99,7 +99,6 @@ public class MECLController {
 				if(client != null) {
 					dbUpdated = dbUpdated && couponService.createCoupon(client, offer);
 				}
-				//TODO create coupon
 				if(dbUpdated) {
 					return "redirect:/paypal/mecl/success";
 				} else {

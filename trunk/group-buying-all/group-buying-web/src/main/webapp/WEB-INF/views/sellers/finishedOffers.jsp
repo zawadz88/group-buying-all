@@ -33,18 +33,20 @@
 					</td>
 				</tr>
 				<c:forEach items="${offers}" var="offer">
-					<td>
-						<c:out value="${offer.title}"></c:out>
-					</td>
-					<td>
-						<c:out value="${offer.startDate}"></c:out>
-					</td>
-					<td>
-						<c:out value="${offer.endDate}"></c:out>
-					</td>
-					<td>
-						<a href="<c:url value="details.do?offerId=${offer.offerId}"/>">Details</a>
-					</td>
+					<tr>
+						<td>
+							<c:out value="${offer.title}"></c:out>
+						</td>
+						<td>
+							<c:out value="${offer.startDate}"></c:out>
+						</td>
+						<td>
+							<c:out value="${offer.endDate}"></c:out>
+						</td>
+						<td>
+							<a href="<c:url value="details.do?offerId=${offer.offerId}"/>">Details</a>
+						</td>
+					</tr>
 				</c:forEach>
 			</table>
 		</div>

@@ -111,7 +111,7 @@ public class MySQLOfferDAO implements OfferDAO {
 
 	@Transactional
 	private List<Offer> getOffersForState(final String username, final OfferState state) {
-		TypedQuery<Offer> query = entityManager.createQuery("select o from Offer o where o.state = :state and o.username = :username", Offer.class);
+		TypedQuery<Offer> query = entityManager.createQuery("select o from Offer o where o.state = :state and o.seller.email = :username", Offer.class);
 		query.setParameter("state", state);
 		query.setParameter("username", username);
 
