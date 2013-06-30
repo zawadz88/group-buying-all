@@ -16,8 +16,9 @@
 #- NFC
 #- odbieranie kuponów - backend
 #- notyfikacje
-- info o ilości sprzedanych ofert wyciągane razem z ofertą
+- HTTPS
 - wyskakiwanie niewykorzystanego kuponu po uruchomieniu aplikacji jeśli w poblizu miejsca realizacji i zalogowany
+- info o ilości sprzedanych ofert wyciągane razem z ofertą
 - logowanie Facebookiem?
 - Async z Servletu 3.0?
 #- profile Mavenowe przywrócić poprawne
