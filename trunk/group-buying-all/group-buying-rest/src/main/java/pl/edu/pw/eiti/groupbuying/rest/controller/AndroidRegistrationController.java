@@ -43,7 +43,6 @@ public class AndroidRegistrationController {
 			@RequestParam(value = "regId", required = false) final String registrationId,
 			@RequestParam(value = "deviceName", required = false) String deviceName,
 			@RequestParam(value = "systemInfo", required = false) String systemInfo) {
-		System.out.println("jestem");
 		validateRegistrationParams(registrationId, deviceName, systemInfo);
 		
 		AndroidRegisteredDevice device = new AndroidRegisteredDevice();
@@ -53,7 +52,6 @@ public class AndroidRegistrationController {
 		device.setRegistrationId(registrationId);
 		device.setTime(new Date());
 		try {
-
 			androidRegistrationService.registerDevice(device);
 		} catch (DataAccessException e) {
 			LOG.error("DB error occured in register, device: " + device, e);
