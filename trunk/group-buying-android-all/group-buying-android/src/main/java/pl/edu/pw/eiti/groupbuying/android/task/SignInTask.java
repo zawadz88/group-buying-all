@@ -42,6 +42,7 @@ public class SignInTask extends AbstractGroupBuyingTask<Void> {
 	protected void doInBackgroundSafe() throws Exception {
 		HttpHeaders requestHeaders = new HttpHeaders();
 		requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		requestHeaders.add("Connection", "close");
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(formData, requestHeaders);
 		RestTemplate restTemplate = new RestTemplate(true);
 		if (restTemplate.getRequestFactory() instanceof SimpleClientHttpRequestFactory) {
