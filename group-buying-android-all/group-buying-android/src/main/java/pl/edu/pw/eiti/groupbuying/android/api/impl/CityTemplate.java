@@ -1,5 +1,13 @@
 package pl.edu.pw.eiti.groupbuying.android.api.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -23,7 +31,21 @@ public class CityTemplate extends AbstractGroupBuyingOperations implements CityO
 			params.set("latitude", latitude.toString());
 			params.set("longitude", longitude.toString());			
 		}		
-		return restTemplate.getForObject(buildUri("cities/city-config", params), CityConfig.class);
+		HttpHeaders requestHeaders = new HttpHeaders();
+		List<MediaType> acceptableMediaTypes = new ArrayList<MediaType>();
+		acceptableMediaTypes.add(MediaType.APPLICATION_JSON);
+		requestHeaders.setAccept(acceptableMediaTypes);
+		requestHeaders.add("Connection", "close");
+		
+		// Populate the headers in an HttpEntity object to use for the request
+		HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+		ResponseEntity<CityConfig> responseEntity = restTemplate.exchange(
+				buildUri("cities/city-config", params),
+				HttpMethod.GET,
+				requestEntity,
+				CityConfig.class);
+		CityConfig cityConfig = responseEntity.getBody();		
+		return cityConfig;
 	}
 
 }
