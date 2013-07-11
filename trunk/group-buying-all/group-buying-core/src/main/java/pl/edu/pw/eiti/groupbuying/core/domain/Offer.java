@@ -24,6 +24,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Latitude;
 import org.hibernate.search.annotations.Longitude;
@@ -38,6 +40,7 @@ import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 @Entity
 @Indexed
 @Spatial(name="loc")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region="pl.edu.pw.eiti.groupbuying.core.domain.Offer", include="non-lazy")
 @Table(name = "offers")
 public class Offer implements Serializable {
 

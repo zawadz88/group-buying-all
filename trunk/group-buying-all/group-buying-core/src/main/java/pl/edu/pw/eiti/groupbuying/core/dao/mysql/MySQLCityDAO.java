@@ -25,6 +25,8 @@ import org.apache.lucene.search.Sort;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.DatabaseRetrievalMethod;
+import org.hibernate.search.query.ObjectLookupMethod;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.Unit;
 import org.hibernate.search.spatial.impl.DistanceSortField;
@@ -68,14 +70,16 @@ public class MySQLCityDAO implements CityDAO {
 	@Transactional
 	public List<CityDTO> getCities() {
 		CriteriaBuilder qb = entityManager.getCriteriaBuilder();
+		
 		CriteriaQuery<CityDTO> c = qb.createQuery(CityDTO.class);
 		Root<City> p = c.from(City.class);
-
+		
 		Predicate enabledCondition = qb.equal(p.get("state"), true);		
 		c.where(enabledCondition);		
 		
 		c.multiselect(p.get("cityId"), p.get("name"), p.get("latitude"), p.get("longitude"));
 		TypedQuery<CityDTO> query = entityManager.createQuery(c);
+		query.setHint("org.hibernate.cacheable", true);
 		List<CityDTO> result = query.getResultList();
 		return result;
 	}
@@ -87,6 +91,8 @@ public class MySQLCityDAO implements CityDAO {
 		Query luceneQuery = builder.spatial().onCoordinates("loc").within(citySearchRadius, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery();
 
 		FullTextQuery hibQuery = getFullTextEntityManager().createFullTextQuery(luceneQuery, City.class);
+		hibQuery.initializeObjectsWith(ObjectLookupMethod.SECOND_LEVEL_CACHE, DatabaseRetrievalMethod.QUERY);
+		
 		Sort distanceSort = new Sort(new DistanceSortField(latitude, longitude, "loc"));
 		hibQuery.setSort(distanceSort);
 		hibQuery.setMaxResults(1);

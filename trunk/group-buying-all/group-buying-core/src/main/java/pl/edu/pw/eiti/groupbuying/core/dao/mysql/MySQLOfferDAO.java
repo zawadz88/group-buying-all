@@ -26,6 +26,8 @@ import org.apache.lucene.search.Sort;
 import org.hibernate.search.jpa.FullTextEntityManager;
 import org.hibernate.search.jpa.FullTextQuery;
 import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.DatabaseRetrievalMethod;
+import org.hibernate.search.query.ObjectLookupMethod;
 import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.search.query.dsl.Unit;
 import org.hibernate.search.spatial.impl.DistanceSortField;
@@ -152,6 +154,7 @@ public class MySQLOfferDAO implements OfferDAO {
 
 		c.multiselect(p.get("offerId"), p.get("title"), p.get("imageUrl"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"), p.get("latitude"), p.get("longitude"));
 		TypedQuery<OfferEssentialDTO> query = entityManager.createQuery(c); 
+		query.setHint("org.hibernate.cacheable", true);
 		query.setFirstResult(pageNumber * pageSize);
 		query.setMaxResults(pageSize);
 		List<OfferEssentialDTO> result = query.getResultList();
@@ -173,6 +176,7 @@ public class MySQLOfferDAO implements OfferDAO {
 
 		c.multiselect(p.get("offerId"), p.get("title"), p.get("imageUrl"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"), p.get("latitude"), p.get("longitude"));
 		TypedQuery<OfferEssentialDTO> query = entityManager.createQuery(c); 
+		query.setHint("org.hibernate.cacheable", true);
 		query.setFirstResult(pageNumber * pageSize);
 		query.setMaxResults(pageSize);
 		List<OfferEssentialDTO> result = query.getResultList();
@@ -187,6 +191,7 @@ public class MySQLOfferDAO implements OfferDAO {
 		Query luceneQuery = builder.spatial().onCoordinates("loc").within(searchRadius, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery();
 
 		FullTextQuery hibQuery = getFullTextEntityManager().createFullTextQuery(luceneQuery, Offer.class);
+		hibQuery.initializeObjectsWith(ObjectLookupMethod.SECOND_LEVEL_CACHE, DatabaseRetrievalMethod.QUERY);
 		Sort distanceSort = new Sort(new DistanceSortField(latitude, longitude, "loc"));
 		hibQuery.setSort(distanceSort);
 		List<?> results = hibQuery.getResultList();
