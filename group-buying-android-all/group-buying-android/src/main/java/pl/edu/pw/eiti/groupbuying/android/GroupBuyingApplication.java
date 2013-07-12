@@ -47,7 +47,7 @@ public class GroupBuyingApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		connectionFactory = new GroupBuyingConnectionFactory(getClientId(), getClientSecret(), getApiUrlBase());
+		connectionFactory = new GroupBuyingConnectionFactory(getClientId(), getClientSecret(), getApiUrlBaseSecure());
 		ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
 		registry.addConnectionFactory(connectionFactory);
 		connectionRepository = new SQLiteConnectionRepository(new SQLiteConnectionRepositoryHelper(this), registry,
@@ -75,6 +75,10 @@ public class GroupBuyingApplication extends Application {
 
 	public String getApiUrlBase() {
 		return getString(R.string.base_url);
+	}
+	
+	public String getApiUrlBaseSecure() {
+		return getString(R.string.base_secure_url);
 	}
 
 	//***************************************

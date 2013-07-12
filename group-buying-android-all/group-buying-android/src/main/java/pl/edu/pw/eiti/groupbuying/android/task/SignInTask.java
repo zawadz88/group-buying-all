@@ -11,11 +11,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import pl.edu.pw.eiti.groupbuying.android.task.util.AsyncTaskListener;
+import pl.edu.pw.eiti.groupbuying.android.util.HttpsClient;
 import android.util.Log;
 
 public class SignInTask extends AbstractGroupBuyingTask<Void> {
@@ -44,14 +44,20 @@ public class SignInTask extends AbstractGroupBuyingTask<Void> {
 		requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		requestHeaders.add("Connection", "close");
 		HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<MultiValueMap<String, String>>(formData, requestHeaders);
-		RestTemplate restTemplate = new RestTemplate(true);
+/*		RestTemplate restTemplate = new RestTemplate(true);
 		if (restTemplate.getRequestFactory() instanceof SimpleClientHttpRequestFactory) {
             ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setConnectTimeout(CONNECTION_TIMEOUT);
             ((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory()).setReadTimeout(READ_TIMEOUT);
         } else if (restTemplate.getRequestFactory() instanceof HttpComponentsClientHttpRequestFactory) {
             ((HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory()).setConnectTimeout(CONNECTION_TIMEOUT);
             ((HttpComponentsClientHttpRequestFactory) restTemplate.getRequestFactory()).setReadTimeout(READ_TIMEOUT);
-        }
+        }*/
+		//FIXME replace with the commented code from above, this causes security risks such as MITM, for development only!!!
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(HttpsClient.getNewHttpClient());
+		requestFactory.setConnectTimeout(CONNECTION_TIMEOUT);
+		requestFactory.setReadTimeout(READ_TIMEOUT);
+		RestTemplate restTemplate = new RestTemplate(true, requestFactory);
+		
 		responseBody = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class).getBody();
 		Log.d(TAG, responseBody.toString());		
 	}

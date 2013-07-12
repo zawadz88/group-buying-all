@@ -121,18 +121,18 @@ public class PayPalPaymentFragment extends AbstractPaymentFragment implements Pa
 		payPalWebView.setWebViewClient(new WebViewClient() {
 			public void onPageFinished(WebView view, String url) {
 				System.out.println("onPageFinished: " + url);
-				if (url.equals(getString(R.string.base_url) + "paypal/mecl/success")) {
+				if (url.equals(application.getApiUrlBaseSecure() + "paypal/mecl/success")) {
 					activity.finish();
 					Intent intent = new Intent(activity, PaymentConfirmedActivity.class);
 					intent.putExtra("offer", offer);
 					startActivity(intent);
-				} else if (url.startsWith(getString(R.string.base_url) + "paypal/mecl/cancel")) {
+				} else if (url.startsWith(application.getApiUrlBaseSecure() + "paypal/mecl/cancel")) {
 					FragmentManager manager = getActivity().getSupportFragmentManager();
 					FragmentTransaction trans = manager.beginTransaction();
 					trans.remove(PayPalPaymentFragment.this);
 					trans.commit();
 					manager.popBackStackImmediate();
-				} else if (url.startsWith(getString(R.string.base_url) + "paypal/mecl/error")) {
+				} else if (url.startsWith(application.getApiUrlBaseSecure() + "paypal/mecl/error")) {
 				} else if (url.startsWith(getActivity().getString(R.string.paypal_checkout_url_prefix))) {
 					if (progressDialog != null) {
 						progressDialog.cancel();
