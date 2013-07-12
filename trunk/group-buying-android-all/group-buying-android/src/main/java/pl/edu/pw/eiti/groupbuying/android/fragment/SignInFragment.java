@@ -105,7 +105,7 @@ public class SignInFragment extends Fragment implements AsyncTaskListener {
 					InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.hideSoftInputFromWindow(usernameEditText.getWindowToken(), 0);
 					imm.hideSoftInputFromWindow(passwordEditText.getWindowToken(), 0);
-					new SignInTask(application.getApiUrlBase() + "oauth/token", formData, SignInFragment.this).execute();
+					new SignInTask(application.getApiUrlBaseSecure() + "oauth/token", formData, SignInFragment.this).execute();
 				} else {
 					displayAppAuthorizationError("Your email or password was entered incorrectly.");
 				}

@@ -26,6 +26,7 @@
 	<string name="connection_repository_encryption_password">${connection.repository.encryption.password}</string>
 	<string name="connection_repository_encryption_salt">${connection.repository.encryption.salt}</string>
     <string name="base_url">${base.url}</string>
+    <string name="base_secure_url">${base.secure.url}</string>
 <!--     <string name="base_url">http://192.168.0.195:8080/group-buying-rest/</string>
     <string name="client_id">tonr</string>
 	<string name="client_secret">secret</string>

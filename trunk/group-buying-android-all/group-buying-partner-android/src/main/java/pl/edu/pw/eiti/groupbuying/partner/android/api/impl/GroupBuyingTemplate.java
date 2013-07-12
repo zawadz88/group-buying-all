@@ -7,14 +7,13 @@ import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.social.oauth2.AbstractOAuth2ApiBinding;
 
 import pl.edu.pw.eiti.groupbuying.partner.android.api.CouponOperations;
 import pl.edu.pw.eiti.groupbuying.partner.android.api.GroupBuyingApi;
-import android.os.Build;
+import pl.edu.pw.eiti.groupbuying.partner.android.util.HttpsClient;
 
 public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements GroupBuyingApi {
 	
@@ -42,7 +41,7 @@ public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements Gro
 
 	//FIXME chamski hack, ale dopóki w spring social nic lepszego nie dadza to tak musi być...
 	private void initRequestFactory() {
-		if (Build.VERSION.SDK_INT >= 9) {
+		/*if (Build.VERSION.SDK_INT >= 9) {
 			SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
 			requestFactory.setConnectTimeout(CONNECTION_TIMEOUT);
 			requestFactory.setReadTimeout(READ_TIMEOUT);
@@ -52,7 +51,12 @@ public class GroupBuyingTemplate extends AbstractOAuth2ApiBinding implements Gro
 			requestFactory.setConnectTimeout(CONNECTION_TIMEOUT);
 			requestFactory.setReadTimeout(READ_TIMEOUT);			
 			setRequestFactory(requestFactory);
-		}
+		}*/
+		//FIXME replace with the commented code from above, this causes security risks such as MITM, for development only!!!
+		HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(HttpsClient.getNewHttpClient());
+		requestFactory.setConnectTimeout(CONNECTION_TIMEOUT);
+		requestFactory.setReadTimeout(READ_TIMEOUT);
+		setRequestFactory(requestFactory);
 	}
 
 	private void registerGroupBuyingJsonModule() {
