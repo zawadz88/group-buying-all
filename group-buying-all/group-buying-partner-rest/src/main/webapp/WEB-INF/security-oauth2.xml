@@ -20,7 +20,7 @@
 		authentication-manager-ref="sellerAuthenticationManager"
 		entry-point-ref="oauthAuthenticationEntryPoint" >
 		
-		<intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" />
+		<intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY" requires-channel="https" />
 		<anonymous enabled="false" />
 		<http-basic entry-point-ref="oauthAuthenticationEntryPoint" />
 		<!-- include this only if you need to authenticate clients via request 
@@ -35,7 +35,7 @@
 		use-expressions="true"
 	    entry-point-ref="oauthAuthenticationEntryPoint">	  
 	      
-		<intercept-url pattern="/**" access="isAuthenticated()" />
+		<intercept-url pattern="/**" access="isAuthenticated()" requires-channel="https" />
 		<custom-filter ref="resourceServerFilter" before="EXCEPTION_TRANSLATION_FILTER" />
 	</http>
 	

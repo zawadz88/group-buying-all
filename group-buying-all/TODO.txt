@@ -16,8 +16,8 @@
 #- NFC
 #- odbieranie kuponów - backend
 #- notyfikacje
-- HTTPS
-- Ehcache
+#- HTTPS
+#- Ehcache
 - wyskakiwanie niewykorzystanego kuponu po uruchomieniu aplikacji jeśli w poblizu miejsca realizacji i zalogowany
 - info o ilości sprzedanych ofert wyciągane razem z ofertą
 - logowanie Facebookiem?
