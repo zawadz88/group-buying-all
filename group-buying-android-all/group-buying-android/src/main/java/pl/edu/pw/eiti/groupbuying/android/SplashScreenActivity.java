@@ -31,8 +31,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
 
 public class SplashScreenActivity extends Activity implements AsyncTaskListener {
 
@@ -79,13 +77,11 @@ public class SplashScreenActivity extends Activity implements AsyncTaskListener 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		EasyTracker.getInstance().activityStart(this);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-	    EasyTracker.getInstance().activityStop(this);
 	}
 
 	@Override
