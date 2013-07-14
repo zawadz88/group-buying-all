@@ -29,7 +29,6 @@
 		<maven.resources.plugin.version>2.5</maven.resources.plugin.version>
 		<build.helper.maven.plugin.version>1.5</build.helper.maven.plugin.version>
 		<lifecycle.mapping.plugin.version>1.0.0</lifecycle.mapping.plugin.version>
-		<google.analytics.android.version>2.0b4</google.analytics.android.version>
 		<com.facebook.sdk.version>3.0.0</com.facebook.sdk.version>
 		<android.query.version>0.24.3</android.query.version>
 		<google.cloud.messaging.client.version>3</google.cloud.messaging.client.version>
@@ -52,11 +51,6 @@
 				<groupId>android.support</groupId>
 				<artifactId>compatibility-v4</artifactId>
 				<version>${android.support.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.android.analytics</groupId>
-				<artifactId>google-analytics-android</artifactId>
-				<version>${google.analytics.android.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.android.gcm</groupId>
