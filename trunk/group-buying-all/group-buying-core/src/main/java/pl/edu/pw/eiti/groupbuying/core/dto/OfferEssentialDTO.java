@@ -36,6 +36,8 @@ public class OfferEssentialDTO implements Serializable {
 	
 	private Double longitude;	
 
+	private int soldCount;
+	
 	public int getOfferId() {
 		return offerId;
 	}
@@ -116,9 +118,17 @@ public class OfferEssentialDTO implements Serializable {
 		this.longitude = longitude;
 	}
 
+	public int getSoldCount() {
+		return soldCount;
+	}
+
+	public void setSoldCount(int soldCount) {
+		this.soldCount = soldCount;
+	}
+
 	public OfferEssentialDTO(int offerId, String title, String imageUrl,
 			double price, double priceBeforeDiscount, Date startDate,
-			Date endDate, Category category, Double latitude, Double longitude) {
+			Date endDate, Category category, Double latitude, Double longitude, int soldCount) {
 		super();
 		this.offerId = offerId;
 		this.title = title;
@@ -130,6 +140,7 @@ public class OfferEssentialDTO implements Serializable {
 		this.category = category;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.soldCount = soldCount;
 	}	
 
 }

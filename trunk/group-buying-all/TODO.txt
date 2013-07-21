@@ -19,7 +19,7 @@
 #- HTTPS
 #- Ehcache
 - wyskakiwanie niewykorzystanego kuponu po uruchomieniu aplikacji jeśli w poblizu miejsca realizacji i zalogowany
-- info o ilości sprzedanych ofert wyciągane razem z ofertą
+#- info o ilości sprzedanych ofert wyciągane razem z ofertą
 #- Async z Servletu 3.0?
 #- profile Mavenowe przywrócić poprawne
 - Javadoc

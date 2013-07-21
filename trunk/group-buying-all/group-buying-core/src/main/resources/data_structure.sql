@@ -96,6 +96,7 @@ CREATE TABLE `offers` (
   `city_id` varchar(50) DEFAULT NULL,
   `latitude` double NULL,
   `longitude` double NULL,
+  `sold_count` bigint(6) not null default 0,
   PRIMARY KEY (`offer_id`),
   KEY `FK_OFFERS_USERS` (`username`),
   CONSTRAINT `FK_OFFERS_USERS` FOREIGN KEY (`username`) REFERENCES `sellers` (`email`) ON DELETE CASCADE ON UPDATE CASCADE

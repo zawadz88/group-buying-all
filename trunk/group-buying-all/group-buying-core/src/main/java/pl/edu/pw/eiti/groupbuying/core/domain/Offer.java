@@ -26,10 +26,14 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Latitude;
 import org.hibernate.search.annotations.Longitude;
 import org.hibernate.search.annotations.Spatial;
+import org.hibernate.search.annotations.Store;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import pl.edu.pw.eiti.groupbuying.core.dto.Category;
@@ -86,6 +90,7 @@ public class Offer implements Serializable {
 
 	@Column(name="state")
     @Enumerated(EnumType.ORDINAL)
+	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	private OfferState state;
 
 	@JoinColumn(name="category")
@@ -107,6 +112,9 @@ public class Offer implements Serializable {
 	@Column(name = "longitude")
 	@Longitude(of="loc")
 	private Double longitude;
+
+	@Column(name = "sold_count")
+	private int soldCount;
 	
 	public int getOfferId() {
 		return offerId;
@@ -252,19 +260,34 @@ public class Offer implements Serializable {
 		this.longitude = longitude;
 	}
 
+	public int getSoldCount() {
+		return soldCount;
+	}
+
+	public void setSoldCount(int soldCount) {
+		this.soldCount = soldCount;
+	}
+
 	@Override
 	public String toString() {
-		return "Offer [offerId=" + offerId + ", title=" + title + ", lead=" + lead + ", description=" + description + ", conditions=" + conditions + ", address=" + address + ", imageUrl=" + imageUrl + ", price=" + price + ", priceBeforeDiscount=" + priceBeforeDiscount + ", startDate=" + startDate
-				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate + ", state=" + state + ", category=" + category + ", seller=" + seller + ", city=" + city + ", latitude=" + latitude + ", longitude=" + longitude + "]";
+		return "Offer [offerId=" + offerId + ", title=" + title + ", lead="
+				+ lead + ", description=" + description + ", conditions="
+				+ conditions + ", address=" + address + ", imageUrl="
+				+ imageUrl + ", price=" + price + ", priceBeforeDiscount="
+				+ priceBeforeDiscount + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate
+				+ ", state=" + state + ", category=" + category + ", seller="
+				+ seller + ", city=" + city + ", latitude=" + latitude
+				+ ", longitude=" + longitude + ", soldCount=" + soldCount + "]";
 	}
 	
 	public OfferDTO getOfferDTO() {
-		OfferDTO offerDTO = new OfferDTO(offerId, title, lead, description, conditions, address.getAddressDTO(), imageUrl, price, priceBeforeDiscount, startDate, endDate, expirationDate, state, category, seller.getSellerDTO(), city, latitude, longitude);
+		OfferDTO offerDTO = new OfferDTO(offerId, title, lead, description, conditions, address.getAddressDTO(), imageUrl, price, priceBeforeDiscount, startDate, endDate, expirationDate, state, category, seller.getSellerDTO(), city, latitude, longitude, soldCount);
 		return offerDTO;
 	}
 	
 	public OfferEssentialDTO getOfferEssentialDTO() {
-		OfferEssentialDTO offerEssentialDTO = new OfferEssentialDTO(offerId, title, imageUrl, price, priceBeforeDiscount, startDate, endDate, category, latitude, longitude);
+		OfferEssentialDTO offerEssentialDTO = new OfferEssentialDTO(offerId, title, imageUrl, price, priceBeforeDiscount, startDate, endDate, category, latitude, longitude, soldCount);
 		return offerEssentialDTO;
 	}
 	

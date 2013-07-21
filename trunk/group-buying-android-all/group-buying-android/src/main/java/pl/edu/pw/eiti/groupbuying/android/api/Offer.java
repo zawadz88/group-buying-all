@@ -45,6 +45,8 @@ public class Offer implements Serializable {
 	private Category category;
 
 	private Seller seller;
+	
+	private int soldCount;
 
 	public int getOfferId() {
 		return offerId;
@@ -166,6 +168,14 @@ public class Offer implements Serializable {
 		this.seller = seller;
 	}
 
+	public int getSoldCount() {
+		return soldCount;
+	}
+
+	public void setSoldCount(int soldCount) {
+		this.soldCount = soldCount;
+	}
+
 	public Offer() {
 	}
 
@@ -173,7 +183,7 @@ public class Offer implements Serializable {
 			String conditions, Address address, String imageUrl,
 			double price, double priceBeforeDiscount, Date startDate,
 			Date endDate, Date expirationDate, OfferState state,
-			Category category, Seller seller) {
+			Category category, Seller seller, int soldCount) {
 		super();
 		this.offerId = offerId;
 		this.title = title;
@@ -190,18 +200,19 @@ public class Offer implements Serializable {
 		this.state = state;
 		this.category = category;
 		this.seller = seller;
+		this.soldCount = soldCount;
 	}
 
 	@Override
 	public String toString() {
-		return "OfferDTO [offerId=" + offerId + ", title=" + title + ", lead="
+		return "Offer [offerId=" + offerId + ", title=" + title + ", lead="
 				+ lead + ", description=" + description + ", conditions="
 				+ conditions + ", address=" + address + ", imageUrl="
 				+ imageUrl + ", price=" + price + ", priceBeforeDiscount="
 				+ priceBeforeDiscount + ", startDate=" + startDate
 				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate
 				+ ", state=" + state + ", category=" + category + ", seller="
-				+ seller + "]";
+				+ seller + ", soldCount=" + soldCount + "]";
 	}
 
 }

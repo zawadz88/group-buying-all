@@ -16,6 +16,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,10 @@ public class MySQLCouponDAO implements CouponDAO {
 	@PersistenceContext
 	private EntityManager entityManager;
 
+	public FullTextEntityManager getFullTextEntityManager(){
+		return Search.getFullTextEntityManager(entityManager);
+	}
+	
 	@Override
 	@Transactional
 	public boolean persistCoupon(Coupon coupon) {
