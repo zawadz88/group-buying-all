@@ -192,3 +192,15 @@ CREATE TABLE `seller_oauth_refresh_token` (
   `token` blob,
   `authentication` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `android_registered_devices`;
+
+CREATE TABLE `android_registered_devices`(
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `registration_id` varchar(256) NOT NULL,
+  `device_name` varchar(256) NOT NULL,
+  `system_info` varchar(256) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `status` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`id`) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
