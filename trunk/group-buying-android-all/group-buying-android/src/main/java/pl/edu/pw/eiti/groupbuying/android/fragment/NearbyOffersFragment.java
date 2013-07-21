@@ -247,43 +247,47 @@ public final class NearbyOffersFragment extends SupportMapFragment implements As
 
 	@Override
 	public void onTaskFinished(AbstractGroupBuyingTask<?> task, TaskResult result) {
-		if (result.equals(TaskResult.SUCCESSFUL)) {
-			progressState = ProgressState.OFFERS_FETCHED;
-			infoTopLayout.setVisibility(View.GONE);			
-			List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
-			if (downloadedOffers == null || downloadedOffers.isEmpty()) {
-				Toast.makeText(application, getString(R.string.no_offers_available), Toast.LENGTH_SHORT).show();
-			} else {
-				offerList.addAll(downloadedOffers);
-				if(getActivity() != null) {
-					addMarkersToGoogleMap();			
-				}
-			}
-		} else if (result.equals(TaskResult.FAILED)) {
-			progressState = ProgressState.OFFERS_FAILED;
-			infoActionButton.setVisibility(View.VISIBLE);
-			infoProgressBar.setVisibility(View.INVISIBLE);
-			infoActionButton.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {			
-					progressState = ProgressState.FETCHING_OFFERS;		
-					infoActionButton.setVisibility(View.GONE);
-					infoActionButton.setOnClickListener(null);
-					infoProgressBar.setVisibility(View.VISIBLE);
-					infoMessage.setText(R.string.loading_offers_message);
-					new DownloadOfferListTask("nearby/" + currentBestLocation.getLatitude() + "/" + currentBestLocation.getLongitude(), 1, NearbyOffersFragment.this, application).execute();
-				}
-			});
-			lastOffersException = task.getException();
-			if (lastOffersException != null) {
-				if (lastOffersException instanceof HttpClientErrorException || lastOffersException instanceof DuplicateConnectionException || lastOffersException instanceof ResourceAccessException) {
-					infoMessage.setText(R.string.network_error_title);
+		try {
+			if (result.equals(TaskResult.SUCCESSFUL)) {
+				progressState = ProgressState.OFFERS_FETCHED;
+				infoTopLayout.setVisibility(View.GONE);			
+				List<OfferEssential> downloadedOffers = ((DownloadOfferListTask) task).getOfferList();
+				if (downloadedOffers == null || downloadedOffers.isEmpty()) {
+					Toast.makeText(application, getString(R.string.no_offers_available), Toast.LENGTH_SHORT).show();
 				} else {
-					infoMessage.setText(R.string.connection_error_title);
+					offerList.addAll(downloadedOffers);
+					if(getActivity() != null) {
+						addMarkersToGoogleMap();			
+					}
+				}
+			} else if (result.equals(TaskResult.FAILED)) {
+				progressState = ProgressState.OFFERS_FAILED;
+				infoActionButton.setVisibility(View.VISIBLE);
+				infoProgressBar.setVisibility(View.INVISIBLE);
+				infoActionButton.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {			
+						progressState = ProgressState.FETCHING_OFFERS;		
+						infoActionButton.setVisibility(View.GONE);
+						infoActionButton.setOnClickListener(null);
+						infoProgressBar.setVisibility(View.VISIBLE);
+						infoMessage.setText(R.string.loading_offers_message);
+						new DownloadOfferListTask("nearby/" + currentBestLocation.getLatitude() + "/" + currentBestLocation.getLongitude(), 1, NearbyOffersFragment.this, application).execute();
+					}
+				});
+				lastOffersException = task.getException();
+				if (lastOffersException != null) {
+					if (lastOffersException instanceof HttpClientErrorException || lastOffersException instanceof DuplicateConnectionException || lastOffersException instanceof ResourceAccessException) {
+						infoMessage.setText(R.string.network_error_title);
+					} else {
+						infoMessage.setText(R.string.connection_error_title);
+					}
 				}
 			}
-		}
+		} catch(Exception ex) {
+			//ignore, fragment detached from activity...
+		}		
 	}
 
 	@Override
