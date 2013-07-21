@@ -11,6 +11,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.CouponDAO;
 import pl.edu.pw.eiti.groupbuying.core.domain.Client;
@@ -29,6 +30,7 @@ public class CouponServiceImpl implements CouponService {
 	private CouponDAO couponDAO;
 
 	@Override
+	@Transactional
 	public boolean createCoupon(Client client, Offer offer) {
 		Coupon coupon = new Coupon();
 		coupon.setClient(client);

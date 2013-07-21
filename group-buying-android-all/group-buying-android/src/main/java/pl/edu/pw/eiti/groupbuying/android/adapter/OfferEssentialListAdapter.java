@@ -92,7 +92,7 @@ public class OfferEssentialListAdapter extends ArrayAdapter<OfferEssential> {
 		aq.id(R.id.offerImage).image(offer.getImageUrl()).getImageView();
 		aq.id(R.id.offerTitle).text(offer.getTitle()).getTextView();
 		aq.id(R.id.offerPrice).text(String.valueOf(offer.getPrice())).getTextView();
-		aq.id(R.id.offersSold).text(String.valueOf(24) + " sold").getTextView();
+		aq.id(R.id.offersSold).text(String.valueOf(offer.getSoldCount()) + " sold").getTextView();
 		
 		return hView;
 	}

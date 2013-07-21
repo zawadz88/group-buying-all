@@ -47,5 +47,7 @@ public interface OfferDAO {
 	int indexOffers();
 
 	List<OfferEssentialDTO> getClosestOffers(double latitude, double longitude, double searchRadius);
+	
+	void incrementSoldCount(int offerId);
 
 }

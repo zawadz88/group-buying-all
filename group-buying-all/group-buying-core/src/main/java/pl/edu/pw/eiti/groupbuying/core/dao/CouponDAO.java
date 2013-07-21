@@ -22,7 +22,7 @@ public interface CouponDAO {
 	boolean updateCoupon(Coupon coupon);
 
 	List<Coupon> getCouponsForClientId(String email);
-	
+
 	Coupon getCoupon(int couponId);
 
 }

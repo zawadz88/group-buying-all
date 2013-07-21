@@ -38,17 +38,17 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
-import pl.edu.pw.eiti.groupbuying.core.domain.City;
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 import pl.edu.pw.eiti.groupbuying.core.dto.Category;
-import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferEssentialDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
 @Repository("offerDAO")
 public class MySQLOfferDAO implements OfferDAO {
-	
+
 	private static final String SELECT_USERNAME_FROM_OFFER = "select username from offers where offer_id = ?";
+	
+	private static final String UPDATE_SOLD_COUNT_INCREMENT = "update offers set sold_count = sold_count + 1 where offer_id = ?";
 		
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -152,7 +152,7 @@ public class MySQLOfferDAO implements OfferDAO {
 			c.where(stateCondition);		
 		}
 
-		c.multiselect(p.get("offerId"), p.get("title"), p.get("imageUrl"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"), p.get("latitude"), p.get("longitude"));
+		c.multiselect(p.get("offerId"), p.get("title"), p.get("imageUrl"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"), p.get("latitude"), p.get("longitude"), p.get("soldCount"));
 		TypedQuery<OfferEssentialDTO> query = entityManager.createQuery(c); 
 		query.setHint("org.hibernate.cacheable", true);
 		query.setFirstResult(pageNumber * pageSize);
@@ -174,7 +174,7 @@ public class MySQLOfferDAO implements OfferDAO {
 		Predicate categoryCondition = qb.equal(p.get("category"), Category.CITY);
 		c.where(qb.and(categoryCondition, qb.and(stateCondition, cityCondition)));			
 
-		c.multiselect(p.get("offerId"), p.get("title"), p.get("imageUrl"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"), p.get("latitude"), p.get("longitude"));
+		c.multiselect(p.get("offerId"), p.get("title"), p.get("imageUrl"), p.get("price"), p.get("priceBeforeDiscount"), p.get("startDate"), p.get("endDate"), p.get("category"), p.get("latitude"), p.get("longitude"), p.get("soldCount"));
 		TypedQuery<OfferEssentialDTO> query = entityManager.createQuery(c); 
 		query.setHint("org.hibernate.cacheable", true);
 		query.setFirstResult(pageNumber * pageSize);
@@ -188,8 +188,11 @@ public class MySQLOfferDAO implements OfferDAO {
 	@Transactional
 	public List<OfferEssentialDTO> getClosestOffers(double latitude, double longitude, double searchRadius) {
 		QueryBuilder builder = getFullTextEntityManager().getSearchFactory().buildQueryBuilder().forEntity(Offer.class).get();
-		Query luceneQuery = builder.spatial().onCoordinates("loc").within(searchRadius, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery();
-
+		Query luceneQuery = builder.bool()
+				.must(builder.spatial().onCoordinates("loc").within(searchRadius, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery())
+				.must(builder.keyword().onField("state").matching(OfferState.ACTIVE).createQuery())
+			.createQuery();
+	
 		FullTextQuery hibQuery = getFullTextEntityManager().createFullTextQuery(luceneQuery, Offer.class);
 		hibQuery.initializeObjectsWith(ObjectLookupMethod.SECOND_LEVEL_CACHE, DatabaseRetrievalMethod.QUERY);
 		Sort distanceSort = new Sort(new DistanceSortField(latitude, longitude, "loc"));
@@ -221,5 +224,11 @@ public class MySQLOfferDAO implements OfferDAO {
 		fullTextEntityManager.getSearchFactory().optimize(Offer.class);
 		fullTextEntityManager.flushToIndexes();
 		return counter;
+	}
+
+	@Override
+	@Transactional
+	public void incrementSoldCount(int offerId) {
+		jdbcTemplate.update(UPDATE_SOLD_COUNT_INCREMENT, offerId);		
 	}
 }

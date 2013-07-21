@@ -53,7 +53,9 @@ public class OfferDTO implements Serializable {
 	private Double latitude;
 
 	private Double longitude;
-
+	
+	private int soldCount;
+	
 	public int getOfferId() {
 		return offerId;
 	}
@@ -198,6 +200,14 @@ public class OfferDTO implements Serializable {
 		this.longitude = longitude;
 	}
 
+	public int getSoldCount() {
+		return soldCount;
+	}
+
+	public void setSoldCount(int soldCount) {
+		this.soldCount = soldCount;
+	}
+
 	public OfferDTO() {
 	}
 
@@ -205,7 +215,7 @@ public class OfferDTO implements Serializable {
 			String conditions, AddressDTO address, String imageUrl,
 			double price, double priceBeforeDiscount, Date startDate,
 			Date endDate, Date expirationDate, OfferState state,
-			Category category, SellerDTO seller, City city, Double latitude, Double longitude) {
+			Category category, SellerDTO seller, City city, Double latitude, Double longitude, int soldCount) {
 		super();
 		this.offerId = offerId;
 		this.title = title;
@@ -225,12 +235,20 @@ public class OfferDTO implements Serializable {
 		this.city = city;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.soldCount = soldCount;
 	}
 
 	@Override
 	public String toString() {
-		return "OfferDTO [offerId=" + offerId + ", title=" + title + ", lead=" + lead + ", description=" + description + ", conditions=" + conditions + ", address=" + address + ", imageUrl=" + imageUrl + ", price=" + price + ", priceBeforeDiscount=" + priceBeforeDiscount + ", startDate="
-				+ startDate + ", endDate=" + endDate + ", expirationDate=" + expirationDate + ", state=" + state + ", category=" + category + ", seller=" + seller + ", city=" + city + ", latitude=" + latitude + ", longitude=" + longitude + "]";
+		return "OfferDTO [offerId=" + offerId + ", title=" + title + ", lead="
+				+ lead + ", description=" + description + ", conditions="
+				+ conditions + ", address=" + address + ", imageUrl="
+				+ imageUrl + ", price=" + price + ", priceBeforeDiscount="
+				+ priceBeforeDiscount + ", startDate=" + startDate
+				+ ", endDate=" + endDate + ", expirationDate=" + expirationDate
+				+ ", state=" + state + ", category=" + category + ", seller="
+				+ seller + ", city=" + city + ", latitude=" + latitude
+				+ ", longitude=" + longitude + ", soldCount=" + soldCount + "]";
 	}
 
 }
