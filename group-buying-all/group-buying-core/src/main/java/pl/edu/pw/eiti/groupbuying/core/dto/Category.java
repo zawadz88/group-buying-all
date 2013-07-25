@@ -10,6 +10,11 @@
  ******************************************************************************/
 package pl.edu.pw.eiti.groupbuying.core.dto;
 
+/**
+ * Enumeration of possible offer categories
+ * @author Piotr Zawadzki
+ *
+ */
 public enum Category {
 	
 	SHOPPING, TRAVEL, CITY;

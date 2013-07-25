@@ -15,45 +15,107 @@ import java.util.Date;
 
 import pl.edu.pw.eiti.groupbuying.core.domain.City;
 
+/**
+ * A DTO for an entity containing information about an offer
+ * @author Piotr Zawadzki
+ *
+ */
 @SuppressWarnings("serial")
 public class OfferDTO implements Serializable {
-
+	
+	/**
+	 * Unique identifier
+	 */
 	private int offerId;
-
+	
+	/**
+	 * Title of the offer
+	 */
 	private String title;
-
+	
+	/**
+	 * Short description
+	 */
 	private String lead;
-
+	
+	/**
+	 * Long description
+	 */
 	private String description;
-
+	
+	/**
+	 * Conditions for buying and usage of this offer
+	 */
 	private String conditions;
-
+	
+	/**
+	 * Address where this offer can be claimed
+	 */
 	private AddressDTO address = new AddressDTO();
-
+	
+	/**
+	 * URL address of an image
+	 */
 	private String imageUrl;
-
+	
+	/**
+	 * Price of this offer
+	 */
 	private double price;
-
+	
+	/**
+	 * Price of the offer before the discount
+	 */
 	private double priceBeforeDiscount;
-
+	
+	/**
+	 * Time when this offer started being available
+	 */
 	private Date startDate;
-
+	
+	/**
+	 * Time when this offer stopped being available
+	 */
 	private Date endDate;
-
+	
+	/**
+	 * Time when this offer can be last claimed
+	 */
 	private Date expirationDate;
-
+	
+	/**
+	 * Offer's status
+	 */
 	private OfferState state;
-
+	
+	/**
+	 * Category this offer belongs to
+	 */
 	private Category category;
-
+	
+	/**
+	 * Seller who published the offer
+	 */
 	private SellerDTO seller;
-
+	
+	/**
+	 * City this offer can be published in
+	 */
 	private City city;
-
+	
+	/**
+	 * Latitude of the place
+	 */
 	private Double latitude;
 
+	/**
+	 * Longitude of the place
+	 */
 	private Double longitude;
-	
+
+	/**
+	 * Number of offers sold
+	 */
 	private int soldCount;
 	
 	public int getOfferId() {

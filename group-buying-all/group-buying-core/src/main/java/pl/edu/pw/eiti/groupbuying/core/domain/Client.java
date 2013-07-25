@@ -18,29 +18,55 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * An entity representing a client account
+ * @author Piotr Zawadzki
+ *
+ */
 @Entity
 @Table(name="clients")
 public class Client implements Serializable {
 	
+	/**
+	 * Client's email, this is also a unique ID
+	 */
 	@Id
 	@Column(name = "email")
 	private String email;
 
+	/**
+	 * Account's password
+	 */
 	@Column(name = "password")
 	private String password;
 	
+	/**
+	 * First name
+	 */
 	@Column(name = "first_name")
 	private String firstName;
 
+	/**
+	 * Last name
+	 */
 	@Column(name = "last_name")
 	private String lastName;
-		
+	
+	/**
+	 * Client's address
+	 */
 	@Embedded
 	private Address address = new Address();
 
+	/**
+	 * Client's phone number
+	 */
 	@Column(name = "phone_number")
 	private String phoneNumber;
 
+	/**
+	 * Salt used for extra security when encoding the password
+	 */
 	@Column(name = "salt")
 	private String salt;
 

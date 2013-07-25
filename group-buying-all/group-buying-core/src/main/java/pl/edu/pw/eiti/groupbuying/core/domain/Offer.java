@@ -37,10 +37,16 @@ import org.hibernate.search.annotations.Store;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import pl.edu.pw.eiti.groupbuying.core.dto.Category;
+import pl.edu.pw.eiti.groupbuying.core.dto.CouponDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferEssentialDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
+/**
+ * An entity containing information about an offer
+ * @author Piotr Zawadzki
+ *
+ */
 @Entity
 @Indexed
 @Spatial(name="loc")
@@ -48,71 +54,128 @@ import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 @Table(name = "offers")
 public class Offer implements Serializable {
 
+	/**
+	 * Unique identifier
+	 */
 	@Id
 	@Column(name="offer_id")
 	private int offerId;
 
+	/**
+	 * Title of the offer
+	 */
 	@Column(name="title")
 	private String title;
 
+	/**
+	 * Short description
+	 */
 	@Column(name="lead")
 	private String lead;
 
+	/**
+	 * Long description
+	 */
 	@Column(name="description")
 	private String description;
 
+	/**
+	 * Conditions for buying and usage of this offer
+	 */
 	@Column(name="conditions")
 	private String conditions;
 
+	/**
+	 * Address where this offer can be claimed
+	 */
 	@Embedded
 	private Address address = new Address();
 
+	/**
+	 * URL address of an image
+	 */
 	@Column(name="image_url")
 	private String imageUrl;
 
+	/**
+	 * Price of this offer
+	 */
 	@Column(name="price")
 	private double price;
 
+	/**
+	 * Price of the offer before the discount
+	 */
 	@Column(name="price_before_discount")
 	private double priceBeforeDiscount;
 
+	/**
+	 * Time when this offer started being available
+	 */
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	@Column(name="start_date")
 	private Date startDate;
 
+	/**
+	 * Time when this offer stopped being available
+	 */
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	@Column(name="end_date")
 	private Date endDate;
 	
+	/**
+	 * Time when this offer can be last claimed
+	 */
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	@Column(name="expiration_date")
 	private Date expirationDate;
 
+	/**
+	 * Offer's status
+	 */
 	@Column(name="state")
     @Enumerated(EnumType.ORDINAL)
 	@Field(index=Index.YES, analyze=Analyze.YES, store=Store.NO)
 	private OfferState state;
 
+	/**
+	 * Category this offer belongs to
+	 */
 	@JoinColumn(name="category")
     @Enumerated(EnumType.STRING)
 	private Category category;
 
+	/**
+	 * Seller who published the offer
+	 */
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="username")
 	private Seller seller;
 
+	/**
+	 * City this offer can be published in
+	 */
 	@OneToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="city_id")
 	private City city = new City();
 
+	/**
+	 * Latitude of the place
+	 */
 	@Column(name = "latitude")
 	@Latitude(of="loc")
 	private Double latitude;
 
+	/**
+	 * Longitude of the place
+	 */
 	@Column(name = "longitude")
 	@Longitude(of="loc")
 	private Double longitude;
 
+	/**
+	 * Number of offers sold
+	 */
 	@Column(name = "sold_count")
 	private int soldCount;
 	
@@ -281,11 +344,19 @@ public class Offer implements Serializable {
 				+ ", longitude=" + longitude + ", soldCount=" + soldCount + "]";
 	}
 	
+	/**
+	 * Transforms this entity into an {@link OfferDTO} transfer object
+	 * @return
+	 */
 	public OfferDTO getOfferDTO() {
 		OfferDTO offerDTO = new OfferDTO(offerId, title, lead, description, conditions, address.getAddressDTO(), imageUrl, price, priceBeforeDiscount, startDate, endDate, expirationDate, state, category, seller.getSellerDTO(), city, latitude, longitude, soldCount);
 		return offerDTO;
 	}
 	
+	/**
+	 * Transforms this entity into an {@link OfferEssentialDTO} transfer object containing selective information about the offer only
+	 * @return
+	 */
 	public OfferEssentialDTO getOfferEssentialDTO() {
 		OfferEssentialDTO offerEssentialDTO = new OfferEssentialDTO(offerId, title, imageUrl, price, priceBeforeDiscount, startDate, endDate, category, latitude, longitude, soldCount);
 		return offerEssentialDTO;

@@ -26,6 +26,11 @@ import org.hibernate.search.annotations.Spatial;
 
 import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 
+/**
+ * An entity representing one of cities for which there are offers available
+ * @author Piotr Zawadzki
+ *
+ */
 @Entity
 @Indexed
 @Spatial(name="loc")
@@ -33,21 +38,36 @@ import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 @Table(name = "cities")
 public class City implements Serializable {
 
+	/**
+	 * Unique identifier
+	 */
 	@Id
 	@Column(name = "city_id")
 	private String cityId;
 
+	/**
+	 * Displayable city name
+	 */
 	@Column(name = "name")
 	private String name;
 	
+	/**
+	 * Latitude of the city centre
+	 */
 	@Latitude(of="loc")
 	@Column(name = "latitude")
 	private double latitude;
 	
+	/**
+	 * Longitude of the city centre
+	 */
 	@Longitude(of="loc")
 	@Column(name = "longitude")
 	private double longitude;
 
+	/**
+	 * City's state: true - active, false - disabled
+	 */
 	@Column(name = "state")
 	private boolean state;	
 	
@@ -95,7 +115,11 @@ public class City implements Serializable {
 	public void setState(boolean state) {
 		this.state = state;
 	}
-
+	
+	/**
+	 * Transforms this entity into an {@link CityDTO} transfer object
+	 * @return
+	 */
 	public CityDTO getCityDTO() {
 		CityDTO dto = new CityDTO(cityId, name, latitude, longitude);
 		return dto;

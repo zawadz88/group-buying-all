@@ -12,13 +12,27 @@ package pl.edu.pw.eiti.groupbuying.core.dto;
 
 import java.io.Serializable;
 
+/**
+ * A DTO for address entity consisting of fields such as city, street and postal code.
+ * @author Piotr Zawadzki
+ *
+ */
 @SuppressWarnings("serial")
 public class AddressDTO implements Serializable {
-
+	
+	/**
+	 * The name of the city
+	 */
 	private String city;
-
+	
+	/**
+	 * The name of the stret
+	 */
 	private String street;
-
+	
+	/**
+	 * The value of the postal code
+	 */
 	private String postalCode;
 
 	public String getCity() {
