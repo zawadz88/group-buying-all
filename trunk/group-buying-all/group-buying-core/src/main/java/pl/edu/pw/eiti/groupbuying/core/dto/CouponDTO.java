@@ -14,17 +14,36 @@ import java.io.Serializable;
 import java.util.Date;
 
 import pl.edu.pw.eiti.groupbuying.core.domain.Coupon.CouponState;
-
+/**
+ * A DTO for an entity for a coupon bought by the client
+ * @author Piotr Zawadzki
+ *
+ */
 public class CouponDTO implements Serializable {
-
+	
+	/**
+	 * Coupon's unique identifier
+	 */
 	private int couponId;
-
+	
+	/**
+	 * Date when the coupon was claimed
+	 */
 	private Date useDate;
 
+	/**
+	 * Security key
+	 */
 	private String securityKey;
 
+	/**
+	 * A client to which this coupon belongs to
+	 */
 	private OfferDTO offer;	
 
+	/**
+	 * State of the coupon
+	 */
 	private CouponState couponState;
 
 	public int getCouponId() {

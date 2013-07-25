@@ -12,15 +12,31 @@ package pl.edu.pw.eiti.groupbuying.core.dto;
 
 import java.io.Serializable;
 
-
+/**
+ * A DTO for an entity representing one of cities for which there are offers available
+ * @author Piotr Zawadzki
+ *
+ */
 public class CityDTO implements Serializable {
-
+	
+	/**
+	 * Unique identifier
+	 */
 	private String cityId;
-
+	
+	/**
+	 * Displayable city name
+	 */
 	private String name;
 	
+	/**
+	 * Latitude of the city centre
+	 */
 	private double latitude;
-
+	
+	/**
+	 * Longitude of the city centre
+	 */
 	private double longitude;
 
 	public String getCityId() {

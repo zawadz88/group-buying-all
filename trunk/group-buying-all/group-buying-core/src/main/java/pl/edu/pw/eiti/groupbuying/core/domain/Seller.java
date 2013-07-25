@@ -21,41 +21,74 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import pl.edu.pw.eiti.groupbuying.core.dto.CouponDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.SellerDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * An entity representing a publisher
+ * @author Piotr Zawadzki
+ *
+ */
 @Entity
 @Table(name = "sellers")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY, region="pl.edu.pw.eiti.groupbuying.core.domain.Seller", include="non-lazy")
 public class Seller implements Serializable {
 
+	/**
+	 * Email address, this is also a unique identifier
+	 */
 	@Id
 	@Column(name = "email")
 	private String email;
 
+	/**
+	 * Name of the publisher
+	 */
 	@Column(name = "name")
 	private String name;
 
+	/**
+	 * Password
+	 */
 	@Column(name = "password")
 	@JsonIgnore
 	private String password;	
 
+	/**
+	 * Phone number
+	 */
 	@Column(name = "phone_number")
 	private String phoneNumber;
 
+	/**
+	 * The name of the trade this seller specializes in
+	 */
 	@Column(name = "trade")
 	private String trade;
 
+	/**
+	 * Information about the seller
+	 */
 	@Column(name = "description")
 	private String description;
 
+	/**
+	 * HQ's address
+	 */
 	@Embedded
 	private Address address = new Address();
 
+	/**
+	 * NIP number
+	 */
 	@Column(name = "nip")
 	private String nip;
 
+	/**
+	 * Salt used for extra security when encoding the password
+	 */
 	@Column(name = "salt")
 	@JsonIgnore
 	private String salt;
@@ -140,6 +173,10 @@ public class Seller implements Serializable {
 				+ address + ", nip=" + nip + ", salt=" + salt + "]";
 	}
 	
+	/**
+	 * Transforms this entity into an {@link SellerDTO} transfer object
+	 * @return
+	 */
 	public SellerDTO getSellerDTO() {
 		SellerDTO sellerDTO = new SellerDTO(email, name, phoneNumber, trade, description, address.getAddressDTO(), nip);
 		return sellerDTO;

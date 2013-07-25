@@ -12,21 +12,47 @@ package pl.edu.pw.eiti.groupbuying.core.dto;
 
 import java.io.Serializable;
 
+/**
+ * A DTO for an entity representing a publisher
+ * @author Piotr Zawadzki
+ *
+ */
 @SuppressWarnings("serial")
 public class SellerDTO implements Serializable {
-
+	
+	/**
+	 * Email address, this is also a unique identifier
+	 */
 	private String email;
 
+	/**
+	 * Name of the publisher
+	 */
 	private String name;
 
+	/**
+	 * Phone number
+	 */
 	private String phoneNumber;
-
+	
+	/**
+	 * The name of the trade this seller specializes in
+	 */
 	private String trade;
-
+	
+	/**
+	 * Information about the seller
+	 */
 	private String description;
 
+	/**
+	 * HQ's address
+	 */
 	private AddressDTO address = new AddressDTO();
 
+	/**
+	 * NIP number
+	 */
 	private String nip;
 
 	public String getEmail() {

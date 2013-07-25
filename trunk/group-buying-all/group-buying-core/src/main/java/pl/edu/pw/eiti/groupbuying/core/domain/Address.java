@@ -17,15 +17,29 @@ import javax.persistence.Embeddable;
 
 import pl.edu.pw.eiti.groupbuying.core.dto.AddressDTO;
 
+/**
+ * An embeddable address entity consisting of fields such as city, street and postal code.
+ * @author Piotr Zawadzki
+ *
+ */
 @Embeddable
 public class Address implements Serializable {
 
+	/**
+	 * The name of the city
+	 */
 	@Column(name = "city")
 	private String city;
 
+	/**
+	 * The name of the stret
+	 */
 	@Column(name = "street")
 	private String street;
 
+	/**
+	 * The value of the postal code
+	 */
 	@Column(name = "postal_code")
 	private String postalCode;
 
@@ -59,6 +73,10 @@ public class Address implements Serializable {
 				+ postalCode + "]";
 	}
 	
+	/**
+	 * Transforms this entity into an {@link AddressDTO} transfer object
+	 * @return
+	 */
 	public AddressDTO getAddressDTO() {
 		final AddressDTO addressDTO = new AddressDTO(city, street, postalCode);
 		return addressDTO;

@@ -25,32 +25,55 @@ import javax.persistence.Table;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.CouponDTO;
 
+/**
+ * An entity for a coupon bought by the client
+ * @author Piotr Zawadzki
+ *
+ */
 @Entity
 @Table(name = "coupons")
 public class Coupon implements Serializable {
 
+	/**
+	 * Coupon's unique identifier
+	 */
 	@Id
 	@Column(name = "id")
 	private int couponId;
 
+	/**
+	 * Date when the coupon was claimed
+	 */
 	@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	@Column(name = "use_date")
 	private Date useDate;
 
+	/**
+	 * Security key
+	 */
 	@Column(name = "security_key")
 	private String securityKey;
 
+	/**
+	 * A client to which this coupon belongs to
+	 */
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "email")
 	private Client client;
 
+	/**
+	 * An offer for which this coupon was bought
+	 */
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "offer_id")
 	private Offer offer;
 	
-
+	/**
+	 * State of the coupon
+	 */
 	@Column(name="coupon_state")
     @Enumerated(EnumType.ORDINAL)
 	private CouponState couponState;
@@ -110,6 +133,11 @@ public class Coupon implements Serializable {
 				+ ", offer=" + offer + ", couponState=" + couponState + "]";
 	}
 	
+	/**
+	 * Represents different states of the coupon, which are {@code BOUGHT}, {@code REDEEMED} and {@code EXPIRED}
+	 * @author Piotr Zawadzki
+	 *
+	 */
 	public static enum CouponState {
 		BOUGHT,
 		REDEEMED,
@@ -117,6 +145,10 @@ public class Coupon implements Serializable {
 
 	}
 	
+	/**
+	 * Transforms this entity into an {@link CouponDTO} transfer object
+	 * @return
+	 */
 	public CouponDTO getCouponDTO() {
 		return new CouponDTO(couponId, useDate, securityKey, offer.getOfferDTO(), couponState);
 	}
