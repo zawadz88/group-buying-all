@@ -9,6 +9,7 @@
 	<artifactId>group-buying-core</artifactId>
 	<packaging>jar</packaging>
 	<name>Group Buying Core</name>
+	<description>Contains the core model and persistence logic for the group buying system</description>
 
 	<dependencies>
 

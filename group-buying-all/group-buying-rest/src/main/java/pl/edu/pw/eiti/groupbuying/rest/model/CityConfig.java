@@ -4,9 +4,21 @@ import java.util.List;
 
 import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 
+/**
+ * POJO containing start config
+ * @author Piotr Zawadzki
+ *
+ */
 public class CityConfig {
 
+	/**
+	 * Selected city
+	 */
 	private CityDTO myCity;
+	
+	/**
+	 * A list of available cities
+	 */
 	private List<CityDTO> cities;
 
 	public CityDTO getMyCity() {

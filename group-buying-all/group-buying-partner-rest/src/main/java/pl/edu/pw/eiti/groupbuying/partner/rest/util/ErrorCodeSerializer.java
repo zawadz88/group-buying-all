@@ -9,6 +9,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
+/**
+ * Serializer for {@link ErrorCode} enum
+ * @author Piotr Zawadzki
+ *
+ */
 public class ErrorCodeSerializer extends JsonSerializer<ErrorCode> {
 	@Override
 	public void serialize(final ErrorCode errorCode,

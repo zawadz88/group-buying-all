@@ -15,7 +15,12 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 
 import pl.edu.pw.eiti.groupbuying.core.domain.Client;
-
+ 
+/**
+ * Validates client details
+ * @author Piotr Zawadzki
+ *
+ */
 @Component
 public class ClientValidator {
 	public void validateAddClientGeneralForm(Client client, Errors errors) {

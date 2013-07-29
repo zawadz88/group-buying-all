@@ -18,6 +18,11 @@ import pl.edu.pw.eiti.groupbuying.partner.rest.model.ClaimResponse;
 import pl.edu.pw.eiti.groupbuying.partner.rest.model.CouponInfo;
 import pl.edu.pw.eiti.groupbuying.partner.rest.service.CouponService;
 
+/**
+ * Controller used for coupon operations
+ * @author Piotr Zawadzki
+ *
+ */
 @Controller
 @RequestMapping("/account/coupon")
 public class CouponController {
@@ -27,6 +32,12 @@ public class CouponController {
 	@Autowired
 	private CouponService couponService;
 	
+	/**
+	 * Endpoint for claiming coupons by the partners. Users must be authorized via OAuth 2.0 to access this resource.
+	 * @param principal principal containing logged-in user's details
+	 * @param couponInfo
+	 * @return
+	 */
 	@RequestMapping(value = "/claim")
 	public @ResponseBody ClaimResponse claimCoupon(Principal principal, @RequestBody CouponInfo couponInfo ) {
 		ClaimResponse response = null;

@@ -12,6 +12,16 @@ package pl.edu.pw.eiti.groupbuying.web.service;
 
 import pl.edu.pw.eiti.groupbuying.core.domain.Seller;
 
+/**
+ * Service for seller operations
+ * @author Piotr Zawadzki
+ *
+ */
 public interface SellerService {
+	/**
+	 * Persists a seller
+	 * @param seller
+	 * @return
+	 */
 	public boolean saveSeller(Seller seller);
 }

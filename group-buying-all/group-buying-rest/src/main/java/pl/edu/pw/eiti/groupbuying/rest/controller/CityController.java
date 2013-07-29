@@ -31,6 +31,11 @@ import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 import pl.edu.pw.eiti.groupbuying.rest.model.CityConfig;
 import pl.edu.pw.eiti.groupbuying.rest.service.CityService;
 
+/**
+ * Controller for city operations
+ * @author Piotr Zawadzki
+ *
+ */
 @Controller
 @RequestMapping("/cities")
 public class CityController {
@@ -48,6 +53,12 @@ public class CityController {
 	@Autowired
 	private OfferDAO offerDAO;
 	
+	/**
+	 * Returns a start configuration 
+	 * @param latitude latitude of the current location
+	 * @param longitude longitude of the current location
+	 * @return
+	 */
 	@RequestMapping(value = "city-config", method = RequestMethod.GET)
 	public @ResponseBody CityConfig getCityConfig(@RequestParam(value="latitude", required = false) final Double latitude, @RequestParam(value="longitude", required = false) final Double longitude) {
 		CityConfig cityConfig = new CityConfig();

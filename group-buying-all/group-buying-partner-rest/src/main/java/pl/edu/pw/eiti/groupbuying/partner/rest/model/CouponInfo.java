@@ -12,10 +12,21 @@ package pl.edu.pw.eiti.groupbuying.partner.rest.model;
 
 import java.io.Serializable;
 
+/**
+ * POJO containing basic coupon operations, i.e. ID and security key
+ * @author Piotr Zawadzki
+ *
+ */
 public class CouponInfo implements Serializable {
 
+	/**
+	 * Coupon's ID
+	 */
 	private int couponId;
 
+	/**
+	 * Security key
+	 */
 	private String securityKey;	
 
 

@@ -20,6 +20,11 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 
+/**
+ * DAO for {@link UserDetails} operations that handles user's salt
+ * @author Piotr Zawadzki
+ *
+ */
 public class CustomJdbcDaoImpl extends JdbcDaoImpl {
 
 	@Override

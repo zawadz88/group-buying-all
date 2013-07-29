@@ -16,6 +16,11 @@ import org.springframework.validation.ValidationUtils;
 
 import pl.edu.pw.eiti.groupbuying.core.domain.Seller;
 
+/**
+ * Validates seller details
+ * @author Piotr Zawadzki
+ *
+ */
 @Component
 public class SellerValidator {
 	public void validateAddSellerGeneralForm(Seller seller, Errors errors) {

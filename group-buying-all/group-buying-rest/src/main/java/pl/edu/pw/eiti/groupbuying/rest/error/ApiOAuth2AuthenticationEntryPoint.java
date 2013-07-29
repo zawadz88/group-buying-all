@@ -19,6 +19,11 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
+/**
+ * Extension of {@link OAuth2AuthenticationEntryPoint} that adds a custom error translator and resolver
+ * @author Piotr Zawadzki
+ *
+ */
 public class ApiOAuth2AuthenticationEntryPoint extends OAuth2AuthenticationEntryPoint {
 
 	private HandlerExceptionResolver customHandlerExceptionResolver = new DefaultHandlerExceptionResolver();

@@ -19,12 +19,21 @@ import org.springframework.stereotype.Controller;
 import pl.edu.pw.eiti.groupbuying.core.domain.Client;
 import pl.edu.pw.eiti.groupbuying.web.service.ClientService;
 
+/**
+ * Controller for adding new clients
+ * @author Piotr Zawadzki
+ *
+ */
 @Controller("addClientController")
 public class AddClientController extends BaseController {
 
 	@Autowired
 	private ClientService clientService;
 	
+	/**
+	 * Adds a new client
+	 * @param client
+	 */
 	public void submitClient(Client client) {
 		clientService.saveClient(client);
 	}

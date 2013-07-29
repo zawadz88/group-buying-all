@@ -16,6 +16,11 @@ import org.springframework.validation.ValidationUtils;
 
 import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 
+/**
+ * Validates offer details
+ * @author Piotr Zawadzki
+ *
+ */
 @Component
 public class OfferValidator {
 	public void validateAddOfferGeneralForm(Offer offer, Errors errors) {

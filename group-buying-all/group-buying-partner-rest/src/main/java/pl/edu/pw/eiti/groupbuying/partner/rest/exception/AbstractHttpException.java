@@ -2,6 +2,11 @@ package pl.edu.pw.eiti.groupbuying.partner.rest.exception;
 
 import pl.edu.pw.eiti.groupbuying.partner.rest.model.ApiError.ErrorCode;
 
+/**
+ * Base class for an exception containing a custom message and an error code
+ * @author Piotr Zawadzki
+ *
+ */
 @SuppressWarnings("serial")
 public abstract class AbstractHttpException extends RuntimeException {
 	protected String customMessage;

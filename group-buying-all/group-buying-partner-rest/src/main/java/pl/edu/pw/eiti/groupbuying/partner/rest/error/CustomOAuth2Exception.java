@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 
+import pl.edu.pw.eiti.groupbuying.partner.rest.model.ApiError;
 import pl.edu.pw.eiti.groupbuying.partner.rest.model.ApiError.ErrorCode;
 
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -13,6 +14,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
+/**
+ * Custom OAuth 2.0 exception that can be JSON serialized to {@link ApiError} format
+ * @author Piotr Zawadzki
+ *
+ */
 @SuppressWarnings("serial")
 @com.fasterxml.jackson.databind.annotation.JsonSerialize(using = CustomOAuth2Exception.OAuth2ExceptionSerializer.class)
 public class CustomOAuth2Exception extends OAuth2Exception {
@@ -32,6 +38,11 @@ public class CustomOAuth2Exception extends OAuth2Exception {
 		this.responsecode = responsecode;
 	}
 
+	/**
+	 * A serializer that converts {@link CustomOAuth2Exception} into a custom JSON format
+	 * @author Piotr Zawadzki
+	 *
+	 */
 	public static class OAuth2ExceptionSerializer extends StdSerializer<CustomOAuth2Exception> {
 
 		public OAuth2ExceptionSerializer() {

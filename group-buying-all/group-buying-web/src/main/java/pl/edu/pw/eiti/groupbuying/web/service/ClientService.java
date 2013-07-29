@@ -12,6 +12,16 @@ package pl.edu.pw.eiti.groupbuying.web.service;
 
 import pl.edu.pw.eiti.groupbuying.core.domain.Client;
 
+/**
+ * Service for client operations
+ * @author Piotr Zawadzki
+ *
+ */
 public interface ClientService {
+	/**
+	 * Persists a client
+	 * @param client
+	 * @return
+	 */
 	public boolean saveClient(Client client);
 }

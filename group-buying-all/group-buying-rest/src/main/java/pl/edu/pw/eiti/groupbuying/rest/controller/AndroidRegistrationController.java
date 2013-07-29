@@ -37,7 +37,14 @@ public class AndroidRegistrationController {
 
 	@Autowired
 	private AndroidRegistrationService androidRegistrationService;
-		
+	
+	/**
+	 * Endpoint for registering devices for GCM push notifications
+	 * @param registrationId device's registration ID
+	 * @param deviceName make and model of the device
+	 * @param systemInfo OS version
+	 * @return
+	 */
 	@RequestMapping(value = "register", method = RequestMethod.POST)
 	protected @ResponseBody boolean register(
 			@RequestParam(value = "regId", required = false) final String registrationId,
@@ -67,6 +74,12 @@ public class AndroidRegistrationController {
 		return true;
 	}
 	
+	/**
+	 * Validates if all the required parameters are present and valid
+	 * @param registrationId
+	 * @param deviceName
+	 * @param systemInfo
+	 */
 	private void validateRegistrationParams(final String registrationId, final String deviceName, final String systemInfo) {
 		if(!StringUtils.hasText(registrationId)) {
 			throw new BadRequestException("Parameter regID is empty or missing!", ErrorCode.MISSING_REGISTRATION_ID_PARAM);

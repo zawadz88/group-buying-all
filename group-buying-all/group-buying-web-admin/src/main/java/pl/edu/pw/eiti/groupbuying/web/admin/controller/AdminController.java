@@ -34,7 +34,7 @@ import pl.edu.pw.eiti.groupbuying.web.admin.model.PushNotification;
 import pl.edu.pw.eiti.groupbuying.web.admin.service.PushService;
 
 /**
- * 
+ * Controller for admin operations
  * @author Piotr Zawadzki
  *
  */

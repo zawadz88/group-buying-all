@@ -34,6 +34,11 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import pl.edu.pw.eiti.groupbuying.partner.rest.model.ApiError;
 import pl.edu.pw.eiti.groupbuying.partner.rest.model.ApiError.ErrorCode;
 
+/**
+ * Custom API resolver that overrides {@link DefaultHandlerExceptionResolver}
+ * @author Piotr Zawadzki
+ *
+ */
 public class ApiHandlerExceptionResolver extends DefaultHandlerExceptionResolver {
 
 	/**
@@ -353,6 +358,14 @@ public class ApiHandlerExceptionResolver extends DefaultHandlerExceptionResolver
 		return getErrorModelAndView(ex, response, ErrorCode.INVALID_BINDING, HttpServletResponse.SC_BAD_REQUEST);
 	}
 
+	/**
+	 * Returns a {@ModelAndView} object with information about an exception that was thrown
+	 * @param ex thrown exception
+	 * @param response serlvet's response
+	 * @param errorCode error code to attach to the response
+	 * @param statusCode HTTP status code to attach to the exception
+	 * @return
+	 */
 	private ModelAndView getErrorModelAndView(Exception ex, HttpServletResponse response, ErrorCode errorCode, int statusCode) {
 		ModelAndView mav = new ModelAndView();
 		mav.setView(new MappingJackson2JsonView());
