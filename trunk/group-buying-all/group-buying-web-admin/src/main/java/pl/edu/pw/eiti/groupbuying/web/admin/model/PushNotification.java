@@ -4,11 +4,22 @@ import javax.validation.constraints.Min;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+/**
+ * Push notification POJO
+ * @author Piotr Zawadzki
+ *
+ */
 public class PushNotification {
 	
+	/**
+	 * Offer's ID
+	 */
 	@Min(value = 1)
 	private int offerId;
 	
+	/**
+	 * Displayed message
+	 */
 	@NotBlank
 	private String message;
 

@@ -31,6 +31,11 @@ import pl.edu.pw.eiti.groupbuying.rest.exception.InternalServerErrorException;
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 import pl.edu.pw.eiti.groupbuying.rest.service.OfferService;
 
+/**
+ * Controller responsible for handling offer operations
+ * @author Piotr Zawadzki
+ *
+ */
 @Controller
 @RequestMapping("/offers")
 public class OfferController {
@@ -40,12 +45,22 @@ public class OfferController {
 	@Autowired
 	OfferService offerService;
 
+	/**
+	 * Returns offer detail's based on its ID
+	 * @param offerId
+	 * @return
+	 */
 	@RequestMapping(value = "offer/{offerId}", method = RequestMethod.GET)
 	public @ResponseBody OfferDTO getOfferById(@PathVariable("offerId") final int offerId) {
 		OfferDTO offerDTO = offerService.getOfferDTO(offerId);
 		return offerDTO;
 	}
 	
+	/**
+	 * Returns a list of all available offers
+	 * @param pageNumber
+	 * @return
+	 */
 	@RequestMapping(value = "all", method = RequestMethod.GET)
 	public @ResponseBody List<OfferEssentialDTO> getAllOffers(@RequestParam(value = "page", defaultValue = "0") final int pageNumber) {
 		List<OfferEssentialDTO> selectedOffers = null;
@@ -64,6 +79,11 @@ public class OfferController {
 		return selectedOffers;
 	}
 
+	/**
+	 * Returns a list of available shopping offers
+	 * @param pageNumber
+	 * @return
+	 */
 	@RequestMapping(value = "shopping", method = RequestMethod.GET)
 	public @ResponseBody List<OfferEssentialDTO> getShoppingOffers(@RequestParam(value = "page", defaultValue = "0") final int pageNumber) {
 		List<OfferEssentialDTO> selectedOffers = null;
@@ -83,6 +103,11 @@ public class OfferController {
 		return selectedOffers;
 	}
 	
+	/**
+	 * Returns a list of available travel offers
+	 * @param pageNumber
+	 * @return
+	 */
 	@RequestMapping(value = "travel", method = RequestMethod.GET)
 	public @ResponseBody List<OfferEssentialDTO> getTravelOffers(@RequestParam(value = "page", defaultValue = "0") final int pageNumber) {
 		List<OfferEssentialDTO> selectedOffers = null;
@@ -101,12 +126,25 @@ public class OfferController {
 		return selectedOffers;
 	}
 
+	/**
+	 * Returns a list of available city offers for a given city ID
+	 * @param pageNumber
+	 * @param cityId
+	 * @return
+	 */
 	@RequestMapping(value = "city/{cityId}", method = RequestMethod.GET)
 	public @ResponseBody List<OfferEssentialDTO> getCityOffers(@RequestParam(value = "page", defaultValue = "0") final int pageNumber, @PathVariable(value = "cityId") final String cityId) {
 		List<OfferEssentialDTO> selectedOffers = offerService.getCityOfferEssentials(cityId, pageNumber);
 		return selectedOffers;
 	}
 
+	/**
+	 * Return a list of nearby offers based on the latitude and longitude
+	 * @param latitude
+	 * @param longitude
+	 * @param zoom
+	 * @return
+	 */
 	@RequestMapping(value = "nearby/{latitude}/{longitude}", method = RequestMethod.GET)
 	public @ResponseBody List<OfferEssentialDTO> getNearbyOffers(@PathVariable(value = "latitude") final double latitude, @PathVariable(value = "longitude") final double longitude, @RequestParam(value = "zoom", defaultValue = "1") final int zoom) {
 		List<OfferEssentialDTO> selectedOffers = offerService.getClosestOffers(latitude, longitude, zoom);

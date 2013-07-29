@@ -29,6 +29,11 @@ import pl.edu.pw.eiti.groupbuying.core.dto.Category;
 import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 
+/**
+ * Controller for editing offers
+ * @author Piotr Zawadzki
+ *
+ */
 @Controller("editOfferController")
 public class EditOfferController extends BaseController {
 
@@ -42,14 +47,26 @@ public class EditOfferController extends BaseController {
 		offerDAO.updateOffer(offer);
 	}
 
+	/**
+	 * Returns a list of available categories
+	 * @return
+	 */
 	public List<Category> prepareCategories() {
 		return Arrays.asList(Category.values());
 	}
 
+	/**
+	 * Returns a list of available cities
+	 * @return
+	 */
 	public List<CityDTO> prepareCities() {
 		return cityDAO.getCities();
 	}
 	
+	/**
+	 * Prepares a set of available offer states
+	 * @return
+	 */
 	public Map<OfferState, String> prepareStates() {
 		Map<OfferState,String> stateMap = new LinkedHashMap<OfferState,String>();
 		stateMap.put(OfferState.WAITING, "Waiting");

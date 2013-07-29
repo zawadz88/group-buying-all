@@ -30,6 +30,11 @@ import pl.edu.pw.eiti.groupbuying.core.dto.CityDTO;
 import pl.edu.pw.eiti.groupbuying.core.dto.OfferState;
 import pl.edu.pw.eiti.groupbuying.security.core.SaltedUser;
 
+/**
+ * Controller for adding new offers
+ * @author Piotr Zawadzki
+ *
+ */
 @Controller("addOfferController")
 public class AddOfferController extends BaseController {
 
@@ -39,6 +44,10 @@ public class AddOfferController extends BaseController {
 	@Autowired
 	private CityDAO cityDAO;
 	
+	/**
+	 * Adds a new offer
+	 * @param offer
+	 */
 	public void submitOffer(final Offer offer) {
 		SecurityContext context = SecurityContextHolder.getContext();
 		SaltedUser saltedUser = (SaltedUser) context.getAuthentication().getPrincipal();
@@ -47,12 +56,20 @@ public class AddOfferController extends BaseController {
 		offer.setSeller(seller);
 		offer.setState(OfferState.WAITING);
 		offerDAO.saveOffer(offer);
-	}
+	} 
 
+	/**
+	 * Returns a list of available categories
+	 * @return
+	 */
 	public List<Category> prepareCategories() {
 		return Arrays.asList(Category.values());
 	}
 	
+	/**
+	 * Returns a list of available cities
+	 * @return
+	 */
 	public List<CityDTO> prepareCities() {
 		return cityDAO.getCities();
 	}

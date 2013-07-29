@@ -2,7 +2,11 @@ package pl.edu.pw.eiti.groupbuying.partner.rest.exception;
 
 import pl.edu.pw.eiti.groupbuying.partner.rest.model.ApiError.ErrorCode;
 
-
+/**
+ * Exception thrown when the request is of HTTP type 401 Unauthorized
+ * @author Piotr Zawadzki
+ *
+ */
 @SuppressWarnings("serial")
 public class UnauthorizedException extends AbstractHttpException {
 

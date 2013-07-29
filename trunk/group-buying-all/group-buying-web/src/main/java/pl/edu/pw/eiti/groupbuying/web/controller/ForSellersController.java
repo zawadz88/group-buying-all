@@ -29,7 +29,7 @@ import pl.edu.pw.eiti.groupbuying.core.domain.Offer;
 import pl.edu.pw.eiti.groupbuying.security.core.SaltedUser;
 
 /**
- * 
+ * Controller for seller's operations
  * @author Piotr Zawadzki
  *
  */
@@ -62,6 +62,10 @@ public class ForSellersController extends BaseController {
 		model.addAttribute("offers", offers);
 	}
 
+	/**
+	 * Returns the username of the currently logged in user
+	 * @return
+	 */
 	private String getUsername() {
 		SecurityContext context = SecurityContextHolder.getContext();
 		SaltedUser saltedUser = (SaltedUser) context.getAuthentication().getPrincipal();

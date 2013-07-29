@@ -8,6 +8,11 @@ import org.springframework.stereotype.Component;
 import pl.edu.pw.eiti.groupbuying.core.dao.CityDAO;
 import pl.edu.pw.eiti.groupbuying.core.dao.OfferDAO;
 
+/**
+ * Task responsible for indexing data in a Lucene index
+ * @author Piotr Zawadzki
+ *
+ */
 @Component("objectIndexingTask")
 public class ObjectIndexingTask{
 
@@ -19,6 +24,9 @@ public class ObjectIndexingTask{
 	@Autowired
 	private CityDAO cityDAO;
 
+	/**
+	 * Indexes available offers
+	 */
 	@Scheduled(initialDelay = 60000, fixedDelay = 300000) //index every 5 minutes
 	public void indexOffers() {
 		if(LOG.isDebugEnabled()) {
@@ -32,6 +40,9 @@ public class ObjectIndexingTask{
 		}
 	}
 	
+	/**
+	 * Indexes enabled cities
+	 */
 	@Scheduled(initialDelay = 30000, fixedDelay = 900000) //index every 15 minutes
 	public void indexCities() {
 		if(LOG.isDebugEnabled()) {

@@ -17,6 +17,11 @@ import pl.edu.pw.eiti.groupbuying.rest.exception.InternalServerErrorException;
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 import pl.edu.pw.eiti.groupbuying.rest.service.CouponService;
 
+/**
+ * Controller for handling coupon operations
+ * @author Piotr Zawadzki
+ *
+ */
 @Controller
 @RequestMapping("/account/coupon")
 public class CouponController {
@@ -26,6 +31,11 @@ public class CouponController {
 	@Autowired
 	private CouponService couponService;
 	
+	/**
+	 * Returns a list of client's coupons
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = "/coupons")
 	public @ResponseBody List<CouponDTO> getCoupons(Principal principal) {
 		

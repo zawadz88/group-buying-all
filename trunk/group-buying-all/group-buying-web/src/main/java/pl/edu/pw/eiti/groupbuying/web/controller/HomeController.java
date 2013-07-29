@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * This controller is used to provide functionality for the home page.
  * 
- * @author Mularien
+ * @author Piotr Zawadzki
  *
  */
 @Controller

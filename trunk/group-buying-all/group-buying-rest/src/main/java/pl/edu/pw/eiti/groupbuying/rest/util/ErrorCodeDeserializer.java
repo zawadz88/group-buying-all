@@ -9,6 +9,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
+/**
+ * Deserializer for {@link ErrorCode} enum
+ * @author Piotr Zawadzki
+ *
+ */
 public class ErrorCodeDeserializer extends JsonDeserializer<ErrorCode>{
 
 	@Override

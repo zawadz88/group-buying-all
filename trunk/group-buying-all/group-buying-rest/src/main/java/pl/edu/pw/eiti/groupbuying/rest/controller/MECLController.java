@@ -31,6 +31,11 @@ import pl.edu.pw.eiti.groupbuying.rest.service.CouponService;
 import pl.edu.pw.eiti.groupbuying.rest.service.OfferService;
 import pl.edu.pw.eiti.groupbuying.rest.service.PayPalService;
 
+/**
+ * Controller for handling PayPal's Mobile Express Checkout operations
+ * @author Piotr Zawadzki
+ *
+ */
 @Controller
 @RequestMapping("/paypal/mecl")
 public class MECLController {
@@ -52,6 +57,16 @@ public class MECLController {
 	@Autowired
 	private CouponService couponService;
 	
+	/**
+	 * Responsible for handling SetExpressCheckout PayPal operations
+	 * @param request
+	 * @param offerId
+	 * @param response
+	 * @param deviceReferenceToken
+	 * @param principal
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/checkout/{offerId}")
 	public @ResponseBody Callable<String> setCheckOut(final HttpServletRequest request, @PathVariable final int offerId, HttpServletResponse response, @RequestParam("drt") final String deviceReferenceToken, final Principal principal) throws IOException {
 		return new Callable<String>() {
@@ -93,6 +108,13 @@ public class MECLController {
 					
 	}
 
+	/**
+	 * Responsible for making GetExpressCheckout and DoExpressCheckout PayPal operations
+	 * @param request
+	 * @param offerId
+	 * @param token
+	 * @return
+	 */
 	@RequestMapping(value = "/docheckout/{offerId}")
 	public Callable<String> doCheckOut(HttpServletRequest request, @PathVariable final int offerId, @RequestParam("token") final String token) {
 		return new Callable<String>() {

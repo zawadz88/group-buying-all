@@ -13,8 +13,19 @@ import pl.edu.pw.eiti.groupbuying.rest.exception.UnauthorizedException;
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError;
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 
+/**
+ * Controller advice used for exception handling
+ * @author Piotr Zawadzki
+ *
+ */
 @ControllerAdvice
 public class ErrorControllerAdvice {
+	
+	/**
+	 * Handles 404 Page Not Found errors
+	 * @param ex thrown exception
+	 * @return error response containing error info
+	 */
 	@ResponseStatus(value = HttpStatus.NOT_FOUND)
 	@ExceptionHandler(ResourceNotFoundException.class)
     public @ResponseBody ApiError handleResourceNotFoundException(ResourceNotFoundException ex) {
@@ -28,7 +39,12 @@ public class ErrorControllerAdvice {
 		}
         return error;
     }
-
+	
+	/**
+	 * Handles 400 Bad Request errors
+	 * @param ex thrown exception
+	 * @return error response containing error info
+	 */
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BadRequestException.class)
     public @ResponseBody ApiError handleBadRequestException(BadRequestException ex) {
@@ -43,6 +59,11 @@ public class ErrorControllerAdvice {
         return error;
     }
 	
+	/**
+	 * Handles 401 Unauthorized errors
+	 * @param ex thrown exception
+	 * @return error response containing error info
+	 */
 	@ResponseStatus(value = HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(UnauthorizedException.class)
     public @ResponseBody ApiError handleUnauthorizedException(UnauthorizedException ex) {
@@ -56,7 +77,12 @@ public class ErrorControllerAdvice {
 		}
         return error;
     }
-
+	
+	/**
+	 * Handles 500 Internal Server Error errors
+	 * @param ex thrown exception
+	 * @return error response containing error info
+	 */
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(InternalServerErrorException.class)
     public @ResponseBody ApiError handleInternalServerErrorException(InternalServerErrorException ex) {

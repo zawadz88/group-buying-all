@@ -22,9 +22,9 @@ import pl.edu.pw.eiti.groupbuying.rest.model.ApiError;
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 
 /**
- * This controller is used to provide functionality for the login page.
+ * This controller is used to provide functionality for the 404 page not found.
  * 
- * @author Mularien
+ * @author Piotr Zawadzki
  */
 @Controller
 public class PageNotFoundController {

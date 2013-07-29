@@ -16,16 +16,23 @@ import org.springframework.stereotype.Controller;
 import pl.edu.pw.eiti.groupbuying.core.domain.Seller;
 import pl.edu.pw.eiti.groupbuying.web.service.SellerService;
 
-
+/**
+ * Controller for adding new partner accounts
+ * @author Piotr Zawadzki
+ *
+ */
 @Controller("addSellerController")
 public class AddSellerController extends BaseController {
 
 	@Autowired
 	private SellerService sellerService;
 	
+	/**
+	 * Adds a seller
+	 * @param seller
+	 */
 	public void submitSeller(Seller seller) {
 		sellerService.saveSeller(seller);
 	}
-
 
 }

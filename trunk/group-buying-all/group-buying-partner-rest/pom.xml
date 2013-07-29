@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>group-buying-partner-rest</artifactId>
 	<packaging>war</packaging>
-	<name>Group Buying Partner's REST application</name>
+	<name>Group Buying Partner's REST web application</name>
 
 	<dependencies>
 

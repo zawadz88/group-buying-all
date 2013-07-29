@@ -2,8 +2,11 @@ package pl.edu.pw.eiti.groupbuying.rest.exception;
 
 import pl.edu.pw.eiti.groupbuying.rest.model.ApiError.ErrorCode;
 
-
-
+/**
+ * Exception thrown when the request is of HTTP type 400 Bad Request
+ * @author Piotr Zawadzki
+ *
+ */
 @SuppressWarnings("serial")
 public class BadRequestException extends AbstractHttpException {
 

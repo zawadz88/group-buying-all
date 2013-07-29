@@ -10,9 +10,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+/**
+ * POJO containing information about an API error that occurred
+ * @author Piotr Zawadzki
+ *
+ */
 public class ApiError {
+	/**
+	 * HTTP response code
+	 */
 	private int responseCode;
+	/**
+	 * API specific error code
+	 */
 	private ErrorCode errorCode;
+	/**
+	 * Description of the error
+	 */
 	private String errorMessage;
 
 	public ErrorCode getErrorCode() {
@@ -52,7 +66,12 @@ public class ApiError {
 		map.put("responseCode", responseCode);
 		return map;
 	}
-	
+
+	/**
+	 * Enumeration containing API specific error codes
+	 * @author Piotr Zawadzki
+	 *
+	 */
 	@JsonSerialize(using = ErrorCodeSerializer.class)
 	@JsonDeserialize(using = ErrorCodeDeserializer.class)
 	public static enum ErrorCode {

@@ -1,5 +1,10 @@
 package pl.edu.pw.eiti.groupbuying.partner.rest.model;
 
+/**
+ * Enumaration describing possible response codes for claiming a coupon
+ * @author Piotr Zawadzki
+ *
+ */
 public enum ClaimResponse {
 	CLAIMED(0), EXPIRED(1), ALREADY_USED(2);
 	
